@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import PermIdentityIcon from "@material-ui/icons/PermIdentity";
 import LockIcon from "@material-ui/icons/Lock";
 import PhoneAndroidIcon from "@material-ui/icons/PhoneAndroid";
+import EmailIcon from "@material-ui/icons/Email";
 import axios from "axios";
 import { lazy, Suspense, createContext, useState, useEffect } from "react";
 
@@ -16,31 +17,32 @@ function Join() {
         .catch(() => {
             console.log('실패함')
         })
-    const [temp, SetTemp] = useState(true);
+
 
     const [id, setId] = useState("2");
-    const [password, setPassword] = useState("");
+    const [pw, setpw] = useState("");
     const [name, setName] = useState("");
-    const [number, setNumber] = useState("");
+    const [phone, setphone] = useState("");
     const [check_pw, setCehck_pw] = useState("");
-    const [role, setRole] = useState("");
-    const hasNotSameError = passwordEntered =>
-    password != check_pw ? true : false;    
+    const [role, setrole] = useState("");
+    const [temp, SetTemp] = useState(true);
+    const hasNotSameError = pwEntered =>
+        pw != check_pw ? true : false;
 
     const onSubmitHandler = (event) => {
-    event.preventDefault(); // 아무 동작 안하고 버튼만 눌러도 리프레쉬 되는 것을 막는다
+        event.preventDefault(); // 아무 동작 안하고 버튼만 눌러도 리프레쉬 되는 것을 막는다
 
-    if(password !== check_pw){
-        return alert('비밀번호와 비밀번호 확인은 같아야 합니다.')
+        if (pw !== check_pw) {
+            return alert('비밀번호와 비밀번호 확인은 같아야 합니다.')
+        }
     }
-    }
+
     useEffect(() => {
-        console.log(id);
-        console.log(password);
-        console.log(name);
-        console.log(number);
-        console.log(role)
+        if(temp==false){
         sendUserData();
+        temp=true;
+        }
+
     }, [temp])
     return (
         <div className="join_wrap" style={{ backgroundColor: "rgb(209, 209, 214)" }}>
@@ -48,7 +50,7 @@ function Join() {
             <div className="joinWrap">
                 <div className="join">
                     <p>Sign Up</p>
-                    <div id="textFeild">
+                    <div id="textFeild" style={{ marginLeft: "10px" }}>
                         <TextField
                             InputProps={{
                                 startAdornment: (
@@ -73,7 +75,7 @@ function Join() {
                                 setId(e.target.value);
                             }} />
                         &nbsp;&nbsp;
-                        
+
                     </div>
                     <div id="textFeild">
                         <div>
@@ -85,11 +87,11 @@ function Join() {
                                         </InputAdornment>
                                     ),
                                 }}
-                                label="password"
-                                type="password"
+                                label="pw"
+                                type="pw"
                                 required
-                                name="password"
-                                autoComplete="current-password"
+                                name="pw"
+                                autoComplete="current-pw"
                                 sx={{
                                     width: { sm: 200, md: 350 },
                                     "& .MuiInputBase-root": {
@@ -97,13 +99,13 @@ function Join() {
                                     }
                                 }}
                                 onChange={(e) => {
-                                    setPassword(e.currentTarget.value);
+                                    setpw(e.currentTarget.value);
                                 }} />
                         </div>
                     </div>
                     <div id="textFeild">
                         <div>
-                        <TextField
+                            <TextField
                                 InputProps={{
                                     startAdornment: (
                                         <InputAdornment position="start">
@@ -112,10 +114,10 @@ function Join() {
                                     ),
                                 }}
                                 label="check_pw"
-                                type="password"
+                                type="pw"
                                 required
                                 name="setCehck_pw"
-                                autoComplete="current-password"
+                                autoComplete="current-pw"
                                 sx={{
                                     width: { sm: 200, md: 350 },
                                     "& .MuiInputBase-root": {
@@ -126,10 +128,10 @@ function Join() {
                                     setCehck_pw(e.currentTarget.value);
                                 }}
                                 error={hasNotSameError('check_pw')} // 해당 텍스트필드에 error 핸들러 추가
-                        helperText={
-                            hasNotSameError('check_pw') ? "입력한 비밀번호와 일치하지 않습니다." : null
-                        } // 에러일 경우에만 안내 문구 표시
-                         />
+                                helperText={
+                                    hasNotSameError('check_pw') ? "입력한 비밀번호와 일치하지 않습니다." : null
+                                } // 에러일 경우에만 안내 문구 표시
+                            />
                         </div>
                     </div>
                     <div id="textFeild">
@@ -163,7 +165,7 @@ function Join() {
                                     </InputAdornment>
                                 ),
                             }}
-                            label="Phone Number"
+                            label="Phone phone"
                             required
                             name="pn"
                             sx={{
@@ -173,17 +175,17 @@ function Join() {
                                 }
                             }}
                             onChange={(e) => {
-                                setNumber(e.target.value);
+                                setphone(e.target.value);
                             }} />
                     </div>
                     <div className="partWrap">
                         <input className="part" type="button" value="사용자" onClick={(e) => {
                             let typped = e.target.value;
-                            setPart(typped);
+                            setrole(typped);
                         }}></input>
                         <input className="part" type="button" value="상업자" onClick={(e) => {
                             let typped = e.target.value;
-                            setPart(typped);
+                            setrole(typped);
                         }}></input>
                     </div>
 
@@ -205,9 +207,13 @@ function Join() {
                 params: {
                     id: id,
                     name: name,
-                    password: password,
-                    number: number,
+                    pw: pw,
+                    phone: phone,
+                    role: role
                 }
+            }).then(() => {
+                window.alert("회원가입 완료")
+                // navigate("/login")
             }).catch(function () {
                 console.log('실패함')
             })
