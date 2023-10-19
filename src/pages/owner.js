@@ -103,55 +103,66 @@ function Owner() {
         }
 
     }, [temp])
+    useEffect(() => {
+        console.log(selectedAddress);
+      }, [selectedAddress]);  
     /* 선택사항 테이블 스위치 */
     let [table, SetTable] = useState(true);
 
     return (
         <div>
             <div className='ownerWrap' >
-                <header id='header' className={`${temp1 == true ? "" : "header_hidden"}`} style={{ borderBottom: "1px solid black" }}>
+                <header id='header' className={`${temp1 == true ? "" : "header_hidden"}`} style={{ 
+                    backgroundColor: 'white', // 헤더 배경색
+                    boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.2)', // 그림자 효과
+                    position: 'sticky', // 스크롤과 함께 고정
+                    top: 0, // 화면 상단에 고정
+                    zIndex: 1, // 다른 요소 위에 나타나도록 설정
+                 }}>
                     <div className='logo'><a href="/home_user">재고 30 </a></div>
                     <nav className='nav' >
-                        <ul >
+                    <ul>
                             <li>
                                 <a onClick={() => {
                                     setTemp(switchTemp);
-                                }} style={{ cursor: "pointer" }}>
-                                    <SearchIcon fontSize="large" />
+                                }} style={{ cursor: "pointer" }} href='/owner'>
+                                    가게등록
                                 </a>
                             </li>
                             <li>
-                                <a href="" style={{ cursor: "pointer" }}>
-                                    <StarBorderIcon fontSize="large" />
+                                <a href="/owner_addmenu" style={{ cursor: "pointer" }}>
+                                    상품등록
                                 </a>
                             </li>
                             <li>
-                                <a href="/" onClick={() => {
-                                    axios.get('/SessionLogout', {
-                                    })
-                                    window.alert("로그아웃되었습니다.");
-                                }
-                                }>
-                                    <ExitToAppIcon fontSize="large" />
+                                <a href="/owner_notice">
+                                    공지사항
                                 </a>
                             </li>
                             <li>
-                                <a className='mypages' onClick={() => {
+                                <a href="/">
+                                    로그아웃
+                                </a>
+                            </li>
+                            <li>
+                                <a className='mypages' style={{ cursor: "pointer" }} onClick={() => {
                                     setTemp1(!temp1);
-                                }} style={{ cursor: "pointer" }}>
-                                    <AccountCircleIcon fontSize="large" /> <span>나윤호</span>
+                                }}>
+                                    <AccountCircleIcon fontSize="large" /> <span>{userInfo.nickname}</span>
                                 </a>
+
                             </li>
                         </ul></nav>
                 </header>
-                <div className={`banner ${temp1 == true ? "" : "banner_hidden"}`}>
+                <div style={{width:"100%",height:"25px"}}></div>
+                <div className={`banner ${temp1 == true ? "" : "banner_hidden"}`} style={{borderRadius:"20px",boxShadow: '0px 0px 5px rgba(0, 0, 0, 0.3)'}}>
                     <div className='text'>
                         <span >가게를 등록하여</span><br />
                         <span>자신의 가게를 보여주세요!</span>
                     </div>
                 </div>
                 <main className={`contents ${table ? "" : "contents_area"}`} style={{ textAlign: "left" }} >
-                    <div style={{ marginTop: "25px" }}>
+                    <div style={{ marginTop: "25px" }} className={`${temp1 == true ? "" : "table_hidden"}`}>
                         <table style={{ marginTop: "25px" }}>
                             <tr >
                                 <th>
@@ -234,6 +245,7 @@ function Owner() {
                                                 </InputAdornment>
                                             ),
                                         }}
+                                        placeholder='가게 이름을 적어주세요'
                                         label="store_name"
                                         required
                                         name="store_name"
@@ -261,6 +273,7 @@ function Owner() {
                                                 </InputAdornment>
                                             ),
                                         }}
+                                        placeholder='가게 전화번호를 적어주세요'
                                         label="store_phon"
                                         required
                                         name="store_phon"
@@ -316,7 +329,7 @@ function Owner() {
                                                 ),
                                                 readOnly: true,
                                             }}
-
+                                            placeholder='가게 이미지를 넣어주세요'
                                             label="store_img"
                                             required
                                             name="store_img"
@@ -336,7 +349,7 @@ function Owner() {
                                         />
                                     </label>
 
-                                    <button className="search" onClick={openFileDialog} style={{ width: "50px", height: "60px", marginLeft: "25px", cursor: "pointer", borderRadius: "10px", backgroundColor: "rgb(218, 216, 216)", border: "1px solid rgb(158, 154, 154)" }}><span>파일 &nbsp;찾기</span></button>
+                                    <button className="search" onClick={openFileDialog} style={{ width: "50px", height: "60px", marginLeft: "25px", cursor: "pointer", borderRadius: "10px", backgroundColor: "rgb(218, 216, 216)",border:"1px solid rgb(158, 154, 154)" }}><span>파일 &nbsp;찾기</span></button>
                                 </th>
 
                                 <th>
@@ -352,6 +365,7 @@ function Owner() {
                                             ),
                                             readOnly: true,
                                         }}
+                                        placeholder='가게 주소를 적어주세요'
                                         label="store_address"
                                         required
                                         name="store_address"
@@ -367,7 +381,7 @@ function Owner() {
                                             setStore_address(e.currentTarget.value);
                                         }} />
 
-                                    <button className="search" style={{ width: "50px", height: "60px", marginLeft: "25px", cursor: "pointer", borderRadius: "10px", backgroundColor: "rgb(218, 216, 216)", border: "1px solid rgb(158, 154, 154)" }} onClick={() => { openModal() }}><span>주소 &nbsp;찾기</span></button>
+                                    <a className="search" style={{ fontSize: "20px", display: "inline-block", lineHeight: "1.5", width: "50px", height: "59px", marginLeft: "25px", cursor: "pointer", borderRadius: "10px", backgroundColor: "rgb(218, 216, 216)", border: "1px solid rgb(158, 154, 154)", textAlign: "center" }} onClick={() => { openModal() }}>주소 찾기</a>
                                 </th>
                             </tr>
                             {isModalOpen && (
@@ -377,7 +391,7 @@ function Owner() {
                                             style={postCodeStyle}
                                             onComplete={onCompletePost}
                                         />
-                                        <button onClick={closeModal} className="close-button" style={{ padding: "15.5px 0px 15.5px 0px", border: "none" }}><span>X</span></button>
+                                        <button onClick={closeModal} className="close-button" style={{ marginLeft:"2.5px",padding: "15.5px 0px 15.5px 0px", border: "none",boxShadow: '5px 0px 10px rgba(0,0,0,0.5)', }}><span>X</span></button>
                                     </div>
                                 </div>
                             )}
@@ -428,6 +442,7 @@ function Owner() {
                                                 </InputAdornment>
                                             ),
                                         }}
+                                        placeholder='가게 웹사이트를 적어주세요'
                                         label="store_website"
                                         name="store_website"
                                         autoComplete="store_website"
@@ -468,6 +483,7 @@ function Owner() {
                                                 </InputAdornment>
                                             ),
                                         }}
+                                        placeholder='홍보 문구를 적어주세요'
                                         label="store_promotionText"
                                         name="store_promotionText"
                                         autoComplete="current-pw"
@@ -496,7 +512,7 @@ function Owner() {
                         </table>
                     </div>
                 </main>
-                <Button onClick={() => {
+                <a className="owner_store_btn" type="submit" Width variant="contained" style={{ marginBottom: "50px", cursor:"pointer",borderRadius: "10px", backgroundColor: "rgb(218, 216, 216)", border: "1px solid rgb(158, 154, 154)" }} onClick={() => {
 
                     if (store_name == "" && store_phon == "" && store_img == "" && store_address == "") {
                         window.alert("가게등록실패 다시입력");
@@ -504,27 +520,27 @@ function Owner() {
                     } else {
                         setTemp(!temp)
                     }
-                }} className="owner_store_btn" type="submit" Width variant="contained" style={{ marginBottom: "50px", borderRadius: "10px", backgroundColor: "rgb(218, 216, 216)", color: "black", border: "2px solid rgb(158, 154, 154)" }}><span>가게 등록</span></Button>
+                }}>가게 등록</a>
             </div>
 
-            <footer id="footer" >
+            <footer id="footer" className={`${temp1 == true ? "" : "footer_hidden"}`}>
                 <div className='footer1'><a href="/">재고 30</a></div>
                 <div className='footer2'>개인정보 및 보호정책 등</div>
             </footer>
-            <div className={`${temp1 == true ? "popup_view_none" : "popup_view"}`} id="owner_popup" >
+            <div className={`${temp1 == true ? "popup_view_none" : "popup_view"}`} id="owner_popup" style={{top:"50%"}} >
                 <div>
                     <Avatar
                         src={Image}
                         style={{ margin: '20px' }}
-                        size={150}
+                        size={170}
                         onClick={() => { fileInput.current.click() }} />
-                    <div><a href='/' style={{ color: "blue", textDecorationLine: 'underline' }}>회원 정보 수정</a></div>
-                    <div><h1 style={{ margin: "20px 0px 30px 30px" }}>나윤호 님 환영합니다.
+                    <div><a href='/' style={{ fontSize:"20px", color: "blue", textDecorationLine: 'underline' }}>회원 정보 수정</a></div>
+                    <div><h1 style={{ fontSize:"35px" ,margin: "20px 0px 30px 30px" }}>나윤호 님 환영합니다.
                         <a href="/" onClick={() => {
                             window.alert("로그아웃되었습니다.");
                         }
                         } style={{ cursor: "pointer" }}>
-                            <ExitToAppIcon fontSize="midium" style={{ margin: "0px 0px -5px 7px" }} />
+                            <ExitToAppIcon className="popup_log_out" fontSize="large" style={{ margin: "0px 0px -5px 7px" }} />
                         </a>
                     </h1>
                     </div>
@@ -541,9 +557,9 @@ function Owner() {
                 <div id="popsec2">
                     <a href="owner" style={{ marginRight: "-200px" }} ><StoreIcon fontSize="large" style={{ margin: "8px 0px -9px 0px" }} /> <span>가게 등록{"\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0>"}</span></a>
                 </div>
-                <button className="popup_btn" onClick={() => {
+                 <a className="popup_btn" onClick={() => {
                     setTemp1(!temp1)
-                }}><a>닫기</a></button>
+                }}>닫기</a>
 
             </div>
 
@@ -554,7 +570,7 @@ function Owner() {
         formData.append('imageFilename', selectedFile);
         formData.append('shopName', store_name);
         formData.append('shopTel', store_phon);
-        formData.append('shopAddress', store_address);
+        formData.append('shopAddress', selectedAddress);
         formData.append('promotionText', store_promotionText);
         formData.append('shopWebsite', store_website);
 
