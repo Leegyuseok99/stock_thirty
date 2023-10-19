@@ -21,7 +21,6 @@ import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import WebAssetIcon from '@mui/icons-material/WebAsset';
 import CallIcon from '@mui/icons-material/Call';
-import StarRateIcon from '@mui/icons-material/StarRate';
 function Home_user() {
   /*마이페이지*/
   const [Image, setImage] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png")
@@ -32,6 +31,7 @@ function Home_user() {
   const [showFilter, setShowFilter] = useState(true);
   const [showDetail, setShowDetail] = useState(false);
   const [shopInfo,setShopInfo] = useState([]);
+  const [selectedShop, setSelectedShop] = useState(null);
   const mapContainer = useRef(null);
   useEffect(() => {
     const { naver } = window;
@@ -47,45 +47,13 @@ function Home_user() {
       };
       map = new naver.maps.Map(mapContainer.current, options);
 
-      // 예시 마커 생성
-      const markerPosition = new naver.maps.LatLng(position.coords.latitude, position.coords.longitude);
-      var marker = new naver.maps.Marker({
-        position: markerPosition,
-        map,
-      });
-
-      var contentString = [
-        `<div class="iw_inner"><a id="showDetails">asdasdas</a></div>`
-      ].join(``);
-      infowindow = new naver.maps.InfoWindow({
-        content: contentString
-      });
+     
       function toggleFilterAndDetail() {
         console.log(1111);
         setShowFilter(!showFilter);
         setShowDetail(!showDetail);
       }
 
-      function addClickListener() {
-        // click 이벤트 리스너를 한 번만 추가
-        naver.maps.Event.addListener(marker, "click", function (e) {
-          if (infowindow.getMap()) {
-            infowindow.close();
-            if (showDetailsLink) {
-              showDetailsLink.removeEventListener('click', toggleFilterAndDetail);
-            }
-          } else {
-            infowindow.open(map, marker);
-            showDetailsLink = document.getElementById('showDetails');
-            // showDetailsLink에 대한 click 이벤트 리스너 추가
-            if (showDetailsLink) {
-              console.log(showDetailsLink);
-              showDetailsLink.clickListener = toggleFilterAndDetail;
-              showDetailsLink.addEventListener('click', showDetailsLink.clickListener);
-            }
-          }
-        });
-      }
       function closeInfoWindow() {
         if (showDetailsLink) {
           showDetailsLink.removeEventListener('click', toggleFilterAndDetail);
@@ -93,12 +61,11 @@ function Home_user() {
         infowindow.close();
       }
 
-      addClickListener();
 
-      document.querySelector('.detail_store_close').addEventListener('click', closeInfoWindow);
-    
+      
+      
       // 예시 마커에 대한 클릭 리스너 추가
-    axios.get('/ShopMarker')
+      axios.get('/ShopMarker')
         .then(response => {
           const shopInfo1 = response.data;
           shopInfo1.forEach(shop => {
@@ -108,9 +75,9 @@ function Home_user() {
               map,
             });
             let copy = shop
-            setShopInfo({ ...shopInfo, ...copy });
+            setShopInfo(prevShopInfo => [...prevShopInfo, shop]);
             var contentString = [
-              `<div class="iw_inner" id="showDetails" style="border-radius: 10px;">`,
+             `<div class="iw_inner" id="showDetails" style="border-radius: 10px;">`,
               `<div style="width: 50%; height: 90px; "><img src="/shopimages/${shop.imageFilename}" alt=${shop.imageFilename} style="width: 100%; height: 90px; border-radius:20px; border:4px solid transparent;"></img></div>`,
               `<div><div style="margin-top: 15px; margin-left: 10px;"><a style="font-weight:700">${shop.shopName}</a></div>`,
               `<div style="margin-top: 15px; margin-top: 10px;"><span className="ct3" style="font-weight:700">${shop.rating}/5</span></div></div>`,
@@ -124,7 +91,7 @@ function Home_user() {
               setShowFilter(!showFilter);
               setShowDetail(!showDetail);
             }
-
+      
             function addClickListener() {
               // click 이벤트 리스너를 한 번만 추가
               naver.maps.Event.addListener(marker, "click", function (e) {
@@ -135,21 +102,30 @@ function Home_user() {
                   }
                 } else {
                   infowindow.open(map, marker);
-                  const iwInner = document.getElementById('showDetails');
-                  const image = iwInner.querySelector('img');
-                  const a = iwInner.querySelector("a");
-                  const ct3 = iwInner.querySelector("span");
-                  iwInner.addEventListener('mouseover', function () {
-                    image.style.backgroundColor = " #383737"; // 이미지 색상을 변경
-                    a.style.color = "white";
-                    ct3.style.color = "white"
-                  });
+                  const clickedShopName = shop.shopName;
 
-                  iwInner.addEventListener('mouseout', function () {
-                    image.style.backgroundColor = 'white';
-                    a.style.color = "black";
-                    ct3.style.color = "black"
-                  });
+                  // shopInfo 배열에서 같은 이름을 가진 가게를 찾습니다.
+                  const selectedShopInfo = shopInfo.find(info => info.shopName === clickedShopName);
+
+                  // 만약 해당 정보를 찾았다면 selectedShopInfo에 그 정보가 저장됩니다.
+                  if (selectedShopInfo) {
+                    setSelectedShop(selectedShopInfo);
+                  }
+                  const iwInner = document.getElementById('showDetails');
+                   const image = iwInner.querySelector('img');
+                   const a = iwInner.querySelector("a");
+                   const ct3 = iwInner.querySelector("span");
+                   iwInner.addEventListener('mouseover', function () {
+                    image.style.backgroundColor=" #383737";
+                   a.style.color="white";
+                   ct3.style.color="white"
+                });
+           
+                iwInner.addEventListener('mouseout', function () {
+                  image.style.backgroundColor = 'white';
+                  a.style.color="black";
+                  ct3.style.color="black"
+                });
                   showDetailsLink = document.getElementById('showDetails');
                   // showDetailsLink에 대한 click 이벤트 리스너 추가
                   if (showDetailsLink) {
@@ -166,23 +142,23 @@ function Home_user() {
               }
               infowindow.close();
             }
-
+      
             addClickListener();
-
+      
             document.querySelector('.detail_store_close').addEventListener('click', closeInfoWindow);
-
+            
           });
         })
         .catch(error => {
           console.error('세션 데이터를 가져오는데 실패함', error);
         });
-
-      return () => {
-        if (showDetailsLink) {
-          showDetailsLink.removeEventListener('click', toggleFilterAndDetail);
-        }
-        closeInfoWindow();
-      };
+        
+    return () => {
+      if (showDetailsLink) {
+        showDetailsLink.removeEventListener('click', toggleFilterAndDetail);
+      }
+      closeInfoWindow(); 
+    };
     });
   }, [showFilter, showDetail]);
   /*필터 버튼(마이페이지) 누를떄 애니메션효과*/
@@ -210,19 +186,19 @@ function Home_user() {
         } else {
           setUserInfo(userData);
           //로그인한 사용자가 상업자라면 공지사항 알림 가져오기
-          if (userData.role == "상업자") {
-            axios.get('/manager/notice/getalarm')
-              .then(response => {
-                const alarmData = response.data;
-                setNoticeAlarmInfo(alarmData);
-                alarmData.map((alarm, index) => (
-                  console.log(alarm)
-                ));
-              })
-              .catch(error => {
-                console.error('세션 데이터를 가져오는데 실패함', error);
-              });
-          }
+          if(userData.role == "상업자"){
+           axios.get('/manager/notice/getalarm')
+               .then(response => {
+                 const alarmData = response.data;
+                   setNoticeAlarmInfo(alarmData);
+                   alarmData.map((alarm, index) => (
+                  console.log(alarm)  
+                 ));
+               })
+               .catch(error => {
+                 console.error('세션 데이터를 가져오는데 실패함', error);
+               });
+        }
         }
       })
       .catch(error => {
@@ -255,7 +231,7 @@ function Home_user() {
   let [temp2, setTemp2] = useState(true);
   /*즐겨찾기*/
   let [temp3, setTemp3] = useState(true);
-  let [shopsData, setShopsData] = useState([{ imagefilename: "123.png", shopName: "나윤호", shopaddress: "경기도" }, { imagefilename: "11113.png", shopName: "나윤445호", shopaddress: "경기도 남양주ㅅㅣ" }, { imagefilename: "1111ㅁㄴㅇㅁㄴㅇ3.png", shopName: "나윤ㅁㄴㅇㅁㄴ445호", shopaddress: "경기도 남양ㅇㅁㄴㅇㄴㅁ주ㅅㅣ" }]);
+  let [shopsData, setShopsData] = useState([]);
   let [fv_store, setFv_store] = useState([]);
   useEffect(() => {
     console.log(shopsData); // 상태가 변경될 때마다 호출됨
@@ -266,24 +242,10 @@ function Home_user() {
 
   /*알림창*/
   let [temp4, setTemp4] = useState(true);
-
   /*상세 페이지*/
   let [search_switch1, setSearch_switch1] = useState(true);
   let [search_switch2, setSearch_switch2] = useState(false);
   let [tapmenu, setTapmenu] = useState(true);
-  // const [clicked, setClicked] = useState([false, false, false, false, false]);
-  // const array = [0, 1, 2, 3, 4]
-  // const [rating, setRating] = useState(0);
-  // const handleStarClick = index => {
-  //   let clickStates = [...clicked];
-  //   for (let i = 0; i < 5; i++) {
-  //     clickStates[i] = i <= index ? true : false;
-  //   }
-  //   setClicked(clickStates);
-  //   setRating(index + 1);
-  // };
-  // let score = clicked.filter(Boolean).length;
-  
 
   return (
     <div className="App">
@@ -380,9 +342,9 @@ function Home_user() {
                   <div className='detail_store_close' style={{ position: "absolute", top: "50px", right: "370px", fontSize: "25px", cursor: "pointer" }} onClick={() => {
                     setShowFilter(!showFilter);
                     setShowDetail(!showDetail);
-                  }}><ArrowBackIosIcon></ArrowBackIosIcon></div>
+                  }}><ArrowBackIosIcon id={`${showFilter == true ? "aa" : null}`}></ArrowBackIosIcon></div>
 
-                  <div className='detail_store_name'><span>{shopInfo.shopName}</span></div>
+                  <div className='detail_store_name'><span>{selectedShop ? selectedShop.shopName : '선택된 가게 없음'}</span></div>
                 </div>
                 <div className='detail_store_ex'>
                   <div className='detail_store_select' style={{ position: "fixed" }}>
@@ -599,15 +561,15 @@ function Home_user() {
             <span>편집</span><span style={{ fontSize: "18px", textAlign: "right" }}><RoomIcon fontSize="small" />{selectedStores.length}개</span>
           </div>
           <div className='divide' style={{ height: "10px" }}><span style={{ display: "none" }}>asd</span></div>
-          <div className="fv_store_list" style={{ marginTop: "20px", width: "100%", height: "70%" }}>
+          <div className="fv_store_list" style={{ marginTop: "20px",width:"100%",height:"70%" }}>
             {shopsData.map((store, index) => (
-              <div key={index} className="fv_store" style={{ display: "flex", borderBottom: "2px solid rgba(0,0,0,0.3)", position: "relative" }}>
+              <div key={index} className="fv_store" style={{ display: "flex", borderBottom: "2px solid rgba(0,0,0,0.3)",position:"relative" }}>
                 <div className='fv_store_image'>
                   <img src={"/shopimages/" + `${store.imagefilename}`} alt={store.imagefilename} style={{ backgroundCover: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat", width: "100%", height: "100px", float: "Left" }} />
                 </div>
                 <div style={{ width: "1000px", marginTop: "10px", lineHeight: "1.8" }}>
                   <div className='fv_store_name' style={{ textAlign: "left" }}>
-                    {store.shopname}
+                    {store.shopName}
                   </div>
                   <div className='fv_store_address'>
                     {store.shopaddress}
@@ -627,25 +589,21 @@ function Home_user() {
                         // 새로운 배열을 생성하여 선택된 항목을 추가
                         let copy = [...selectedStores, store];
                         setSelectedStores(copy);
-                        console.log(copy);
                       }
                     } else {
                       // 선택 해제된 경우, 해당 주소를 가진 항목을 배열에서 제거
                       setSelectedStores(prevStores => prevStores.filter(item => item.shopaddress !== address));
                     }
                   }}
-                  style={{ position: "absolute", top: "0", right: "0", width: "25px", height: "25px", cursor: "pointer" }} />
+                style={{position:"absolute",top:"0",right:"0",width:"25px",height:"25px",cursor:"pointer"}}/>
 
               </div>
             ))}
           </div>
-          <button className="remove_fv_Store" style={{ marginTop: "10px", padding: "10px 50px", borderRadius: "50px", border: "1px solid rgba(0,0,0,0.3)", cursor: "pointer", fontWeight: "700", fontSize: "25px" }} onClick={() => {
+          <button className="remove_fv_Store" style={{marginTop:"10px",padding:"10px 50px",borderRadius:"50px",border:"1px solid rgba(0,0,0,0.3)",cursor:"pointer",fontWeight:"700",fontSize:"25px"}} onClick={()=>{
             console.log(selectedStores);
-            axios.put('/member/update/nickname', {
-              //선택된 즐겨찾기 가게 삭제
-              nickname: selectedStores,
-
-            }).then(response => {//데이터를받아오는게성공시 다른페이지호출
+            axios.post('/member/bookmark/delete', selectedStores
+            ).then(response => {//데이터를받아오는게성공시 다른페이지호출
               setShopsData(response.data);
               window.alert("수정 완료");
               setSelectedStores([]);
@@ -656,7 +614,7 @@ function Home_user() {
             })
             setTemp5(!temp5);
           }}>
-            삭제 {selectedStores.length}
+          삭제 {selectedStores.length}
           </button>
         </div>
 
