@@ -21,6 +21,8 @@ import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import WebAssetIcon from '@mui/icons-material/WebAsset';
 import CallIcon from '@mui/icons-material/Call';
+import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 function Home_user() {
   /*마이페이지*/
   const [Image, setImage] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png")
@@ -30,9 +32,12 @@ function Home_user() {
 
   const [showFilter, setShowFilter] = useState(true);
   const [showDetail, setShowDetail] = useState(false);
-  const [shopInfo,setShopInfo] = useState([]);
-  const [selectedShop, setSelectedShop] = useState(null);
+  const [shopInfo, setShopInfo] = useState([{ shopname: "sdsds", longitude: "127.1525182704408", latitude: "37.624922601488585" }]);
+  const [selectedShop, setSelectedShop] = useState({ shopName: "sdsds" });
   const mapContainer = useRef(null);
+  const [menuData, setMenuData] = useState([{ itemname: "ds", cost: "2000", salecost: "1000", quantity: "44", image: "", itemnotice: "dskskdksdkskdaksdkdasjkasfhkfasjkfasjsafjkfasjfasnasjkdhasndjksnkj", starttime: "2023-10-23-00:00:11", endtime: "2023-10-25-00:11:33" }, { itemname: "nds", cost: "3000", starttime: "" }, { itemname: "nds", cost: "3000", starttime: "" }]);
+  const [cViewVisible, setCViewVisible] = useState(false);
+  const [reViewvisible, setReViewVisible] = useState(false);
   useEffect(() => {
     const { naver } = window;
     let showDetailsLink = null;
@@ -47,7 +52,7 @@ function Home_user() {
       };
       map = new naver.maps.Map(mapContainer.current, options);
 
-     
+
       function toggleFilterAndDetail() {
         console.log(1111);
         setShowFilter(!showFilter);
@@ -62,22 +67,72 @@ function Home_user() {
       }
 
 
-      
-      
+      const markerPosition = new naver.maps.LatLng(position.coords.latitude, position.coords.longitude);
+      var marker = new naver.maps.Marker({
+        position: markerPosition,
+        map,
+      });
+
+      var contentString = [
+        `<div class="iw_inner"><a id="showDetails">${shopInfo.shopName = "sdsds"}</a></div>`
+      ].join(``);
+      infowindow = new naver.maps.InfoWindow({
+        content: contentString
+      });
+      function toggleFilterAndDetail() {
+        console.log(1111);
+        setShowFilter(!showFilter);
+        setShowDetail(!showDetail);
+
+        console.log(selectedShop.shopName)
+      }
+
+      function addClickListener() {
+        // click 이벤트 리스너를 한 번만 추가
+        naver.maps.Event.addListener(marker, "click", function (e) {
+          if (infowindow.getMap()) {
+            infowindow.close();
+            if (showDetailsLink) {
+              showDetailsLink.removeEventListener('click', toggleFilterAndDetail);
+            }
+          } else {
+            infowindow.open(map, marker);
+            showDetailsLink = document.getElementById('showDetails');
+            // showDetailsLink에 대한 click 이벤트 리스너 추가
+            if (showDetailsLink) {
+              console.log(showDetailsLink);
+              showDetailsLink.clickListener = toggleFilterAndDetail;
+              showDetailsLink.addEventListener('click', showDetailsLink.clickListener);
+            }
+          }
+        });
+      }
+      function closeInfoWindow() {
+        if (showDetailsLink) {
+          showDetailsLink.removeEventListener('click', toggleFilterAndDetail);
+        }
+        infowindow.close();
+      }
+
+      addClickListener();
+
+      document.querySelector('.detail_store_close').addEventListener('click', closeInfoWindow);
+
+
       // 예시 마커에 대한 클릭 리스너 추가
       axios.get('/ShopMarker')
         .then(response => {
-          const shopInfo1 = response.data;
-          shopInfo1.forEach(shop => {
+          const shopInfo = response.data;
+          shopInfo.forEach(shop => {
             let markerPosition = new naver.maps.LatLng(shop.latitude, shop.longitude);
             var marker = new naver.maps.Marker({
               position: markerPosition,
               map,
             });
-            let copy = shop
+
             setShopInfo(prevShopInfo => [...prevShopInfo, shop]);
             var contentString = [
-             `<div class="iw_inner" id="showDetails" style="border-radius: 10px;">`,
+              `<div class="iw_inner" id="showDetails" style="border-radius: 10px;">`,
               `<div style="width: 50%; height: 90px; "><img src="/shopimages/${shop.imageFilename}" alt=${shop.imageFilename} style="width: 100%; height: 90px; border-radius:20px; border:4px solid transparent;"></img></div>`,
               `<div><div style="margin-top: 15px; margin-left: 10px;"><a style="font-weight:700">${shop.shopName}</a></div>`,
               `<div style="margin-top: 15px; margin-top: 10px;"><span className="ct3" style="font-weight:700">${shop.rating}/5</span></div></div>`,
@@ -91,7 +146,7 @@ function Home_user() {
               setShowFilter(!showFilter);
               setShowDetail(!showDetail);
             }
-      
+
             function addClickListener() {
               // click 이벤트 리스너를 한 번만 추가
               naver.maps.Event.addListener(marker, "click", function (e) {
@@ -112,20 +167,20 @@ function Home_user() {
                     setSelectedShop(selectedShopInfo);
                   }
                   const iwInner = document.getElementById('showDetails');
-                   const image = iwInner.querySelector('img');
-                   const a = iwInner.querySelector("a");
-                   const ct3 = iwInner.querySelector("span");
-                   iwInner.addEventListener('mouseover', function () {
-                    image.style.backgroundColor=" #383737";
-                   a.style.color="white";
-                   ct3.style.color="white"
-                });
-           
-                iwInner.addEventListener('mouseout', function () {
-                  image.style.backgroundColor = 'white';
-                  a.style.color="black";
-                  ct3.style.color="black"
-                });
+                  const image = iwInner.querySelector('img');
+                  const a = iwInner.querySelector("a");
+                  const ct3 = iwInner.querySelector("span");
+                  iwInner.addEventListener('mouseover', function () {
+                    image.style.backgroundColor = " #383737";
+                    a.style.color = "white";
+                    ct3.style.color = "white"
+                  });
+
+                  iwInner.addEventListener('mouseout', function () {
+                    image.style.backgroundColor = 'white';
+                    a.style.color = "black";
+                    ct3.style.color = "black"
+                  });
                   showDetailsLink = document.getElementById('showDetails');
                   // showDetailsLink에 대한 click 이벤트 리스너 추가
                   if (showDetailsLink) {
@@ -142,25 +197,40 @@ function Home_user() {
               }
               infowindow.close();
             }
-      
+
             addClickListener();
-      
+
             document.querySelector('.detail_store_close').addEventListener('click', closeInfoWindow);
-            
+
           });
         })
         .catch(error => {
           console.error('세션 데이터를 가져오는데 실패함', error);
         });
-        
-    return () => {
-      if (showDetailsLink) {
-        showDetailsLink.removeEventListener('click', toggleFilterAndDetail);
-      }
-      closeInfoWindow(); 
-    };
+
+      return () => {
+        if (showDetailsLink) {
+          showDetailsLink.removeEventListener('click', toggleFilterAndDetail);
+        }
+        closeInfoWindow();
+      };
     });
   }, [showFilter, showDetail]);
+  useEffect(() => {
+    if (selectedShop) {
+      axios.get('/item/getItems')
+        .then(response => {
+          const menuitem = response.data;
+          setMenuData(menuitem);
+        })
+        .catch(error => {
+          console.error('메뉴 데이터를 가져오는데 실패함', error);
+        });
+    } else {
+      // 선택된 가게가 없을 경우 메뉴 데이터를 초기화
+      setMenuData([]);
+    }
+  }, [selectedShop]);
   /*필터 버튼(마이페이지) 누를떄 애니메션효과*/
   let [temp, setTemp] = useState(true);
   const filter_hidden = 'filter_hidden';
@@ -186,19 +256,19 @@ function Home_user() {
         } else {
           setUserInfo(userData);
           //로그인한 사용자가 상업자라면 공지사항 알림 가져오기
-          if(userData.role == "상업자"){
-           axios.get('/manager/notice/getalarm')
-               .then(response => {
-                 const alarmData = response.data;
-                   setNoticeAlarmInfo(alarmData);
-                   alarmData.map((alarm, index) => (
-                  console.log(alarm)  
-                 ));
-               })
-               .catch(error => {
-                 console.error('세션 데이터를 가져오는데 실패함', error);
-               });
-        }
+          if (userData.role == "상업자") {
+            axios.get('/manager/notice/getalarm')
+              .then(response => {
+                const alarmData = response.data;
+                setNoticeAlarmInfo(alarmData);
+                alarmData.map((alarm, index) => (
+                  console.log(alarm)
+                ));
+              })
+              .catch(error => {
+                console.error('세션 데이터를 가져오는데 실패함', error);
+              });
+          }
         }
       })
       .catch(error => {
@@ -231,7 +301,7 @@ function Home_user() {
   let [temp2, setTemp2] = useState(true);
   /*즐겨찾기*/
   let [temp3, setTemp3] = useState(true);
-  let [shopsData, setShopsData] = useState([]);
+  let [shopsData, setShopsData] = useState([{ shopname: "dsdsd", longitude: "127.1525182704408", latitude: "37.624922601488585" }]);
   let [fv_store, setFv_store] = useState([]);
   useEffect(() => {
     console.log(shopsData); // 상태가 변경될 때마다 호출됨
@@ -246,7 +316,8 @@ function Home_user() {
   let [search_switch1, setSearch_switch1] = useState(true);
   let [search_switch2, setSearch_switch2] = useState(false);
   let [tapmenu, setTapmenu] = useState(true);
-
+  const [selectedMenuItem, setSelectedMenuItem] = useState(null);
+  const [quantity, setQuantity] = useState('');
   return (
     <div className="App">
       <div className="home_user_App">
@@ -338,7 +409,7 @@ function Home_user() {
               <div style={{ width: "1%", height: "100%" }} ></div>
 
               <div className='detail_store' style={{ width: "21%", borderRadius: "20px", height: "100%", boxShadow: "3px 3px 3px 3px gray" }}>
-                <div style={{ width: "394px", height: "90px", marginTop: "10px", borderBottom: "1px solid gray" }}>
+                <div style={{ width: "430px", height: "90px", marginTop: "10px", borderBottom: "1px solid gray" }}>
                   <div className='detail_store_close' style={{ position: "absolute", top: "50px", right: "370px", fontSize: "25px", cursor: "pointer" }} onClick={() => {
                     setShowFilter(!showFilter);
                     setShowDetail(!showDetail);
@@ -367,14 +438,20 @@ function Home_user() {
                       }
                     }}> menu </a>
                   </div>
-                  <div className={`find_text_id ${tapmenu == true ? "" : "tapmenu_hidden"}`} >
-                    <div className='detail_store_img'></div>
+                  <div className={`find_text_id ${tapmenu == true ? "" : "tapmenu_hidden"}`}>
+                    <div className='detail_store_img'><img src={shopInfo.imagefilename}></img></div>
                     <div className='detail_store_name' style={{ marginTop: "20px", borderTop: "1px solid rgb(225, 223, 223)", fontSize: "28px", fontWeight: "600", textAlign: "center" }}><span>{shopInfo.shopName}</span></div>
-                    <div style={{ marginTop: "8px", marginBottom: "10px", textAlign: "center" }}><span style={{ fontSize: "20px", fontWeight: "600" }}>평점 : </span><span style={{ fontSize: "20px", color: "gray" }}>/5</span><StarBorderIcon style={{ marginBottom: "-2px" }}></StarBorderIcon></div>
+                    <div style={{ marginTop: "8px", marginBottom: "10px", textAlign: "center" }}><span style={{ fontSize: "20px", fontWeight: "600" }}>평점 : {shopInfo.rating}</span><span style={{ fontSize: "20px", color: "gray" }}>/5</span><StarBorderIcon style={{ marginBottom: "-2px" }}></StarBorderIcon></div>
                     <div style={{ paddingBottom: "20px", borderBottom: "1px solid rgb(225, 223, 223)", textAlign: "center", fontSize: "20px" }}></div>
-                    <div style={{ textAlign: "left", fontSize: "20px", marginTop: "10px", borderBottom: "1px solid rgb(225, 223, 223)", paddingBottom: "10px" }}><WebAssetIcon style={{ marginLeft: "40px", marginBottom: "-6px", marginRight: "10px" }}></WebAssetIcon><a href="https://www.naver.com" style={{ textDecoration: "underline", color: "blue" }}></a></div>
-                    <div style={{ textAlign: "left", fontSize: "20px", marginTop: "10px", borderBottom: "1px solid rgb(225, 223, 223)", paddingBottom: "10px" }}> <CallIcon style={{ marginLeft: "40px", marginBottom: "-6px", marginRight: "10px" }}></CallIcon><a></a></div>
-                    <div><button className="fv_btn"><StarBorderIcon style={{fontSize:"xxLarger",marginBottom:"-4px",marginRight:"15px"}}></StarBorderIcon><span>즐겨찾기</span></button></div>
+                    <div style={{ textAlign: "left", fontSize: "20px", marginTop: "10px", borderBottom: "1px solid rgb(225, 223, 223)", paddingBottom: "10px" }}><WebAssetIcon style={{ marginLeft: "40px", marginBottom: "-6px", marginRight: "10px" }}></WebAssetIcon><a href="https://www.naver.com" style={{ textDecoration: "underline", color: "blue" }}>{shopInfo.shopwesite}</a></div>
+                    <div style={{ textAlign: "left", fontSize: "20px", marginTop: "10px", borderBottom: "1px solid rgb(225, 223, 223)", paddingBottom: "10px" }}> <CallIcon style={{ marginLeft: "40px", marginBottom: "-6px", marginRight: "10px" }}></CallIcon><a>{shopInfo.shoptel}</a></div>
+                    <div><button className="fv_btn" onClick={() => {
+                      if (selectedShop) {
+                        setShopsData((prevShopsData) => [...prevShopsData, selectedShop]);
+                        window.alert("가게가 즐겨찾기에 추가 되었습니다.");
+                      }
+                    }
+                    }><StarBorderIcon style={{ fontSize: "xxLarger", marginBottom: "-4px", marginRight: "15px" }}></StarBorderIcon><span>즐겨찾기</span></button></div>
                     {/* <div className='point' style={{marginTop:"10px", marginRight:"110px"}}> <span style={{fontSize:"18px", fontWeight:"600", paddingRight:"20px"}}> 평점 : </span> {[0,1,2,3,4].map((index) => (
                       <StarRateIcon
                         style={{marginBottom:"-4px"}}
@@ -386,8 +463,104 @@ function Home_user() {
                     </div>
                     {console.log(score)} */}
                   </div>
-                  <div className={`find_text_pw ${tapmenu == true ? "tapmenu_hidden" : ""}`} >
-
+                  <div className={`find_text_pw ${tapmenu == true ? "tapmenu_hidden" : ""}`}>
+                    <ul>
+                      <div style={{ marginTop: "80px" }}></div>
+                      {menuData.map((menuitem, index) => (
+                        <li key={index} style={{ width: "100%", height: "220px", marginLeft: "-20px", marginTop: "20px", borderBottom: "1px solid #eae7e7" }}>
+                          <div style={{ backgroundColor: "blue", width: "37%", height: "180px", float: "left", borderRadius: "20px", marginRight: "10px" }}>{menuitem.image}</div>
+                          <div style={{ width: "45%", marginLeft: "125px", fontSize: "30px", fontWeight: "600", textAlign: "left", paddingLeft: "20px", paddingTop: "10px", cursor: "pointer" }}><span onClick={() => {
+                            setTimeout(() => {
+                              setSelectedMenuItem(menuitem);
+                              setCViewVisible(true);
+                            }, 100);
+                          }}>{menuitem.itemname}</span></div>
+                          <div style={{ width: "55%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", color: "rgb(150, 150, 150)" }}>{menuitem.itemnotice}</div>
+                          <div style={{ width: "100%", marginTop: "10px", marginLeft: "-25px" }}><AccessAlarmIcon style={{ marginBottom: "-15px" }}></AccessAlarmIcon> {menuitem.starttime} ~ </div>
+                          <div style={{ width: "100%", marginLeft: "-10px" }}><span>{menuitem.endtime}</span></div>
+                          <div style={{ marginLeft: "-80px", width: "100%", height: "40px", lineHeight: "40px" }}><span style={{ textAlign: "right", textDecoration: "line-through", fontSize: "20px", fontWeight: "600", color: "rgb(150, 150, 150)", marginRight: "5px" }}>{menuitem.cost}</span><span style={{ fontSize: "25px", fontWeight: "600", color: "Red" }}>{menuitem.salecost}원</span></div>
+                          <button style={{ width: "150px", height: "40px", borderRadius: "20px", backgroundColor: "black", color: "white", fontSize: "18px", fontWeight: "600", float: "right" }} onClick={() => {
+                            setTimeout(() => {
+                              setSelectedMenuItem(menuitem);
+                              setReViewVisible(true);
+                            }, 100);
+                          }}><AddShoppingCartIcon style={{ marginBottom: "-5px", marginRight: "5px" }}></AddShoppingCartIcon>예약하기</button>
+                        </li>
+                      ))}
+                    </ul>
+                    <div className={`c_view ${cViewVisible ? 'c_view_visible' : ''}`}>
+                      <div className="c_view_close" onClick={() => {
+                        setTimeout(() => {
+                          setCViewVisible(false);
+                        }, 100)
+                        setSelectedMenuItem(null);
+                      }}> </div>
+                      <div style={{ marginTop: "30px" }}>
+                        {selectedMenuItem && (
+                          <div>
+                            <div style={{ width: "98%", height: "280px", backgroundColor: "white", borderRadius: "30px", boxShadow: "inset 0 10px 10px -10px #333,inset 0 -10px 10px -10px #333" }}></div>
+                            <div style={{ width: "85%", height: "auto", border: "1px solid rgb(150,150,150)", borderRadius: "7px", marginTop: "-20px", marginLeft: "30px", backgroundColor: "white" }}>
+                              <div style={{ margin: "20px 0px", paddingBottom: "20px", borderBottom: "1px solid rgb(195, 192, 192)" }}>
+                                <span style={{ fontSize: "35px", fontWeight: "600"}}>{selectedMenuItem.itemname}</span>
+                              </div>
+                              <div style={{ paddingBottom: "10px",  borderBottom: "1px solid rgb(195, 192, 192)"}}>
+                                <div style={{paddingBottom:"10px"}}>
+                                <span style={{fontSize: "25px", fontWeight: "600"}}>가격 : </span><span style={{ textAlign: "right", textDecoration: "line-through", fontSize: "20px", fontWeight: "600", color: "rgb(150, 150, 150)", marginRight: "5px" }}>{selectedMenuItem.cost}</span>
+                                <span style={{ fontSize: "25px", fontWeight: "600", color: "Red" }}>{selectedMenuItem.salecost}원</span>
+                                </div>
+                                <button style={{ width: "150px", height: "50px", borderRadius: "20px", backgroundColor: "black", color: "white", fontSize: "20px", fontWeight: "600" }} onClick={() => {
+                                setTimeout(() => {
+                                  setSelectedMenuItem(selectedMenuItem);
+                                  setReViewVisible(true);
+                                  setCViewVisible(false);
+                                }, 100);
+                              }}><AddShoppingCartIcon style={{ marginBottom: "-5px", marginRight: "5px" }}></AddShoppingCartIcon>예약하기</button>
+                              <span style={{ fontSize: "18px", marginLeft: "10px" }}>남은 수량 : {selectedMenuItem.quantity} </span>
+                              </div>
+                              <div style={{fontSize:"18px",color:"rgb(95,95,95)",padding:"50px 0px",marginLeft:"40px",width:"80%",height:"auto",wordBreak:"break-all"}}>{selectedMenuItem.itemnotice}</div>
+                              <div>
+                              <div style={{ width: "100%", marginTop: "10px", marginLeft: "-5px",fontSize:"20px" }}><AccessAlarmIcon style={{ marginBottom: "-7px" }}></AccessAlarmIcon> {selectedMenuItem.starttime} ~ </div>
+                              <div style={{ width: "100%", marginLeft: "0",fontSize:"20px" }}><span>{selectedMenuItem.endtime}</span></div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div className={`re_view ${reViewvisible ? 're_view_visible' : ''}`}>
+                      <div className="re_view_close" onClick={() => {
+                        setTimeout(() => {
+                          setReViewVisible(false);
+                        }, 100)
+                        setSelectedMenuItem(null);
+                      }}> </div>
+                      {selectedMenuItem && (
+                        <div style={{marginTop:"30px"}}>
+                          <div style={{ width: "98%", height: "280px", backgroundColor: "white", borderRadius: "5px",border:"1px solid rgb(150,150,150)",padding:"10px 0px 0px 10px"}}>
+                          <div style={{ backgroundColor: "blue", width: "37%", height: "50%", borderRadius: "20px",float:"left"}}>{selectedMenuItem.image}
+                          </div>
+                          <div style={{float:"left",margin:"20px 0px 0px 20px"}}><span style={{fontSize:"25px",fontWeight:"600"}}>{selectedMenuItem.itemname}</span>
+                          </div>
+                          <div style={{ width: "55%",padding:"10px 0px 0px 20px",overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", color: "rgb(150, 150, 150)" }}>{selectedMenuItem.itemnotice}</div>
+                          <div style={{padding:"10px 0px 30px 0px"}}>
+                            <span style={{ textDecoration: "line-through", fontSize: "20px", fontWeight: "600", color: "rgb(150, 150, 150)", marginRight: "5px" }}>{selectedMenuItem.cost}</span>
+                            <span style={{ fontSize: "25px", fontWeight: "600", color: "Red" }}>{selectedMenuItem.salecost}원</span>
+                          </div>
+                          <div>
+                            <span>수량 : </span>
+                            <TextField
+                              placeholder='예약 하실 수량을 입력'
+                              required
+                              name="quantity"
+                              onChange={(e) => {
+                                  setQuantity(e.target.value);
+                              }}
+                            ></TextField>
+                          </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -561,9 +734,9 @@ function Home_user() {
             <span>편집</span><span style={{ fontSize: "18px", textAlign: "right" }}><RoomIcon fontSize="small" />{selectedStores.length}개</span>
           </div>
           <div className='divide' style={{ height: "10px" }}><span style={{ display: "none" }}>asd</span></div>
-          <div className="fv_store_list" style={{ marginTop: "20px",width:"100%",height:"70%" }}>
+          <div className="fv_store_list" style={{ marginTop: "20px", width: "100%", height: "70%" }}>
             {shopsData.map((store, index) => (
-              <div key={index} className="fv_store" style={{ display: "flex", borderBottom: "2px solid rgba(0,0,0,0.3)",position:"relative" }}>
+              <div key={index} className="fv_store" style={{ display: "flex", borderBottom: "2px solid rgba(0,0,0,0.3)", position: "relative" }}>
                 <div className='fv_store_image'>
                   <img src={"/shopimages/" + `${store.imagefilename}`} alt={store.imagefilename} style={{ backgroundCover: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat", width: "100%", height: "100px", float: "Left" }} />
                 </div>
@@ -595,12 +768,12 @@ function Home_user() {
                       setSelectedStores(prevStores => prevStores.filter(item => item.shopaddress !== address));
                     }
                   }}
-                style={{position:"absolute",top:"0",right:"0",width:"25px",height:"25px",cursor:"pointer"}}/>
+                  style={{ position: "absolute", top: "0", right: "0", width: "25px", height: "25px", cursor: "pointer" }} />
 
               </div>
             ))}
           </div>
-          <button className="remove_fv_Store" style={{marginTop:"10px",padding:"10px 50px",borderRadius:"50px",border:"1px solid rgba(0,0,0,0.3)",cursor:"pointer",fontWeight:"700",fontSize:"25px"}} onClick={()=>{
+          <button className="remove_fv_Store" style={{ marginTop: "10px", padding: "10px 50px", borderRadius: "50px", border: "1px solid rgba(0,0,0,0.3)", cursor: "pointer", fontWeight: "700", fontSize: "25px" }} onClick={() => {
             console.log(selectedStores);
             axios.post('/member/bookmark/delete', selectedStores
             ).then(response => {//데이터를받아오는게성공시 다른페이지호출
@@ -614,7 +787,7 @@ function Home_user() {
             })
             setTemp5(!temp5);
           }}>
-          삭제 {selectedStores.length}
+            삭제 {selectedStores.length}
           </button>
         </div>
 

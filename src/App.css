@@ -201,6 +201,106 @@ li {
   transform: translateX(440px);
 }
 /*가게 상세페이지*/
+.c_view {
+  width: 20%;
+  height:80%;
+  display: block;
+  background-color: white;
+  position: fixed;
+  bottom: 0;
+  padding: 10px;
+  transition: transform 0.3s ease-in-out;
+  transform: translateY(100%);
+  border: 1px solid rgb(195, 192, 192);
+  box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.5);
+  border-radius: 20px;
+  overflow-y: scroll;
+  overflow-x:hidden;
+}
+.c_view::-webkit-scrollbar {
+  width: 15px;
+}
+.c_view::-webkit-scrollbar-thumb {
+  background-color: rgb(67, 66, 66);
+  border-radius: 10px;
+}
+.c_view::-webkit-scrollbar-track {
+  background-color: rgb(225, 223, 223);
+  border-radius: 10px;
+}
+
+.c_view_visible {
+  transform: translateY(0);
+}
+
+.c_view > .c_view_close {
+  position: absolute;
+  margin-left: 52px;
+  width: 70%;
+  height: 2px;
+  background-color: rgb(195, 192, 192);
+  border:4px solid rgb(195, 192, 192);
+  border-radius: 30px;
+  cursor: pointer;
+}
+.re_view {
+  width: 20%;
+  height:80%;
+  display: block;
+  background-color: white;
+  position: fixed;
+  bottom: 0;
+  padding: 10px;
+  transition: transform 0.3s ease-in-out;
+  transform: translateY(100%);
+  border: 1px solid rgb(195, 192, 192);
+  box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.5);
+  border-radius: 20px;
+  overflow-y: scroll;
+  overflow-x:hidden;
+}
+.re_view::-webkit-scrollbar {
+  width: 15px;
+}
+.re_view::-webkit-scrollbar-thumb {
+  background-color: rgb(67, 66, 66);
+  border-radius: 10px;
+}
+.re_view::-webkit-scrollbar-track {
+  background-color: rgb(225, 223, 223);
+  border-radius: 10px;
+}
+
+.c_view_visible {
+  transform: translateY(0);
+}
+
+.re_view_visible {
+  transform: translateY(0);
+}
+
+.re_view > .re_view_close {
+  position: absolute;
+  margin-left: 52px;
+  width: 70%;
+  height: 2px;
+  background-color: rgb(195, 192, 192);
+  border:4px solid rgb(195, 192, 192);
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+
+/* 다른 스타일을 유지합니다. */
+
+/* 예약 확인 버튼 스타일링 (누르면 .c_view_visible 클래스 추가) */
+.find_text_pw button {
+  /* 버튼 스타일 유지 */
+}
+
+.find_text_pw button:focus + .c_view {
+  bottom: 0; /* 버튼이 클릭되면 .c_view가 올라옵니다. */
+}
 .detail_store_name{
   margin-top:15px;
 }
@@ -214,7 +314,7 @@ li {
   margin-top: 10px;
 }
 .select_btn1{
-  padding: 0px 67px 20px 67px;
+  padding: 10px 80px 20px 80px;
   color:rgb(195, 192, 192);
   font-size: 20px;
   border-bottom: 4px solid rgb(195, 192, 192);
@@ -226,7 +326,7 @@ li {
   border-bottom: 4px solid black;
 }
 .select_btn2{
-  padding: 0px 67px 20px 67px;
+  padding: 10px 67px 20px 67px;
   color:rgb(195, 192, 192);
   font-size: 20px;
   border-bottom:4px solid rgb(195, 192, 192);
