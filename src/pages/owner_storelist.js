@@ -514,18 +514,15 @@ useEffect(() => {
         formData.append('promotionText', store_promotionText);
         formData.append('shopWebsite', store_website);
 
-        // axios.post에 직접 formData를 전달
-        return (
-            axios.post('/shopRegistration', formData)
-                .then((response) => {
-                    window.alert("가게 등록 완료");
-                    window.location.href = response.data;
-                })
-                .catch(error => {
-                    window.alert(error.response.data.result);
-                    navigate("/owner");
-                })
-        );
+        axios.post('/shopRegistration', formData)
+            .then((response) => {
+                window.alert("가게 등록 완료");
+                window.location.href = response.data;
+            })
+            .catch(error => {
+                window.alert(error.response.data.result);
+                navigate("/owner");
+            })
     }
 }
 export default Owner_Storelist; 

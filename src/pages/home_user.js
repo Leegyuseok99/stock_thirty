@@ -23,6 +23,7 @@ import WebAssetIcon from '@mui/icons-material/WebAsset';
 import CallIcon from '@mui/icons-material/Call';
 import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import Marker4 from "./../img/marker4.gif";
 function Home_user() {
   /*마이페이지*/
   const [Image, setImage] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png")
@@ -30,14 +31,37 @@ function Home_user() {
   /*지도*/
   /*지도에 현 위치 불러오기*/
 
+  let [a, setA] = useState(0);
+  let [b, setB] = useState(0);
   const [showFilter, setShowFilter] = useState(true);
   const [showDetail, setShowDetail] = useState(false);
-  const [shopInfo, setShopInfo] = useState([{ shopname: "sdsds", longitude: "127.1525182704408", latitude: "37.624922601488585" }]);
-  const [selectedShop, setSelectedShop] = useState({ shopName: "sdsds" });
+  const [shopInfo, setShopInfo] = useState([]);
+  const [selectedShop, setSelectedShop] = useState(null);
   const mapContainer = useRef(null);
-  const [menuData, setMenuData] = useState([{ itemname: "ds", cost: "2000", salecost: "1000", quantity: "44", image: "", itemnotice: "dskskdksdkskdaksdkdasjkasfhkfasjkfasjsafjkfasjfasnasjkdhasndjksnkj", starttime: "2023-10-23-00:00:11", endtime: "2023-10-25-00:11:33" }, { itemname: "nds", cost: "3000", starttime: "" }, { itemname: "nds", cost: "3000", starttime: "" }]);
+  function getBarColor(trust) {
+    if (trust * 40 >= 360) {
+      return "#3498db";
+    } else if (trust * 40 >= 280) {
+      return "#27ae60";
+    } else if (trust * 40 >= 160) {
+      return "#f39c12";
+    } else if (trust * 40 >= 80) {
+      return "#f1c40f";
+    } else {
+      return "#e74c3c";
+    }
+  }
+  let [search_store_switch, setSearch_store_switch] = useState(true);
+  let [search_store_switch2, setSearch_store_switch2] = useState(true);
+  let [switch3, setSwitch3] = useState(0);
+
+  let [search_store, setSearch_store] = useState([]);
+  /*상세 페이지*/
+  const [selectedMenuItem, setSelectedMenuItem] = useState(null);
+  const [quantity, setQuantity] = useState('');
   const [cViewVisible, setCViewVisible] = useState(false);
   const [reViewvisible, setReViewVisible] = useState(false);
+  const [menuData, setMenuData] = useState([]);
   useEffect(() => {
     const { naver } = window;
     let showDetailsLink = null;
@@ -54,7 +78,6 @@ function Home_user() {
 
 
       function toggleFilterAndDetail() {
-        console.log(1111);
         setShowFilter(!showFilter);
         setShowDetail(!showDetail);
       }
@@ -67,69 +90,130 @@ function Home_user() {
       }
 
 
-      const markerPosition = new naver.maps.LatLng(position.coords.latitude, position.coords.longitude);
-      var marker = new naver.maps.Marker({
-        position: markerPosition,
-        map,
-      });
+      if (switch3 == 2) {
+        axios.get('/member/bookmark/check')
+          .then(response => {
+            let search_fv_store = response.data;
+            search_fv_store.forEach(shop => {
+              let markerPosition = new naver.maps.LatLng(shop.latitude, shop.longitude);
 
-      var contentString = [
-        `<div class="iw_inner"><a id="showDetails">${shopInfo.shopName = "sdsds"}</a></div>`
-      ].join(``);
-      infowindow = new naver.maps.InfoWindow({
-        content: contentString
-      });
-      function toggleFilterAndDetail() {
-        console.log(1111);
-        setShowFilter(!showFilter);
-        setShowDetail(!showDetail);
+              var marker = new naver.maps.Marker({
+                position: markerPosition,
+                map,
+                icon: {
+                  url: Marker4, //아이콘 경로
+                  size: new naver.maps.Size(48, 48), //아이콘 크기
+                  origin: new naver.maps.Point(0, 0),
+                  anchor: new naver.maps.Point(10, 40)
+                }
+              });
+              let copy = shop
+              setShopInfo(prevShopInfo => [...prevShopInfo, shop]);
+              var contentString = [
+                `<div class="iw_inner" id="showDetails" style="border-radius: 10px;">`,
+                `<div style="width: 50%; height: 90px; "><img src="/shopimages/${shop.imageFilename}" alt=${shop.imageFilename} style="width: 100%; height: 90px; border-radius:20px; border:4px solid transparent;"></img></div>`,
+                `<div><div style="margin-top: 15px; margin-left: 10px;"><a style="font-weight:700">${shop.shopName}</a></div>`,
+                `<div style="margin-top: 15px; margin-top: 10px;"><span className="ct3" style="font-weight:700">${shop.rating}/5</span></div></div>`,
+                `</div>`
+              ].join('');
+              var infowindow = new naver.maps.InfoWindow({
+                content: contentString
+              });
+              function toggleFilterAndDetail() {
+                setShowFilter(!showFilter);
+                setShowDetail(!showDetail);
+              }
 
-        console.log(selectedShop.shopName)
-      }
+              function addClickListener() {
+                // click 이벤트 리스너를 한 번만 추가
+                naver.maps.Event.addListener(marker, "click", function (e) {
+                  if (infowindow.getMap()) {
+                    infowindow.close();
+                    if (showDetailsLink) {
+                      showDetailsLink.removeEventListener('click', toggleFilterAndDetail);
+                    }
+                  } else {
+                    infowindow.open(map, marker);
+                    const clickedShopName = shop.shopName;
 
-      function addClickListener() {
-        // click 이벤트 리스너를 한 번만 추가
-        naver.maps.Event.addListener(marker, "click", function (e) {
-          if (infowindow.getMap()) {
-            infowindow.close();
-            if (showDetailsLink) {
-              showDetailsLink.removeEventListener('click', toggleFilterAndDetail);
-            }
-          } else {
-            infowindow.open(map, marker);
-            showDetailsLink = document.getElementById('showDetails');
-            // showDetailsLink에 대한 click 이벤트 리스너 추가
-            if (showDetailsLink) {
-              console.log(showDetailsLink);
-              showDetailsLink.clickListener = toggleFilterAndDetail;
-              showDetailsLink.addEventListener('click', showDetailsLink.clickListener);
-            }
+                    // shopInfo 배열에서 같은 이름을 가진 가게를 찾습니다.
+                    const selectedShopInfo = shopInfo.find(info => info.shopName === clickedShopName);
+
+                    // 만약 해당 정보를 찾았다면 selectedShopInfo에 그 정보가 저장됩니다.
+                    if (selectedShopInfo) {
+                      setSelectedShop(selectedShopInfo);
+                    }
+                    const iwInner = document.getElementById('showDetails');
+                    const image = iwInner.querySelector('img');
+                    const a = iwInner.querySelector("a");
+                    const ct3 = iwInner.querySelector("span");
+                    iwInner.addEventListener('mouseover', function () {
+                      image.style.backgroundColor = " #383737";
+                      a.style.color = "white";
+                      ct3.style.color = "white"
+                    });
+
+                    iwInner.addEventListener('mouseout', function () {
+                      image.style.backgroundColor = 'white';
+                      a.style.color = "black";
+                      ct3.style.color = "black"
+                    });
+                    showDetailsLink = document.getElementById('showDetails');
+                    // showDetailsLink에 대한 click 이벤트 리스너 추가
+                    if (showDetailsLink) {
+                      console.log(showDetailsLink);
+                      showDetailsLink.clickListener = toggleFilterAndDetail;
+                      showDetailsLink.addEventListener('click', showDetailsLink.clickListener);
+                    }
+                  }
+                });
+              }
+              function closeInfoWindow() {
+                if (showDetailsLink) {
+                  showDetailsLink.removeEventListener('click', toggleFilterAndDetail);
+                }
+                infowindow.close();
+              }
+
+              addClickListener();
+
+              document.querySelector('.detail_store_close').addEventListener('click', closeInfoWindow);
+
+            });
+          })
+          .catch(error => {
+
+            console.error('세션 데이터를 가져오는데 실패함', error);
+          });
+
+        setA(1);
+      } else if (switch3 == 1) {
+        axios.get('/getShop/filter', {
+          params: {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            distance: rangeValue,
+            unit: "km",
+            price: maxPrice,
+            time: endTime,
+            rating: maxStars.toFixed(1),
           }
-        });
-      }
-      function closeInfoWindow() {
-        if (showDetailsLink) {
-          showDetailsLink.removeEventListener('click', toggleFilterAndDetail);
-        }
-        infowindow.close();
-      }
-
-      addClickListener();
-
-      document.querySelector('.detail_store_close').addEventListener('click', closeInfoWindow);
-
-
-      // 예시 마커에 대한 클릭 리스너 추가
-      axios.get('/ShopMarker')
-        .then(response => {
-          const shopInfo = response.data;
-          shopInfo.forEach(shop => {
+        }).then(response => {//데이터를받아오는게성공시 다른페이지호출
+          let search_store = response.data;
+          console.log(response.data);
+          search_store.forEach(shop => {
             let markerPosition = new naver.maps.LatLng(shop.latitude, shop.longitude);
             var marker = new naver.maps.Marker({
               position: markerPosition,
               map,
+              icon: {
+                url: Marker4, //아이콘 경로
+                size: new naver.maps.Size(48, 48), //아이콘 크기
+                origin: new naver.maps.Point(0, 0),
+                anchor: new naver.maps.Point(10, 40)
+              }
             });
-
+            let copy = shop
             setShopInfo(prevShopInfo => [...prevShopInfo, shop]);
             var contentString = [
               `<div class="iw_inner" id="showDetails" style="border-radius: 10px;">`,
@@ -142,7 +226,6 @@ function Home_user() {
               content: contentString
             });
             function toggleFilterAndDetail() {
-              console.log(1111);
               setShowFilter(!showFilter);
               setShowDetail(!showDetail);
             }
@@ -203,11 +286,104 @@ function Home_user() {
             document.querySelector('.detail_store_close').addEventListener('click', closeInfoWindow);
 
           });
+        }).catch(error => {//데이터를받아오는게 실패시 오류 메세지출력하고 다시 login페이지 호출
+          window.alert(error.response.data.result);
         })
-        .catch(error => {
-          console.error('세션 데이터를 가져오는데 실패함', error);
-        });
+      } else if (switch3 == 0) {
+        // 예시 마커에 대한 클릭 리스너 추가
+        axios.get('/ShopMarker')
+          .then(response => {
+            const shopInfo1 = response.data;
+            shopInfo1.forEach(shop => {
+              let markerPosition = new naver.maps.LatLng(shop.latitude, shop.longitude);
+              var marker = new naver.maps.Marker({
+                position: markerPosition,
+                map,
+                icon: {
+                  url: Marker4, //아이콘 경로
+                  size: new naver.maps.Size(48, 48), //아이콘 크기
+                  origin: new naver.maps.Point(0, 0),
+                  anchor: new naver.maps.Point(10, 40)
+                }
+              });
+              let copy = shop
+              setShopInfo(prevShopInfo => [...prevShopInfo, shop]);
+              var contentString = [
+                `<div class="iw_inner" id="showDetails" style="border-radius: 10px;">`,
+                `<div style="width: 50%; height: 90px; "><img src="/shopimages/${shop.imageFilename}" alt=${shop.imageFilename} style="width: 100%; height: 90px; border-radius:20px; border:4px solid transparent;"></img></div>`,
+                `<div><div style="margin-top: 15px; margin-left: 10px;"><a style="font-weight:700">${shop.shopName}</a></div>`,
+                `<div style="margin-top: 15px; margin-top: 10px;"><span className="ct3" style="font-weight:700">${shop.rating}/5</span></div></div>`,
+                `</div>`
+              ].join('');
+              var infowindow = new naver.maps.InfoWindow({
+                content: contentString
+              });
+              function toggleFilterAndDetail() {
+                setShowFilter(!showFilter);
+                setShowDetail(!showDetail);
+              }
 
+              function addClickListener() {
+                // click 이벤트 리스너를 한 번만 추가
+                naver.maps.Event.addListener(marker, "click", function (e) {
+                  if (infowindow.getMap()) {
+                    infowindow.close();
+                    if (showDetailsLink) {
+                      showDetailsLink.removeEventListener('click', toggleFilterAndDetail);
+                    }
+                  } else {
+                    infowindow.open(map, marker);
+                    const clickedShopName = shop.shopName;
+
+                    // shopInfo 배열에서 같은 이름을 가진 가게를 찾습니다.
+                    const selectedShopInfo = shopInfo1.find(info => info.shopName === clickedShopName);
+
+                    // 만약 해당 정보를 찾았다면 selectedShopInfo에 그 정보가 저장됩니다.
+                    if (selectedShopInfo) {
+                      setSelectedShop(selectedShopInfo);
+                    }
+                    const iwInner = document.getElementById('showDetails');
+                    const image = iwInner.querySelector('img');
+                    const a = iwInner.querySelector("a");
+                    const ct3 = iwInner.querySelector("span");
+                    iwInner.addEventListener('mouseover', function () {
+                      image.style.backgroundColor = " #383737";
+                      a.style.color = "white";
+                      ct3.style.color = "white"
+                    });
+
+                    iwInner.addEventListener('mouseout', function () {
+                      image.style.backgroundColor = 'white';
+                      a.style.color = "black";
+                      ct3.style.color = "black"
+                    });
+                    showDetailsLink = document.getElementById('showDetails');
+                    // showDetailsLink에 대한 click 이벤트 리스너 추가
+                    if (showDetailsLink) {
+                      console.log(showDetailsLink);
+                      showDetailsLink.clickListener = toggleFilterAndDetail;
+                      showDetailsLink.addEventListener('click', showDetailsLink.clickListener);
+                    }
+                  }
+                });
+              }
+              function closeInfoWindow() {
+                if (showDetailsLink) {
+                  showDetailsLink.removeEventListener('click', toggleFilterAndDetail);
+                }
+                infowindow.close();
+              }
+
+              addClickListener();
+
+              document.querySelector('.detail_store_close').addEventListener('click', closeInfoWindow);
+
+            });
+          })
+          .catch(error => {
+            console.error('세션 데이터를 가져오는데 실패함', error);
+          });
+      }
       return () => {
         if (showDetailsLink) {
           showDetailsLink.removeEventListener('click', toggleFilterAndDetail);
@@ -215,11 +391,13 @@ function Home_user() {
         closeInfoWindow();
       };
     });
-  }, [showFilter, showDetail]);
+  }, [search_store_switch]);
   useEffect(() => {
     if (selectedShop) {
-      axios.get('/item/getItems')
+      axios.post('/item/getItems', selectedShop)
         .then(response => {
+          console.log(11);
+          console.log(response.data);
           const menuitem = response.data;
           setMenuData(menuitem);
         })
@@ -300,8 +478,9 @@ function Home_user() {
   let [nicname, setNicname] = useState("");
   let [temp2, setTemp2] = useState(true);
   /*즐겨찾기*/
+
   let [temp3, setTemp3] = useState(true);
-  let [shopsData, setShopsData] = useState([{ shopname: "dsdsd", longitude: "127.1525182704408", latitude: "37.624922601488585" }]);
+  let [shopsData, setShopsData] = useState([{ latitude: "37.65479", longitude: "127.2430", shopName: "나윤호" }, { latitude: "37.65522", longitude: "127.2459", shopName: "나ㅁㅇ윤호" }]);
   let [fv_store, setFv_store] = useState([]);
   useEffect(() => {
     console.log(shopsData); // 상태가 변경될 때마다 호출됨
@@ -312,12 +491,58 @@ function Home_user() {
 
   /*알림창*/
   let [temp4, setTemp4] = useState(true);
-  /*상세 페이지*/
+
+  /*상세페이지 꾸미기*/
   let [search_switch1, setSearch_switch1] = useState(true);
   let [search_switch2, setSearch_switch2] = useState(false);
   let [tapmenu, setTapmenu] = useState(true);
-  const [selectedMenuItem, setSelectedMenuItem] = useState(null);
-  const [quantity, setQuantity] = useState('');
+  /*예약확인*/
+  let [temp6, setTemp6] = useState(true);
+  let [regervation, setRegervation] = useState([]);
+  let [selectedregervationStores, setSelectedregervationStores] = useState([]);
+  let [search_switch3, setSearch_switch3] = useState(true);
+  let [search_switch4, setSearch_switch4] = useState(false);
+  let [tapmenu1, setTapmenu1] = useState(true);
+  let [confirmstate,setConfirmstate] = useState(null); 
+
+  /*필터 꾸미기*/
+  const [rangeValue, setRangeValue] = useState(0); // 초기 슬라이더 값
+
+  const handleRangeChange = (event) => {
+    setRangeValue(event.target.value);
+  }
+
+  const [maxPrice, setMaxPrice] = useState(0);
+  const [maxPrice1, setMaxPrice1] = useState(0);
+  function addCommasToNumber(number) {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+  const handleMaxPriceChange = (event) => {
+    const inputValue = event.target.value;
+
+    // 입력된 값이 0부터 100,000 사이일 때만 최대 가격을 업데이트
+    if (/^\d+$/.test(inputValue) && parseInt(inputValue, 10) >= 0 && parseInt(inputValue, 10) <= 59999) {
+      setMaxPrice(inputValue); // 문자열로 설정
+      setMaxPrice1(addCommasToNumber(inputValue)); // 문자열로 설정
+    }
+  }
+
+  const [endTime, setEndTime] = useState(0); // 초기값 설정 (예: 24시간 마감시간)
+
+  const handleEndTimeChange = (event) => {
+    const selectedTime = parseInt(event.target.value, 10);
+    setEndTime(selectedTime);
+  }
+
+  const [maxStars, setMaxStars] = useState(0); // 최대 별점
+
+
+  const handleMaxStarsChange = (event) => {
+    const selectedMaxStars = parseInt(event.target.value, 10);
+    setMaxStars(selectedMaxStars);
+  }
+  /*신뢰점수*/
+  let [trust_popup, setTrust_popup] = useState(true);
   return (
     <div className="App">
       <div className="home_user_App">
@@ -364,7 +589,23 @@ function Home_user() {
                   </a>
                 </li>
                 <li>
-                  <a href="" style={{ cursor: "pointer" }}>
+                  <a onClick={() => {
+                    if (a == 0) {
+                      setSwitch3(2);
+                      setSearch_store_switch(!search_store_switch);
+                      setA(1);
+                    } else if (a == 1) {
+                      if (b == 1) {
+                        setSwitch3(1);
+                        setSearch_store_switch(!search_store_switch);
+                        setB(0);
+                      } else if (b == 0) {
+                        setSwitch3(0);
+                        setSearch_store_switch(!search_store_switch);
+                      }
+                      setA(0);
+                    }
+                  }} style={{ cursor: "pointer" }}>
                     <StarBorderIcon fontSize="large" />
                   </a>
                 </li>
@@ -394,14 +635,103 @@ function Home_user() {
 
               <div style={{ width: "1%", height: "100%" }}></div>
 
-              <div className={`filter`} style={{ width: "22%", borderRadius: "50px", height: "100%" }}>
-                필터링
+              <div className={`filter`} style={{ width: "22%", borderRadius: "50px", height: "99%", backgroundColor: "white", boxShadow: '0px 2px 5px rgba(0, 0, 0, 1)' }}>
+                <div className='filter_title' style={{ paddingTop: "50px", height: "5%", fontWeight: "600", fontSize: "40px", textAlign: "center", marginBottom: "30px" }}>
+                  필터
+                </div>
+
+                <div className='filter_contents' style={{ height: "95%" }}>
+
+                  <div className='filter_distance' style={{ height: "19%" }}>
+                    <h1 style={{ fontWeight: "700", fontSize: "30px", textAlign: "left", marginLeft: "50px" }}>거리</h1>
+                    <div>
+                      <input
+                        type="range"
+                        min="0"
+                        max="5"
+                        step="0.1"
+                        value={rangeValue}
+                        onChange={handleRangeChange}
+                        style={{ width: "80%", height: "80%", accentColor: "black" }}
+                      />
+
+                      {rangeValue != 0 && (
+                        <p style={{ fontWeight: "600", fontSize: "25px", height: "12%" }}>
+                          선택된 거리: <span style={{ color: "gray", fontWeight: "700", fontSize: "40px" }}>{rangeValue} </span>Km</p>
+                      )}
+                    </div>
+                  </div>
+                  <div className='filter_price' style={{ height: "19%" }}>
+                    <h1 style={{ fontWeight: "700", fontSize: "30px", textAlign: "left", marginLeft: "50px" }}>가격</h1>
+                    <div >
+                      <input
+                        type="range"
+                        min="0"
+                        max="59999"
+                        step="1000"
+                        value={maxPrice}
+                        onChange={handleMaxPriceChange}
+                        style={{ width: "80%", height: "80%", accentColor: "black" }}
+                      />
+                      {maxPrice != 0 && (
+                        <p style={{ fontWeight: "600", fontSize: "25px", height: "12%" }}>
+                          최대 가격: <span style={{ color: "gray", fontWeight: "700", fontSize: "40px" }}>{maxPrice1} </span>원</p>
+                      )}
+                    </div>
+                  </div>
+
+
+                  <div className='filter_endtime' style={{ height: "19%" }}>
+                    <h1 style={{ fontWeight: "700", fontSize: "30px", textAlign: "left", marginLeft: "50px" }}>마감</h1>
+                    <div>
+                      <input
+                        type="range"
+                        min="0"
+                        max="24" // 예: 24시간 범위 설정
+                        step="0.5" // 1시간씩 이동
+                        value={endTime}
+                        onChange={handleEndTimeChange}
+                        style={{ width: "80%", height: "80%", accentColor: "black" }}
+                      />
+                      {endTime != 0 && (
+                        <p style={{ fontWeight: "600", fontSize: "25px", height: "12%" }}>
+                          마감까지 <span style={{ color: "gray", fontWeight: "700", fontSize: "40px" }}>{endTime}</span> 시간 이상 남음</p>
+                      )}
+                    </div>
+                  </div>
+                  <div className='filter_star' style={{ height: "19%" }}>
+                    <h1 style={{ fontWeight: "700", fontSize: "30px", textAlign: "left", marginLeft: "50px" }}>별점</h1>
+                    <div>
+                      <input
+                        type="range"
+                        min="0"
+                        max="5" // 0부터 5점까지 범위
+                        step="0.1" // 0.1씩 이동 (선택적)
+                        value={maxStars}
+                        onChange={handleMaxStarsChange}
+                        style={{ width: "80%", height: "80%", accentColor: "black" }}
+                      />
+                      {maxStars != 0 && (
+                        <p style={{ fontWeight: "600", fontSize: "25px", height: "12%" }}>
+                          최대 별점 : <span style={{ color: "gray", fontWeight: "700", fontSize: "40px" }}>{maxStars.toFixed(1)}</span></p>
+                      )}
+                    </div>
+                  </div>
+                  <div className='filter_btn'>
+                    <button className="remove_regervation_Store" style={{ marginTop: "5px", padding: "10px 50px", borderRadius: "50px", border: "1px solid rgba(0,0,0,0.3)", cursor: "pointer", fontWeight: "700", fontSize: "25px" }} onClick={() => {
+                      setSwitch3(1);
+                      setSearch_store_switch(!search_store_switch);
+                      setB(1);
+                    }}>적용</button>
+                  </div>
+                </div>
+
               </div>
 
               <div style={{ width: "1%", height: "100%" }} ></div>
 
               <div style={{ width: "76%", height: "100%" }}>
-                <div ref={mapContainer} style={{ width: "100%", height: "100%", borderRadius: "50px", boxShadow: '0px 0px 5px rgba(0, 0, 0, 0.2)' }}>
+                <div ref={mapContainer} style={{ width: "100%", height: "99%", borderRadius: "50px", boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.2)' }}>
 
                 </div>
               </div>
@@ -409,7 +739,7 @@ function Home_user() {
               <div style={{ width: "1%", height: "100%" }} ></div>
 
               <div className='detail_store' style={{ width: "21%", borderRadius: "20px", height: "100%", boxShadow: "3px 3px 3px 3px gray" }}>
-                <div style={{ width: "430px", height: "90px", marginTop: "10px", borderBottom: "1px solid gray" }}>
+                <div style={{ width: "394px", height: "90px", marginTop: "10px", borderBottom: "1px solid gray" }}>
                   <div className='detail_store_close' style={{ position: "absolute", top: "50px", right: "370px", fontSize: "25px", cursor: "pointer" }} onClick={() => {
                     setShowFilter(!showFilter);
                     setShowDetail(!showDetail);
@@ -438,20 +768,27 @@ function Home_user() {
                       }
                     }}> menu </a>
                   </div>
-                  <div className={`find_text_id ${tapmenu == true ? "" : "tapmenu_hidden"}`}>
-                    <div className='detail_store_img'><img src={shopInfo.imagefilename}></img></div>
+                  <div className={`find_text_id ${tapmenu == true ? "" : "tapmenu_hidden"}`} >
+                    <div className='detail_store_img'><img src={"/shopimages/" + `${shopInfo.imageFilename}`} alt={shopInfo.imageFilename}></img></div>
                     <div className='detail_store_name' style={{ marginTop: "20px", borderTop: "1px solid rgb(225, 223, 223)", fontSize: "28px", fontWeight: "600", textAlign: "center" }}><span>{shopInfo.shopName}</span></div>
                     <div style={{ marginTop: "8px", marginBottom: "10px", textAlign: "center" }}><span style={{ fontSize: "20px", fontWeight: "600" }}>평점 : {shopInfo.rating}</span><span style={{ fontSize: "20px", color: "gray" }}>/5</span><StarBorderIcon style={{ marginBottom: "-2px" }}></StarBorderIcon></div>
                     <div style={{ paddingBottom: "20px", borderBottom: "1px solid rgb(225, 223, 223)", textAlign: "center", fontSize: "20px" }}></div>
-                    <div style={{ textAlign: "left", fontSize: "20px", marginTop: "10px", borderBottom: "1px solid rgb(225, 223, 223)", paddingBottom: "10px" }}><WebAssetIcon style={{ marginLeft: "40px", marginBottom: "-6px", marginRight: "10px" }}></WebAssetIcon><a href="https://www.naver.com" style={{ textDecoration: "underline", color: "blue" }}>{shopInfo.shopwesite}</a></div>
-                    <div style={{ textAlign: "left", fontSize: "20px", marginTop: "10px", borderBottom: "1px solid rgb(225, 223, 223)", paddingBottom: "10px" }}> <CallIcon style={{ marginLeft: "40px", marginBottom: "-6px", marginRight: "10px" }}></CallIcon><a>{shopInfo.shoptel}</a></div>
+                    <div style={{ textAlign: "left", fontSize: "20px", marginTop: "10px", borderBottom: "1px solid rgb(225, 223, 223)", paddingBottom: "10px" }}><WebAssetIcon style={{ marginLeft: "40px", marginBottom: "-6px", marginRight: "10px" }}></WebAssetIcon><a href="https://www.naver.com" style={{ textDecoration: "underline", color: "blue" }}></a></div>
+                    <div style={{ textAlign: "left", fontSize: "20px", marginTop: "10px", borderBottom: "1px solid rgb(225, 223, 223)", paddingBottom: "10px" }}> <CallIcon style={{ marginLeft: "40px", marginBottom: "-6px", marginRight: "10px" }}></CallIcon><a></a></div>
                     <div><button className="fv_btn" onClick={() => {
                       if (selectedShop) {
-                        setShopsData((prevShopsData) => [...prevShopsData, selectedShop]);
-                        window.alert("가게가 즐겨찾기에 추가 되었습니다.");
+                        axios.post('/', selectedShop)
+                          .then((response) => {
+                            window.alert("즐겨찾기 추가 완료");
+                            window.location.href = response.data;
+                          })
+                          .catch(error => {
+                            window.alert(error.response.data.result);
+                          })
                       }
                     }
                     }><StarBorderIcon style={{ fontSize: "xxLarger", marginBottom: "-4px", marginRight: "15px" }}></StarBorderIcon><span>즐겨찾기</span></button></div>
+
                     {/* <div className='point' style={{marginTop:"10px", marginRight:"110px"}}> <span style={{fontSize:"18px", fontWeight:"600", paddingRight:"20px"}}> 평점 : </span> {[0,1,2,3,4].map((index) => (
                       <StarRateIcon
                         style={{marginBottom:"-4px"}}
@@ -501,26 +838,26 @@ function Home_user() {
                             <div style={{ width: "98%", height: "280px", backgroundColor: "white", borderRadius: "30px", boxShadow: "inset 0 10px 10px -10px #333,inset 0 -10px 10px -10px #333" }}></div>
                             <div style={{ width: "85%", height: "auto", border: "1px solid rgb(150,150,150)", borderRadius: "7px", marginTop: "-20px", marginLeft: "30px", backgroundColor: "white" }}>
                               <div style={{ margin: "20px 0px", paddingBottom: "20px", borderBottom: "1px solid rgb(195, 192, 192)" }}>
-                                <span style={{ fontSize: "35px", fontWeight: "600"}}>{selectedMenuItem.itemname}</span>
+                                <span style={{ fontSize: "35px", fontWeight: "600" }}>{selectedMenuItem.itemname}</span>
                               </div>
-                              <div style={{ paddingBottom: "10px",  borderBottom: "1px solid rgb(195, 192, 192)"}}>
-                                <div style={{paddingBottom:"10px"}}>
-                                <span style={{fontSize: "25px", fontWeight: "600"}}>가격 : </span><span style={{ textAlign: "right", textDecoration: "line-through", fontSize: "20px", fontWeight: "600", color: "rgb(150, 150, 150)", marginRight: "5px" }}>{selectedMenuItem.cost}</span>
-                                <span style={{ fontSize: "25px", fontWeight: "600", color: "Red" }}>{selectedMenuItem.salecost}원</span>
+                              <div style={{ paddingBottom: "10px", borderBottom: "1px solid rgb(195, 192, 192)" }}>
+                                <div style={{ paddingBottom: "10px" }}>
+                                  <span style={{ fontSize: "25px", fontWeight: "600" }}>가격 : </span><span style={{ textAlign: "right", textDecoration: "line-through", fontSize: "20px", fontWeight: "600", color: "rgb(150, 150, 150)", marginRight: "5px" }}>{selectedMenuItem.cost}</span>
+                                  <span style={{ fontSize: "25px", fontWeight: "600", color: "Red" }}>{selectedMenuItem.salecost}원</span>
                                 </div>
                                 <button style={{ width: "150px", height: "50px", borderRadius: "20px", backgroundColor: "black", color: "white", fontSize: "20px", fontWeight: "600" }} onClick={() => {
-                                setTimeout(() => {
-                                  setSelectedMenuItem(selectedMenuItem);
-                                  setReViewVisible(true);
-                                  setCViewVisible(false);
-                                }, 100);
-                              }}><AddShoppingCartIcon style={{ marginBottom: "-5px", marginRight: "5px" }}></AddShoppingCartIcon>예약하기</button>
-                              <span style={{ fontSize: "18px", marginLeft: "10px" }}>남은 수량 : {selectedMenuItem.quantity} </span>
+                                  setTimeout(() => {
+                                    setSelectedMenuItem(selectedMenuItem);
+                                    setReViewVisible(true);
+                                    setCViewVisible(false);
+                                  }, 100);
+                                }}><AddShoppingCartIcon style={{ marginBottom: "-5px", marginRight: "5px" }}></AddShoppingCartIcon>예약하기</button>
+                                <span style={{ fontSize: "18px", marginLeft: "10px" }}>남은 수량 : {selectedMenuItem.quantity} </span>
                               </div>
-                              <div style={{fontSize:"18px",color:"rgb(95,95,95)",padding:"50px 0px",marginLeft:"40px",width:"80%",height:"auto",wordBreak:"break-all"}}>{selectedMenuItem.itemnotice}</div>
+                              <div style={{ fontSize: "18px", color: "rgb(95,95,95)", padding: "50px 0px", marginLeft: "40px", width: "80%", height: "auto", wordBreak: "break-all" }}>{selectedMenuItem.itemnotice}</div>
                               <div>
-                              <div style={{ width: "100%", marginTop: "10px", marginLeft: "-5px",fontSize:"20px" }}><AccessAlarmIcon style={{ marginBottom: "-7px" }}></AccessAlarmIcon> {selectedMenuItem.starttime} ~ </div>
-                              <div style={{ width: "100%", marginLeft: "0",fontSize:"20px" }}><span>{selectedMenuItem.endtime}</span></div>
+                                <div style={{ width: "100%", marginTop: "10px", marginLeft: "-5px", fontSize: "20px" }}><AccessAlarmIcon style={{ marginBottom: "-7px" }}></AccessAlarmIcon> {selectedMenuItem.starttime} ~ </div>
+                                <div style={{ width: "100%", marginLeft: "0", fontSize: "20px" }}><span>{selectedMenuItem.endtime}</span></div>
                               </div>
                             </div>
                           </div>
@@ -535,28 +872,46 @@ function Home_user() {
                         setSelectedMenuItem(null);
                       }}> </div>
                       {selectedMenuItem && (
-                        <div style={{marginTop:"30px"}}>
-                          <div style={{ width: "98%", height: "280px", backgroundColor: "white", borderRadius: "5px",border:"1px solid rgb(150,150,150)",padding:"10px 0px 0px 10px"}}>
-                          <div style={{ backgroundColor: "blue", width: "37%", height: "50%", borderRadius: "20px",float:"left"}}>{selectedMenuItem.image}
-                          </div>
-                          <div style={{float:"left",margin:"20px 0px 0px 20px"}}><span style={{fontSize:"25px",fontWeight:"600"}}>{selectedMenuItem.itemname}</span>
-                          </div>
-                          <div style={{ width: "55%",padding:"10px 0px 0px 20px",overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", color: "rgb(150, 150, 150)" }}>{selectedMenuItem.itemnotice}</div>
-                          <div style={{padding:"10px 0px 30px 0px"}}>
-                            <span style={{ textDecoration: "line-through", fontSize: "20px", fontWeight: "600", color: "rgb(150, 150, 150)", marginRight: "5px" }}>{selectedMenuItem.cost}</span>
-                            <span style={{ fontSize: "25px", fontWeight: "600", color: "Red" }}>{selectedMenuItem.salecost}원</span>
-                          </div>
-                          <div>
-                            <span>수량 : </span>
-                            <TextField
-                              placeholder='예약 하실 수량을 입력'
-                              required
-                              name="quantity"
-                              onChange={(e) => {
+                        <div style={{ marginTop: "30px" }}>
+                          <div style={{ width: "98%", height: "280px", backgroundColor: "white", borderRadius: "5px", border: "1px solid rgb(150,150,150)", padding: "10px 0px 0px 10px" }}>
+                            <div style={{ backgroundColor: "blue", width: "37%", height: "50%", borderRadius: "20px", float: "left" }}>{selectedMenuItem.image}
+                            </div>
+                            <div style={{ float: "left", margin: "20px 0px 0px 20px" }}><span style={{ fontSize: "25px", fontWeight: "600" }}>{selectedMenuItem.itemname}</span>
+                            </div>
+                            <div style={{ width: "55%", padding: "10px 0px 0px 20px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", color: "rgb(150, 150, 150)" }}>{selectedMenuItem.itemnotice}</div>
+                            <div style={{ padding: "10px 0px 30px 0px" }}>
+                              <span style={{ textDecoration: "line-through", fontSize: "20px", fontWeight: "600", color: "rgb(150, 150, 150)", marginRight: "5px" }}>{selectedMenuItem.cost}</span>
+                              <span style={{ fontSize: "25px", fontWeight: "600", color: "Red" }}>{selectedMenuItem.salecost}원</span>
+                            </div>
+                            <div>
+                              <span>수량 : </span>
+                              <TextField
+                                placeholder='예약 하실 수량을 입력'
+                                required
+                                name="quantity"
+                                onChange={(e) => {
                                   setQuantity(e.target.value);
-                              }}
-                            ></TextField>
-                          </div>
+                                }}
+                              ></TextField>
+                            </div>
+                            <button className="addreservation_sub" onClick={() => {
+                              const formData = new FormData();
+
+                              formData.append('memberidx', userInfo.member);
+                              formData.append('shopidx', selectedShop.shopidx);
+                              formData.append('itemidx', selectedMenuItem.itemidx);
+                              formData.append('quantity', quantity);
+                              axios.post('/shopRegistration', formData)
+                                .then((response) => {
+                                  window.alert("가게 등록 완료");
+                                  window.location.href = response.data;
+                                })
+                                .catch(error => {
+                                  window.alert(error.response.data);
+                                })
+                              setReViewVisible(false);
+                              setSelectedMenuItem(null);
+                            }}><a>[ SUBMIT ]</a></button>
                           </div>
                         </div>
                       )}
@@ -564,6 +919,7 @@ function Home_user() {
                   </div>
                 </div>
               </div>
+
 
               <div style={{ width: "1%", height: "100%" }} ></div>
             </div>
@@ -617,10 +973,30 @@ function Home_user() {
 
           </div>
           <div id="popsec2" style={{ cursor: "pointer" }}>
-            <a href="" ><span>예약 확인</span></a>
+            <a onClick={() => {
+              setConfirmstate("wait");
+              axios.get('/item/reservation/getreservations')
+                .then(response => {
+                  setRegervation(response.data);
+                  setTemp6(!temp6);
+                })
+                .catch(error => {
+                  console.error('세션 데이터를 가져오는데 실패함', error);
+                });
+
+              setTemp6(!temp6);
+            }} style={{ cursor: "pointer" }} ><span>예약 확인</span></a>
           </div>
-          <div id="popsec3" style={{ cursor: "pointer" }}>
-            <a href=""> <span>내 신뢰점수</span></a>
+          <div id="popsec3" style={{ cursor: "pointer", alignItems: "center", position: "relative" }}>
+            <div style={{ alignItems: "center" }}>
+              <span onClick={() => {
+                setTrust_popup(!trust_popup);
+              }}><span style={{ fontSize: "28px" }}></span>신뢰도</span>
+              <div className={`${trust_popup == true ? "trust_popup" : null}`} style={{ backgroundColor: "white", height: `${10 * 64.8}px`, width: "30px", borderRadius: "50px", position: "absolute", top: "-438px", right: "-58px", boxShadow: "5px 5px 5px 5px gray", border: "1px solid black" }}>
+                <div>{userInfo.trust}</div>
+                <div style={{ backgroundColor: getBarColor(userInfo.trust), borderRadius: "20px", height: `${userInfo.trust * 60}px`, width: "20px", margin: "0 auto", marginTop: "5px", position: "absolute", bottom: "5px", left: "5px" }}></div> {/* 연두색 바 */}
+              </div>
+            </div>
           </div>
           <div id="popsec2" style={{ cursor: "pointer" }}>
             <a href="owner_main_page"><span>내 가게</span></a>
@@ -694,7 +1070,7 @@ function Home_user() {
             setTemp3(!temp3);
           }}>X</span>
           <div className='fv_view_title'>
-            <span>내 장소</span><span style={{ fontSize: "18px", textAlign: "right" }}><RoomIcon fontSize="small" />{shopsData.length}개</span>
+            <span>즐겨찾기</span><span style={{ fontSize: "18px", textAlign: "right" }}><RoomIcon fontSize="small" />{shopsData.length}개</span>
           </div>
 
           <div className='fv_view_edit' style={{ border: "2px solid gray", marginLeft: "210px", color: "rgba(0,0,0,0.8)" }} >
@@ -742,7 +1118,7 @@ function Home_user() {
                 </div>
                 <div style={{ width: "1000px", marginTop: "10px", lineHeight: "1.8" }}>
                   <div className='fv_store_name' style={{ textAlign: "left" }}>
-                    {store.shopName}
+                    {store.shopname}
                   </div>
                   <div className='fv_store_address'>
                     {store.shopaddress}
@@ -802,14 +1178,14 @@ function Home_user() {
             {combinedAlarms.map((alarm, index) => (
               <div key={index} className="fv_store" style={{ display: "block", borderBottom: "2px solid rgba(0,0,0,0.3)" }}>
                 <a style={{ color: "red", fontSize: "25px" }}>new &nbsp;</a>
-                {alarm.object.shopName ? (
-                  <a style={{ fontSize: "25px" }}><b>{alarm.object.shopName}</b></a>
+                {alarm.shopname ? (
+                  <a style={{ fontSize: "25px" }}><b>{alarm.shopname}</b></a>
                 ) : (
-                  <a style={{ fontSize: "25px" }}><b>{alarm.object.title}</b></a>
+                  <a style={{ fontSize: "25px" }}><b>{alarm.title}</b></a>
                 )}
                 <br></br>
                 <a style={{ fontSize: "20px" }}>
-                  {alarm.object.shopName
+                  {alarm.shopname
                     ? "새 할인상품이 등록되었습니다."
                     : "새 공지사항이 등록되었습니다."}
                   <a style={{ color: "red", fontSize: "20px", float: "right" }}>
@@ -819,9 +1195,193 @@ function Home_user() {
               </div>
             ))}
           </div>
-
         </div>
 
+        <div id={`${temp6 == true ? "regervation_none" : "regervation_view"}`}>
+          <span className="regervation_close" style={{ fontSize: "25px", position: "absolute", top: "10px", right: "19px", cursor: "pointer", padding: "0px 10px", fontSize: "25px", fontWeight: "700" }} onClick={() => {
+            setTemp6(!temp6);
+            setSearch_switch3(true);
+            setSearch_switch4(false);
+            setTapmenu1(false);
+          }}>X</span>
+          <div className='regervation_title' style={{ borderBottom: "2px solid rgba(0,0,0,0.3)", paddingBottom: "30px" }}>
+            <span>예약 내역</span>
+          </div>
+          <div className='reservation_check'>
+            <div className='reservation_select' style={{ position: "fixed" }}>
+              <a className={`res_select_btn1 ${search_switch3 == true ? "res_select_btn1_open" : ""}`} onClick={() => {
+                if (search_switch4 == true) {
+                  setSearch_switch3(true);
+                  setSearch_switch4(false);
+                  setTapmenu1(true);
+                  setConfirmstate("wait");
+                  {console.log(confirmstate)}
+                  axios.post('/', {
+                    memberidx:memberidx,
+                    confirm:confirmstate
+                  })
+                      .then((response) => {
+                        window.location.href = response.data;
+                      })
+                      .catch(error => {
+                        window.alert(error.response.data.result);
+                      })
+                  }
+                 else {
+
+                }
+              }}> waiting </a>
+              <a className={`res_select_btn2 ${search_switch4 == true ? "res_select_btn2_open" : ""}`} onClick={() => {
+                if (search_switch3 == true) {
+                  setSearch_switch3(false);
+                  setSearch_switch4(true);
+                  setTapmenu1(false);
+
+                  setConfirmstate("true");
+                  {console.log(confirmstate)}
+                  axios.post('/', {
+                    memberidx:memberidx,
+                    confirm:confirmstate
+                  })
+                      .then((response) => {
+                        window.location.href = response.data;
+                      })
+                      .catch(error => {
+                        window.alert(error.response.data.result);
+                      })
+                  }
+                 else {
+
+                }
+              }}> complete </a>
+            </div>
+            <div className={`find_text_id ${tapmenu1 == true ? "" : "tapmenu1_hidden"}`} >
+              <div className="regervation_content" style={{ width: "90%", height: "70%", paddingTop:"20px",margin: "0 auto" }}>
+                {regervation.map((store, index) => (
+                  <div key={index} className="regervation_store" style={{ display: "flex", borderBottom: "2px solid rgba(0,0,0,0.3)", position: "relative" }}>
+                    <div className='regervation_store_image'>
+                      <img src={"/itemimages/" + `${store.image}`} alt={store.imagefilename} style={{ backgroundCover: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat", width: "100%", height: "100px", float: "Left" }} />
+                    </div>
+                    <div style={{ width: "1000px", marginTop: "10px", lineHeight: "1.5" }}>
+                      <div className='regervation_store_name' style={{ textAlign: "left" }}>
+                        {store.shopname}
+                      </div>
+                      <div className='fv_store_address' style={{ fontSize: "15px" }}>
+                        {store.shopaddress}
+                      </div>
+
+                      <div className='fv_store_address' style={{ display: "flex" }}>
+                        <div>
+                          {store.itemname}
+                        </div>
+                        <div style={{ marginLeft: "20px" }}>
+                          수량: {store.number}
+                          {confirmstate}
+                        </div>
+                      </div>
+                    </div>
+
+                    <input
+                      type="checkbox"
+                      checked={selectedregervationStores.includes(store)}
+                      onChange={(e) => {
+                        let isChecked = e.target.checked;
+                        let address = store.shopaddress;
+                        if (isChecked) {
+                          if (selectedregervationStores.some(item => item.shopaddress === address)) {
+                            // 이미 선택된 주소인 경우, 아무것도 하지 않음
+                          } else {
+                            // 새로운 배열을 생성하여 선택된 항목을 추가
+                            let copy = [...selectedregervationStores, store];
+                            setSelectedregervationStores(copy);
+                          }
+                        } else {
+                          // 선택 해제된 경우, 해당 주소를 가진 항목을 배열에서 제거
+                          setSelectedregervationStores(prevStores => prevStores.filter(item => item.shopaddress !== address));
+                        }
+                      }}
+                      style={{ position: "absolute", top: "0", right: "0", width: "25px", height: "25px", cursor: "pointer" }} />
+
+                  </div>
+                ))}
+              </div>
+          </div>
+          <div className={`find_text_pw ${tapmenu1 == true ? "tapmenu1_hidden" : ""}`}>
+          <div className="regervation_content" style={{ width: "90%", height: "70%", paddingTop:"20px",margin: "0 auto" }}>
+                {regervation.map((store, index) => (
+                  <div key={index} className="regervation_store" style={{ display: "flex", borderBottom: "2px solid rgba(0,0,0,0.3)", position: "relative" }}>
+                    <div className='regervation_store_image'>
+                      <img src={"/itemimages/" + `${store.image}`} alt={store.imagefilename} style={{ backgroundCover: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat", width: "100%", height: "100px", float: "Left" }} />
+                    </div>
+                    <div style={{ width: "1000px", marginTop: "10px", lineHeight: "1.5" }}>
+                      <div className='regervation_store_name' style={{ textAlign: "left" }}>
+                        {store.shopname}
+                      </div>
+                      <div className='fv_store_address' style={{ fontSize: "15px" }}>
+                        {store.shopaddress}
+                      </div>
+
+                      <div className='fv_store_address' style={{ display: "flex" }}>
+                        <div>
+                          {store.itemname}
+                        </div>
+                        <div style={{ marginLeft: "20px" }}>
+                          수량: {store.number}
+                          {confirmstate}
+                        </div>
+                      </div>
+                    </div>
+
+                    <input
+                      type="checkbox"
+                      checked={selectedregervationStores.includes(store)}
+                      onChange={(e) => {
+                        let isChecked = e.target.checked;
+                        let address = store.shopaddress;
+                        if (isChecked) {
+                          if (selectedregervationStores.some(item => item.shopaddress === address)) {
+                            // 이미 선택된 주소인 경우, 아무것도 하지 않음
+                          } else {
+                            // 새로운 배열을 생성하여 선택된 항목을 추가
+                            let copy = [...selectedregervationStores, store];
+                            setSelectedregervationStores(copy);
+                          }
+                        } else {
+                          // 선택 해제된 경우, 해당 주소를 가진 항목을 배열에서 제거
+                          setSelectedregervationStores(prevStores => prevStores.filter(item => item.shopaddress !== address));
+                        }
+                      }}
+                      style={{ position: "absolute", top: "0", right: "0", width: "25px", height: "25px", cursor: "pointer" }} />
+
+                  </div>
+                ))}
+              </div>
+          </div>
+          </div>
+          
+          
+          <button className="remove_regervation_Store" style={{ marginTop: "20px", padding: "10px 50px", borderRadius: "50px", border: "1px solid rgba(0,0,0,0.3)", cursor: "pointer", fontWeight: "700", fontSize: "25px" }} onClick={() => {
+            console.log(selectedregervationStores);
+            axios.post('/item/reservation/cancel', selectedregervationStores
+            ).then(response => {//데이터를받아오는게성공시 다른페이지호출
+              window.alert("취소 완료");
+              axios.get('/item/reservation/getreservations')
+                .then(response => {
+                  setRegervation(response.data);
+                  setSelectedregervationStores([]);
+                })
+                .catch(error => {
+                  console.error('세션 데이터를 가져오는데 실패함', error);
+                });
+
+            }).catch(error => {//데이터를받아오는게 실패시 오류 메세지출력하고 다시 login페이지 호출
+              setSelectedregervationStores([]);
+              window.alert(error.response.data.result);
+            })
+          }}>
+            삭제 {selectedregervationStores.length}
+          </button>
+        </div>
       </div>
     </div>
   );

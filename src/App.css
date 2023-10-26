@@ -313,6 +313,50 @@ li {
   height: 50px;
   margin-top: 10px;
 }
+/*예약 확인*/
+.reservation_select{
+  margin-left: 10px;
+}
+.res_select_btn1{
+  padding: 10px 80px 20px 80px;
+  color:rgb(195, 192, 192);
+  font-size: 20px;
+  border-bottom: 4px solid rgb(195, 192, 192);
+  cursor: pointer;
+  background-color: white;
+}
+.res_select_btn1_open{  
+  color:black;
+  border-bottom: 4px solid black;
+}
+.res_select_btn2{
+  padding: 10px 80px 20px 80px;
+  color:rgb(195, 192, 192);
+  font-size: 20px;
+  border-bottom:4px solid rgb(195, 192, 192);
+  cursor: pointer;
+  background-color: white;
+}
+.res_select_btn2_open{
+  color:black;
+  border-bottom: 4px solid black;
+}
+.reservation_check{
+  height: 68%;
+  overflow-y: scroll;
+  overflow-x:hidden;
+}
+.reservation_check::-webkit-scrollbar {
+  width: 15px;
+}
+.reservation_check::-webkit-scrollbar-thumb {
+  background-color: rgb(67, 66, 66);
+  border-radius: 10px;
+}
+.reservation_check::-webkit-scrollbar-track {
+  background-color: rgb(225, 223, 223);
+  border-radius: 10px;
+}
 .select_btn1{
   padding: 10px 80px 20px 80px;
   color:rgb(195, 192, 192);
@@ -835,6 +879,121 @@ border:1px solid rgb(158, 154, 154);
 .remove_fv_Store:hover{
 color:white;
 background-color: gray;
+}
+/*예약확인*/
+#regervation_none{
+  display: none;
+  width:700px;
+  height: 550px;
+  padding:20px;
+  top:50%;
+  left:50%;
+  transform: translate(-50%,-50%);
+  box-sizing: border-box;
+  position: absolute;
+  background-color: white;
+  border-radius: 10px;
+  border:3px solid rgba(59, 59, 59, 0.3);
+}
+#regervation_view{
+  width:550px;
+  height: 650px;
+  padding:20px;
+  top:50%;
+  left:50%;
+  transform: translate(-50%,-50%);
+  box-sizing: border-box;
+  position: absolute;
+  background-color: white;
+  border-radius: 20px;
+  z-index: 1000;
+  border:1px solid black;
+  box-shadow: 5px 5px 5px 5px gray;
+}
+.regervation_title{
+  font-size: 30px;
+  margin-bottom: 30px;
+  margin-left: 10px;
+}
+.regervation_store_image{
+  width:500px;
+}
+.remove_regervation_Store{
+  background-color: white;
+}
+.remove_regervation_Store:hover{
+  color:white;
+  background-color: gray;
+  }
+  /*예약리스트*/
+.reservation_close{
+  display: none;
+}
+.reservation_list_view{
+  width:600px;
+  height: 700px;
+  padding:20px;
+  top:50%;
+  left:50%;
+  transform: translate(-50%,-50%);
+  box-sizing: border-box;
+  position: absolute;
+  background-color: white;
+  border-radius: 20px;
+  z-index: 1000;
+  border:1px solid black;
+  box-shadow: 5px 5px 5px 5px gray;
+}
+.reservation_list{
+  overflow-y: scroll;
+  overflow-x:hidden;
+
+}
+.reservation_list::-webkit-scrollbar {
+  width: 15px;
+}
+.reservation_list::-webkit-scrollbar-thumb {
+  background-color: rgb(67, 66, 66);
+  border-radius: 10px;
+}
+.reservation_list::-webkit-scrollbar-track {
+  background-color: rgb(225, 223, 223);
+  border-radius: 10px;
+}
+.reservation_list_title{
+  font-size: 30px;
+  margin-left: 10px;
+  height: 10%;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+}
+.reservation_solo{
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+}
+.reservation_agree{
+  background-color: white;
+}
+.reservation_deny{
+  background-color:white;
+}
+.reservation_agree:hover{
+  background-color: black;
+  color: white;
+}
+.reservation_deny:hover{
+  background-color: black;
+  color: white;
+}
+.item_reservation_btn{
+  width: 200px;
+  height: 40px;
+  border-radius: 20px;
+  background-color: rgb(74, 74, 247);
+  border-color: rgb(74, 74, 247);
+}
+.item_reservation_btn>span{
+  color: white;
+  font-size: 17px;
+  font-weight: 600;
 }
 /*home_user filter*/
 
@@ -1969,6 +2128,9 @@ background-color: rgba(0,0,0,0.5);
   background-color: rgb(219, 215, 215);
 }
 .tapmenu_hidden{
+  display: none;
+}
+.tapmenu1_hidden{
   display: none;
 }
 .search_id_btn:hover{
