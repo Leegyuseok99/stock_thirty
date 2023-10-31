@@ -28,10 +28,10 @@ li {
 /*header*/
 #header {
   width: 100%;
-  height: 100px;
+  height: 63.5px;
   display: flex;
   transition: opacity 0.2s ease-in-out;
-  border-bottom: 2px solid rgba(0, 0, 0) ;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3) ;
 }
 .header_hidden {
   opacity: 0.5;
@@ -46,7 +46,7 @@ li {
   display: block;
   padding:10px 20px;
   font-size: 30px;
-  margin-top: 20px;
+  margin-top: 5px;
 }
 #header .logo>a:hover{
   text-decoration: underline;
@@ -60,8 +60,7 @@ li {
 .nav>ul {
   display: flex;
   justify-content: right;
-  padding-top:20px;
-  font-weight: 700;
+ 
 }
 
 .nav>ul>li {
@@ -157,150 +156,7 @@ li {
   height: 91%;
   transform: translateX(-18.7%);
 }
-.detail_store_slide{
-  display: block;
-}
-.filter_hidden {
-  opacity: 0.5;
-}
-.map_size{
-  overflow: hidden;
-  height:100%;
-  width:76%;
-  transition: transform 0.5s ease-in-out;
-}
-.map_size_change{
-  transform: translateX(-30.5%);
-}
-.iw_inner {
-  display: flex;
-  background-color: white;
-  border: 2px solid #000; /* 테두리 스타일을 설정할 수 있습니다. */
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5); /* 그림자 스타일을 설정할 수 있습니다. */
-  padding: 10px;
-  font-size: 16px;
-  width: 150px;
-  height: 90px;
-}
-.iw_inner > .content1{
-  background-color: red;
-}
-.iw_inner > .content2{
-  display: flex;
-}
-.iw_inner:hover{
-  background-color: rgba(142, 139, 139, 0.5);
-  color: white;
-}
-.detail_store_close{
-  overflow: hidden;
-}
-.detail_store_hidden{
-  overflow: hidden;
-  height: 100%;
-  transform: translateX(440px);
-}
 /*가게 상세페이지*/
-.c_view {
-  width: 20%;
-  height:80%;
-  display: block;
-  background-color: white;
-  position: fixed;
-  bottom: 0;
-  padding: 10px;
-  transition: transform 0.3s ease-in-out;
-  transform: translateY(100%);
-  border: 1px solid rgb(195, 192, 192);
-  box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.5);
-  border-radius: 20px;
-  overflow-y: scroll;
-  overflow-x:hidden;
-}
-.c_view::-webkit-scrollbar {
-  width: 15px;
-}
-.c_view::-webkit-scrollbar-thumb {
-  background-color: rgb(67, 66, 66);
-  border-radius: 10px;
-}
-.c_view::-webkit-scrollbar-track {
-  background-color: rgb(225, 223, 223);
-  border-radius: 10px;
-}
-
-.c_view_visible {
-  transform: translateY(0);
-}
-
-.c_view > .c_view_close {
-  position: absolute;
-  margin-left: 52px;
-  width: 70%;
-  height: 2px;
-  background-color: rgb(195, 192, 192);
-  border:4px solid rgb(195, 192, 192);
-  border-radius: 30px;
-  cursor: pointer;
-}
-.re_view {
-  width: 20%;
-  height:80%;
-  display: block;
-  background-color: white;
-  position: fixed;
-  bottom: 0;
-  padding: 10px;
-  transition: transform 0.3s ease-in-out;
-  transform: translateY(100%);
-  border: 1px solid rgb(195, 192, 192);
-  box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.5);
-  border-radius: 20px;
-  overflow-y: scroll;
-  overflow-x:hidden;
-}
-.re_view::-webkit-scrollbar {
-  width: 15px;
-}
-.re_view::-webkit-scrollbar-thumb {
-  background-color: rgb(67, 66, 66);
-  border-radius: 10px;
-}
-.re_view::-webkit-scrollbar-track {
-  background-color: rgb(225, 223, 223);
-  border-radius: 10px;
-}
-
-.c_view_visible {
-  transform: translateY(0);
-}
-
-.re_view_visible {
-  transform: translateY(0);
-}
-
-.re_view > .re_view_close {
-  position: absolute;
-  margin-left: 52px;
-  width: 70%;
-  height: 2px;
-  background-color: rgb(195, 192, 192);
-  border:4px solid rgb(195, 192, 192);
-  border-radius: 30px;
-  cursor: pointer;
-}
-
-
-/* 다른 스타일을 유지합니다. */
-
-/* 예약 확인 버튼 스타일링 (누르면 .c_view_visible 클래스 추가) */
-.find_text_pw button {
-  /* 버튼 스타일 유지 */
-}
-
-.find_text_pw button:focus + .c_view {
-  bottom: 0; /* 버튼이 클릭되면 .c_view가 올라옵니다. */
-}
 .detail_store_name{
   margin-top:15px;
 }
@@ -313,52 +169,8 @@ li {
   height: 50px;
   margin-top: 10px;
 }
-/*예약 확인*/
-.reservation_select{
-  margin-left: 10px;
-}
-.res_select_btn1{
-  padding: 10px 80px 20px 80px;
-  color:rgb(195, 192, 192);
-  font-size: 20px;
-  border-bottom: 4px solid rgb(195, 192, 192);
-  cursor: pointer;
-  background-color: white;
-}
-.res_select_btn1_open{  
-  color:black;
-  border-bottom: 4px solid black;
-}
-.res_select_btn2{
-  padding: 10px 80px 20px 80px;
-  color:rgb(195, 192, 192);
-  font-size: 20px;
-  border-bottom:4px solid rgb(195, 192, 192);
-  cursor: pointer;
-  background-color: white;
-}
-.res_select_btn2_open{
-  color:black;
-  border-bottom: 4px solid black;
-}
-.reservation_check{
-  height: 68%;
-  overflow-y: scroll;
-  overflow-x:hidden;
-}
-.reservation_check::-webkit-scrollbar {
-  width: 15px;
-}
-.reservation_check::-webkit-scrollbar-thumb {
-  background-color: rgb(67, 66, 66);
-  border-radius: 10px;
-}
-.reservation_check::-webkit-scrollbar-track {
-  background-color: rgb(225, 223, 223);
-  border-radius: 10px;
-}
 .select_btn1{
-  padding: 10px 80px 20px 80px;
+  padding: 0px 67px 20px 67px;
   color:rgb(195, 192, 192);
   font-size: 20px;
   border-bottom: 4px solid rgb(195, 192, 192);
@@ -370,7 +182,7 @@ li {
   border-bottom: 4px solid black;
 }
 .select_btn2{
-  padding: 10px 67px 20px 67px;
+  padding: 0px 67px 20px 67px;
   color:rgb(195, 192, 192);
   font-size: 20px;
   border-bottom:4px solid rgb(195, 192, 192);
@@ -419,72 +231,28 @@ li {
   font-size: 20px;
   font-weight: 600;
 }
-.StarRateIcon {
-  color: gray; /* 기본 별 색상 */
-  cursor: pointer; /* 커서를 포인터로 변경하여 클릭 가능한 것처럼 보이도록 함 */
+.detail_store_slide{
+  display: block;
 }
-
-/* 클릭한 별의 색상을 변경 */
-.StarRateIcon.checked {
-  color: gold; /* 클릭한 별의 색상 (예를 들어, 금색) */
+.filter_hidden {
+  opacity: 0.5;
+}
+.map_size{
+  overflow: hidden;
+  height:100%;
+  width:76%;
+  transition: transform 0.5s ease-in-out;
+}
+.map_size_change{
+  transform: translateX(-30.5%);
+}
+.detail_store_hidden{
+  overflow: hidden;
+  height: 100%;
+  transform: translateX(440px);
 }
 #showDetails{
   cursor: pointer;
-}
-#filter {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 25%;
-  height: 100%;
-  overflow: hidden;
-  transition: transform 0.5s ease-in-out;
-  display: flex;
-  z-index: 100;
-  
-}
-
-#filter>.filter {
-  border-radius: 20px;
-  width: 90%;
-  height: 100%;
-  background-color: white;
-  border-right: 1px solid black;
-  overflow: hidden;
-  transition: transform 0.5s ease-in-out;
-  box-shadow: 3px 3px 3px 3px gray;
-}
-
-.filter_hidden {
-  transform: translateX(-90%);
-  
-}
-
-.filter-btn {
-  width: 10%;
-  height: 100%;
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.3s ease-in-out;
-}
-#filter-btn_hidden {
-  opacity: 0.5;
-}
-.filter1-btn {
-  border: none;
-  position: absolute;
-  border-radius: 10px;
-  top: 45%;
-  left: 26%;
-  padding: 20px 10px;
-  transform: translate(-45%, 3%);
-  overflow: hidden;
-  transition: transform 0.3s ease-in-out;
-
-}
-
-.filter1-btn:hover {
-  background-color: rgba(190, 183, 183, 1);
 }
 
 /*join.js*/
@@ -822,181 +590,6 @@ border:1px solid rgb(158, 154, 154);
   border:1px solid black;
   box-shadow: 5px 5px 5px 5px gray;
 }
-/*즐겨찾기 편집*/
-.fv_store_edite_none{
-  display: none;
-  width:700px;
-  height: 550px;
-  padding:20px;
-  top:50%;
-  left:50%;
-  transform: translate(-50%,-50%);
-  box-sizing: border-box;
-  position: absolute;
-  background-color: white;
-  border-radius: 10px;
-  border:3px solid rgba(59, 59, 59, 0.3);
-}
-.fv_store_edite{
-  width:550px;
-  height: 650px;
-  padding:20px;
-  top:50%;
-  left:50%;
-  transform: translate(-50%,-50%);
-  box-sizing: border-box;
-  position: absolute;
-  background-color: white;
-  border-radius: 20px;
-  z-index: 1000;
-  border:1px solid black;
-  box-shadow: 5px 5px 5px 5px gray;
-
-}
-.fv_store_list{
-  overflow-y: scroll;
-  overflow-x:hidden; 
-}
-.fv_store_list::-webkit-scrollbar {
-  width: 15px;
-}
-.fv_store_list::-webkit-scrollbar-thumb {
-  background-color: rgb(67, 66, 66);
-  border-radius: 10px;
-}
-.fv_store_list::-webkit-scrollbar-track {
-  background-color: rgb(225, 223, 223);
-  border-radius: 10px;
-}
-.fv_store_edite_title{
-  font-size: 30px;
-  margin-bottom: 30px;
-  margin-left: 10px;
-}
-.remove_fv_Store{
-  background-color: white;
-}
-.remove_fv_Store:hover{
-color:white;
-background-color: gray;
-}
-/*예약확인*/
-#regervation_none{
-  display: none;
-  width:700px;
-  height: 550px;
-  padding:20px;
-  top:50%;
-  left:50%;
-  transform: translate(-50%,-50%);
-  box-sizing: border-box;
-  position: absolute;
-  background-color: white;
-  border-radius: 10px;
-  border:3px solid rgba(59, 59, 59, 0.3);
-}
-#regervation_view{
-  width:550px;
-  height: 650px;
-  padding:20px;
-  top:50%;
-  left:50%;
-  transform: translate(-50%,-50%);
-  box-sizing: border-box;
-  position: absolute;
-  background-color: white;
-  border-radius: 20px;
-  z-index: 1000;
-  border:1px solid black;
-  box-shadow: 5px 5px 5px 5px gray;
-}
-.regervation_title{
-  font-size: 30px;
-  margin-bottom: 30px;
-  margin-left: 10px;
-}
-.regervation_store_image{
-  width:500px;
-}
-.remove_regervation_Store{
-  background-color: white;
-}
-.remove_regervation_Store:hover{
-  color:white;
-  background-color: gray;
-  }
-  /*예약리스트*/
-.reservation_close{
-  display: none;
-}
-.reservation_list_view{
-  width:600px;
-  height: 700px;
-  padding:20px;
-  top:50%;
-  left:50%;
-  transform: translate(-50%,-50%);
-  box-sizing: border-box;
-  position: absolute;
-  background-color: white;
-  border-radius: 20px;
-  z-index: 1000;
-  border:1px solid black;
-  box-shadow: 5px 5px 5px 5px gray;
-}
-.reservation_list{
-  overflow-y: scroll;
-  overflow-x:hidden;
-
-}
-.reservation_list::-webkit-scrollbar {
-  width: 15px;
-}
-.reservation_list::-webkit-scrollbar-thumb {
-  background-color: rgb(67, 66, 66);
-  border-radius: 10px;
-}
-.reservation_list::-webkit-scrollbar-track {
-  background-color: rgb(225, 223, 223);
-  border-radius: 10px;
-}
-.reservation_list_title{
-  font-size: 30px;
-  margin-left: 10px;
-  height: 10%;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-}
-.reservation_solo{
-  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-}
-.reservation_agree{
-  background-color: white;
-}
-.reservation_deny{
-  background-color:white;
-}
-.reservation_agree:hover{
-  background-color: black;
-  color: white;
-}
-.reservation_deny:hover{
-  background-color: black;
-  color: white;
-}
-.item_reservation_btn{
-  width: 200px;
-  height: 40px;
-  border-radius: 20px;
-  background-color: rgb(74, 74, 247);
-  border-color: rgb(74, 74, 247);
-}
-.item_reservation_btn>span{
-  color: white;
-  font-size: 17px;
-  font-weight: 600;
-}
-/*home_user filter*/
-
 /*owner*/
 .ownerWrap{
   width: 100%;
@@ -1096,7 +689,6 @@ background-color: gray;
   color:black;
 }
 /*owner_main_page*/
-/*owner_main_page*/
 .owner_main_pageWrap{
   background-color: #f7f7f7;
 }
@@ -1128,7 +720,7 @@ background-color: gray;
   left:50%;
   font-size: 25px;
   transform: translate(-50%,-50%);
-
+  
 }
 .owner_main_pageWrap>.banner>.baner_img2>.text2{
   padding:10px 20px;
@@ -1176,7 +768,7 @@ background-color: gray;
 }
 .owner_main_pageWrap>.contents>.content1{
   width:96%;
-  height: 700px;
+  height: 1000px;
   margin-left: 4%;
   margin-top: 20px;
   border-top : 3px solid #777676;
@@ -1188,15 +780,13 @@ background-color: gray;
   margin-left: 4% ;
   font-size: 32px;
   font-weight: 700;
-  margin-top: 100px;
 }
 .owner_main_pageWrap>.contents>.content2{
-  width:96%;
-  height: 700px;
-  margin-left: 4%;
+  width: 96%;
+  margin-left: 4% ;
+  height: 500px;
   margin-top: 20px;
   border-top : 3px solid #777676;
-  padding-top: 100px;
 }
 .owner_main_pageWrap>.contents>.content3{
   width: 96%;
@@ -1207,15 +797,12 @@ background-color: gray;
 }
 .cont_text1{
   width: 500px;
-  margin-top: 200px;
-  margin-left: 150px;
 }
 .cont_text1>span{
-  width: 400px;
   display: block;
   text-align: left;
   line-height: 2;
-  font-size: 16px;
+  font-size: 20px;
 }
 /*owner_notcie*/
 .owner_noticeWrap{
@@ -1418,6 +1005,9 @@ background-color: rgba(0,0,0,0.5);
   margin: 0 auto;
   margin-left: 0px;
 }
+#aa{
+   display:none;
+}
 .addmenu_header>span{
   font-size: xx-large;
   margin-right: 1300px;
@@ -1577,9 +1167,7 @@ background-color: rgba(0,0,0,0.5);
 }
 .addmenu_sub{
   width: 400px;
-  position: absolute;
-  bottom:10px;
-  right: 31%;
+  
   transform: translate(-10px,-50%);
   background-color: rgb(74, 74, 247);
   box-sizing: border-box;
@@ -1670,7 +1258,7 @@ background-color: rgba(0,0,0,0.5);
   height: 50px;
   width: 500px;
   margin-left: 1150px;
-  margin-top: -50px;
+  margin-top: -100px;
 
 }
 .item_change_btn{
@@ -1888,7 +1476,7 @@ background-color: rgba(0,0,0,0.5);
 }
 .addstpop_view{
   width:1605px;
-  height:1000px;
+  height:800px;
   padding:20px;
   top:50%;
   left:50%;
@@ -1917,7 +1505,7 @@ background-color: rgba(0,0,0,0.5);
 .addstpop_view_none{
   display: none;
   width:1600px;
-  height: 1000px;
+  height: 800px;
   padding:20px;
   top:50%;
   left:50%;
@@ -1956,7 +1544,7 @@ background-color: rgba(0,0,0,0.5);
   font-size: 25px;
   float: left;
   margin-top: 40px;
-  margin-left: -220px;
+  margin-left: -225px;
 }
 .addstore_phon{
   width: 1600px;
@@ -2006,7 +1594,6 @@ background-color: rgba(0,0,0,0.5);
   margin-top: 40px;
   margin-left: 55px;
 }
-
 /*find_id*/
 .find_idWrap{
   width: 100%;
@@ -2130,9 +1717,6 @@ background-color: rgba(0,0,0,0.5);
 .tapmenu_hidden{
   display: none;
 }
-.tapmenu1_hidden{
-  display: none;
-}
 .search_id_btn:hover{
   color:white;
   background-color: rgb(219, 215, 215);
@@ -2203,6 +1787,7 @@ background-color: rgba(0,0,0,0.5);
   margin-top: 130px;
 }
 #fv_view{
+  position: relative;
   width:550px;
   height: 650px;
   padding:20px;
@@ -2216,6 +1801,19 @@ background-color: rgba(0,0,0,0.5);
   z-index: 1000;
   border:1px solid black;
   box-shadow: 5px 5px 5px 5px gray;
+  overflow-y: scroll;
+  overflow-x:hidden; 
+}
+#fv_view::-webkit-scrollbar {
+  width: 15px;
+}
+#fv_view::-webkit-scrollbar-thumb {
+  background-color: rgb(67, 66, 66);
+  border-radius: 10px;
+}
+#fv_view::-webkit-scrollbar-track {
+  background-color: rgb(225, 223, 223);
+  border-radius: 10px;
 }
 #fv_view_none{
   display: none;
@@ -2231,112 +1829,49 @@ background-color: rgba(0,0,0,0.5);
   border-radius: 10px;
   border:3px solid rgba(59, 59, 59, 0.3);
 }
-/*edit_member_information*/
-.edit_member_informationWrap{
-  width:100%;
-  height: 100vh;
- }
- .edit_member_informationWrap> #header{
-  width:100%;
-  height: 63.5px;
- }
-
- .edit_member_informationWrap> .edit_member_contents{
-  width:100%;
-  margin:0 auto;
-  display: flex;
- }
- .edit_member_informationWrap> .edit_member_contents>.edit_member_content1{
-  width:15%;
-  background-color: rgb(200, 198, 202);
- }
- .edit_member_informationWrap> .edit_member_contents>.edit_member_content1>ul{
-  width:100%;
-  margin-left: -40px;
-  margin-top: -1px;
- }
- .edit_member_informationWrap> .edit_member_contents>.edit_member_content1>ul>li{
-  width:100%;
- }
- .edit_member_informationWrap> .edit_member_contents>.edit_member_content1>ul>li>a{
-  width:100%;
-  padding:20px;
-  display: block;
-  box-sizing: border-box;
-  font-size: 25px;
-  background-color: rgb(150, 147, 147);
- }
- .edit_member_informationWrap> .edit_member_contents>.edit_member_content1>ul>li>a:hover{
-  color:white;
-  background-color: rgb(107, 104, 104);
- }
- .edit_member_informationWrap> .edit_member_contents>.edit_member_content2{
-  width:85%;
-  height: 100%;
-  background: #eae7e7;
- }
- .edit_member_informationWrap> .edit_member_contents>.edit_member_content2>.member_title{
-  text-align: left;
-  margin-left: 50px;
- }
- .edit_member_informationWrap> .edit_member_contents>.edit_member_content2>.member_title>span{
-  margin-left: 20px;
-  color:rgb(152, 151, 151);
- }
- .edit_member_informationWrap> .edit_member_contents>.edit_member_content2>table tr>#detail_title{
-  width:150px;
- }
- .edit_member_informationWrap> .edit_member_contents>.edit_member_content2>table tr>#user_detail{
-  height: 150px;
-  width:800px
- }
- .table_none{
-  display: none;
- }
- .edit_member_informationWrap> #footer{
-  width:100%;
-  height: 61px;
- }
- .a1:hover{
-  color:white;
-  background-color: gray;
- }
- .a2:hover{
-  color:white;
-  background-color: gray;
- }
- .a3:hover{
-  color:white;
-  background-color: gray;
- }
- .a4:hover{
-  color:white;
-  background-color: gray;
- }
-  .a5:hover{
-  color:white;
-  background-color: gray;
- }
- .b1:hover{
-  color:white;
-  background-color: gray;
- }
- .b2:hover{
-  color:white;
-  background-color: gray;
- }
- .b3:hover{
-  color:white;
-  background-color: gray;
- }
- .b4:hover{
-  color:white;
-  background-color: gray;
- }
- .b5:hover{
-  color:white;
-  background-color: gray;
- }
+.fv_view_title{
+  font-size: 30px;
+  margin-bottom: 30px;
+  margin-left: 10px;
+}
+.fv_view_edit{
+  width: 100px;
+  cursor: pointer;
+  border-radius: 20px;
+  display:flex;
+  text-align: center;
+}
+.fv_view_edit:hover span{
+color:rgb(63, 92, 255)
+}
+.fv_view_edit:hover .fv_view_EditNoteIcon{
+  color:rgb(63, 92, 255)
+  }
+  .divide{
+    width:100%;
+    height: 30px;
+    border-bottom: 1px solid gray;
+  }
+  .fv_store_name{
+    font-size: 20px;
+    font-weight: bolder;
+  }
+  .fv_store_address{
+    font-size: 20px;
+    text-align: left;
+  }
+  .fv_store_category{
+    margin-top: 8px;
+    margin-left: 10px;
+    font-size: 15px;
+    color:#acaaaa;
+  }
+  .fv_store_image{
+    margin-top: 10px;
+    width:100%;
+    height: 100px;
+    
+  }
 /*id_result*/
 .id_resultWrap{
   width:80%;
@@ -2447,6 +1982,112 @@ background-color: rgba(0,0,0,0.5);
   margin-top: 100px;
   margin-left: 40px;
  }
+ /*edit_member_information*/
+ .edit_member_informationWrap{
+  width:100%;
+  height: 100vh;
+ }
+ .edit_member_informationWrap> #header{
+  width:100%;
+  height: 63.5px;
+ }
+
+ .edit_member_informationWrap> .edit_member_contents{
+  width:100%;
+  margin:0 auto;
+  display: flex;
+ }
+ .edit_member_informationWrap> .edit_member_contents>.edit_member_content1{
+  width:15%;
+  background-color: rgb(200, 198, 202);
+ }
+ .edit_member_informationWrap> .edit_member_contents>.edit_member_content1>ul{
+  width:100%;
+  margin-left: -40px;
+  margin-top: -1px;
+ }
+ .edit_member_informationWrap> .edit_member_contents>.edit_member_content1>ul>li{
+  width:100%;
+ }
+ .edit_member_informationWrap> .edit_member_contents>.edit_member_content1>ul>li>a{
+  width:100%;
+  padding:20px;
+  display: block;
+  box-sizing: border-box;
+  font-size: 25px;
+  background-color: rgb(150, 147, 147);
+ }
+ .edit_member_informationWrap> .edit_member_contents>.edit_member_content1>ul>li>a:hover{
+  color:white;
+  background-color: rgb(107, 104, 104);
+ }
+ .edit_member_informationWrap> .edit_member_contents>.edit_member_content2{
+  width:85%;
+  height: 100%;
+  background: #eae7e7;
+ }
+ .edit_member_informationWrap> .edit_member_contents>.edit_member_content2>.member_title{
+  text-align: left;
+  margin-left: 50px;
+ }
+ .edit_member_informationWrap> .edit_member_contents>.edit_member_content2>.member_title>span{
+  margin-left: 20px;
+  color:rgb(152, 151, 151);
+ }
+ .edit_member_informationWrap> .edit_member_contents>.edit_member_content2>table tr>#detail_title{
+  width:150px;
+ }
+ .edit_member_informationWrap> .edit_member_contents>.edit_member_content2>table tr>#user_detail{
+  height: 150px;
+  width:800px
+ }
+ .table_none{
+  display: none;
+ }
+ .edit_member_informationWrap> #footer{
+  width:100%;
+  height: 61px;
+ }
+ .a1:hover{
+  color:white;
+  background-color: gray;
+ }
+ .a2:hover{
+  color:white;
+  background-color: gray;
+ }
+ .a3:hover{
+  color:white;
+  background-color: gray;
+ }
+ .a4:hover{
+  color:white;
+  background-color: gray;
+ }
+  .a5:hover{
+  color:white;
+  background-color: gray;
+ }
+ .b1:hover{
+  color:white;
+  background-color: gray;
+ }
+ .b2:hover{
+  color:white;
+  background-color: gray;
+ }
+ .b3:hover{
+  color:white;
+  background-color: gray;
+ }
+ .b4:hover{
+  color:white;
+  background-color: gray;
+ }
+ .b5:hover{
+  color:white;
+  background-color: gray;
+ }
 @media (prefers-reduion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
@@ -2503,4 +2144,533 @@ background-color: rgba(0,0,0,0.5);
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-2@1.0/Cafe24Supermagic-Bold-v1.0.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
+}
+/*즐겨찾기 편집*/
+ .fv_store_edite_none{
+  display: none;
+  width:700px;
+  height: 550px;
+  padding:20px;
+  top:50%;
+  left:50%;
+  transform: translate(-50%,-50%);
+  box-sizing: border-box;
+  position: absolute;
+  background-color: white;
+  border-radius: 10px;
+  border:3px solid rgba(59, 59, 59, 0.3);
+}
+.fv_store_edite{
+  width:550px;
+  height: 650px;
+  padding:20px;
+  top:50%;
+  left:50%;
+  transform: translate(-50%,-50%);
+  box-sizing: border-box;
+  position: absolute;
+  background-color: white;
+  border-radius: 20px;
+  z-index: 1000;
+  border:1px solid black;
+  box-shadow: 5px 5px 5px 5px gray;
+
+}
+.fv_store_list{
+  overflow-y: scroll;
+  overflow-x:hidden; 
+}
+.fv_store_list::-webkit-scrollbar {
+  width: 15px;
+}
+.fv_store_list::-webkit-scrollbar-thumb {
+  background-color: rgb(67, 66, 66);
+  border-radius: 10px;
+}
+.fv_store_list::-webkit-scrollbar-track {
+  background-color: rgb(225, 223, 223);
+  border-radius: 10px;
+}
+.fv_store_edite_title{
+  font-size: 30px;
+  margin-bottom: 30px;
+  margin-left: 10px;
+}
+.remove_fv_Store{
+  background-color: white;
+}
+.remove_fv_Store:hover{
+color:white;
+background-color: gray;
+}
+
+/*마커 css*/
+.iw_inner {
+  display: flex;
+  background-color: white;
+  border: 2px solid #000; /* 테두리 스타일을 설정할 수 있습니다. */
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5); /* 그림자 스타일을 설정할 수 있습니다. */
+  padding: 10px;
+  font-size: 16px;
+  width: 150px;
+  height: 90px;
+}
+.iw_inner > .content1{
+  background-color: red;
+}
+.iw_inner > .content2{
+  display: flex;
+}
+.iw_inner:hover{
+  background-color: rgba(142, 139, 139, 0.5);
+  color: white;
+}
+.trust_popup{
+  display: none;
+}
+/*예약확인*/
+#regervation_none{
+  display: none;
+  width:700px;
+  height: 550px;
+  padding:20px;
+  top:50%;
+  left:50%;
+  transform: translate(-50%,-50%);
+  box-sizing: border-box;
+  position: absolute;
+  background-color: white;
+  border-radius: 10px;
+  border:3px solid rgba(59, 59, 59, 0.3);
+}
+#regervation_view{
+  width:550px;
+  height: 650px;
+  padding:20px;
+  top:50%;
+  left:50%;
+  transform: translate(-50%,-50%);
+  box-sizing: border-box;
+  position: absolute;
+  background-color: white;
+  border-radius: 20px;
+  z-index: 1000;
+  border:1px solid black;
+  box-shadow: 5px 5px 5px 5px gray;
+}
+.regervation_title{
+  font-size: 30px;
+  margin-bottom: 30px;
+  margin-left: 10px;
+}
+.regervation_content {
+  width: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.regervation_content::-webkit-scrollbar {
+  width: 15px;
+}
+
+.regervation_content::-webkit-scrollbar-thumb {
+  background-color: rgb(67, 66, 66);
+  border-radius: 10px;
+}
+
+.regervation_content::-webkit-scrollbar-track {
+  background-color: rgb(225, 223, 223);
+  border-radius: 10px;
+}
+.reservation_check{
+  height: 68%;
+}
+.regervation_store_image{
+  width:400px;
+}
+.remove_regervation_Store{
+  background-color: white;
+}
+.remove_regervation_Store:hover{
+  color:white;
+  background-color: black;
+}
+/*가게 상세페이지*/
+.c_view {
+  width: 20%;
+  height:80%;
+  display: block;
+  background-color: white;
+  position: fixed;
+  bottom: 0;
+  padding: 10px;
+  transition: transform 0.3s ease-in-out;
+  transform: translateY(100%);
+  border: 1px solid rgb(195, 192, 192);
+  box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.5);
+  border-radius: 20px;
+  overflow-y: scroll;
+  overflow-x:hidden;
+}
+.c_view::-webkit-scrollbar {
+  width: 15px;
+}
+.c_view::-webkit-scrollbar-thumb {
+  background-color: rgb(67, 66, 66);
+  border-radius: 10px;
+}
+.c_view::-webkit-scrollbar-track {
+  background-color: rgb(225, 223, 223);
+  border-radius: 10px;
+}
+
+.c_view_visible {
+  transform: translateY(0);
+}
+
+.c_view > .c_view_close {
+  position: absolute;
+  margin-left: 52px;
+  width: 70%;
+  height: 2px;
+  background-color: rgb(195, 192, 192);
+  border:4px solid rgb(195, 192, 192);
+  border-radius: 30px;
+  cursor: pointer;
+}
+.re_view {
+  width: 20%;
+  height:80%;
+  display: block;
+  background-color: white;
+  position: fixed;
+  bottom: 0;
+  padding: 10px;
+  transition: transform 0.3s ease-in-out;
+  transform: translateY(100%);
+  border: 1px solid rgb(195, 192, 192);
+  box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.5);
+  border-radius: 20px;
+  overflow-y: scroll;
+  overflow-x:hidden;
+}
+.re_view::-webkit-scrollbar {
+  width: 15px;
+}
+.re_view::-webkit-scrollbar-thumb {
+  background-color: rgb(67, 66, 66);
+  border-radius: 10px;
+}
+.re_view::-webkit-scrollbar-track {
+  background-color: rgb(225, 223, 223);
+  border-radius: 10px;
+}
+
+.c_view_visible {
+  transform: translateY(0);
+}
+
+.re_view_visible {
+  transform: translateY(0);
+}
+
+.re_view > .re_view_close {
+  position: absolute;
+  margin-left: 52px;
+  width: 70%;
+  height: 2px;
+  background-color: rgb(195, 192, 192);
+  border:4px solid rgb(195, 192, 192);
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+/*예약리스트*/
+.reservation_close{
+  display: none;
+}
+.reservation_list_view{
+  width:600px;
+  height: 700px;
+  padding:20px;
+  top:50%;
+  left:50%;
+  transform: translate(-50%,-50%);
+  box-sizing: border-box;
+  position: absolute;
+  background-color: white;
+  border-radius: 20px;
+  z-index: 1000;
+  border:1px solid black;
+  box-shadow: 5px 5px 5px 5px gray;
+}
+.reservation_list{
+  overflow-y: scroll;
+  overflow-x:hidden;
+
+}
+.reservation_list::-webkit-scrollbar {
+  width: 15px;
+}
+.reservation_list::-webkit-scrollbar-thumb {
+  background-color: rgb(67, 66, 66);
+  border-radius: 10px;
+}
+.reservation_list::-webkit-scrollbar-track {
+  background-color: rgb(225, 223, 223);
+  border-radius: 10px;
+}
+.reservation_list_title{
+  font-size: 30px;
+  margin-left: 10px;
+  height: 10%;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+}
+.reservation_solo{
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+}
+.reservation_agree{
+  background-color: white;
+}
+.reservation_deny{
+  background-color:white;
+}
+.reservation_agree:hover{
+  background-color: black;
+  color: white;
+}
+.reservation_deny:hover{
+  background-color: black;
+  color: white;
+}
+.item_reservation_btn{
+  width: 200px;
+  height: 40px;
+  border-radius: 20px;
+  background-color: rgb(74, 74, 247);
+  border-color: rgb(74, 74, 247);
+}
+.item_reservation_btn>span{
+  color: white;
+  font-size: 17px;
+  font-weight: 600;
+}
+/*예약 확인*/
+.reservation_select{
+  margin-left: 10px;
+}
+.res_select_btn1{
+  padding: 10px 80px 20px 80px;
+  color:rgb(195, 192, 192);
+  font-size: 20px;
+  border-bottom: 4px solid rgb(195, 192, 192);
+  cursor: pointer;
+  background-color: white;
+}
+.res_select_btn1_open{  
+  color:black;
+  border-bottom: 4px solid black;
+}
+.res_select_btn2{
+  padding: 10px 80px 20px 80px;
+  color:rgb(195, 192, 192);
+  font-size: 20px;
+  border-bottom:4px solid rgb(195, 192, 192);
+  cursor: pointer;
+  background-color: white;
+}
+.res_select_btn2_open{
+  color:black;
+  border-bottom: 4px solid black;
+}
+.reservation_check{
+  height: 68%;
+
+}
+
+.tapmenu1_hidden{
+  display: none;
+}/*1:1문의*/
+#inquiry {
+  position: relative;
+  width: 550px;
+  height: 650px;
+  padding: 20px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-sizing: border-box;
+  position: absolute;
+  background-color: white;
+  border-radius: 20px;
+  z-index: 1000;
+  border: 1px solid black;
+  box-shadow: 5px 5px 5px 5px gray;
+}
+
+#inquiry_none {
+  display: none;
+}
+
+.inquiry_title {
+  margin-top: 20px;
+  font-size: 30px;
+  margin-bottom: 20px;
+  margin-left: 10px;
+}
+
+.inquiry_content {
+  width: 100%;
+  height: 410px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.inquiry_content::-webkit-scrollbar {
+  width: 15px;
+}
+
+.inquiry_content::-webkit-scrollbar-thumb {
+  background-color: rgb(67, 66, 66);
+  border-radius: 10px;
+}
+
+.inquiry_content::-webkit-scrollbar-track {
+  background-color: rgb(225, 223, 223);
+  border-radius: 10px;
+}
+
+.inquiry_request {
+
+  background-color: white;
+}
+
+.inquiry_request:hover {
+  color: white;
+  background-color: black;
+}
+
+.inquiry_box {
+  width: 100%;
+  height: 100px;
+}
+
+.inquiry_box_name {
+  font-size: 20px;
+  font-weight: bolder;
+  margin-left: 5px;
+}
+
+.inquiry_box_date {
+  margin-right: 40px;
+  font-size: 20px;
+}
+
+.inquiry_box_content {
+  text-align: left;
+  margin-top: 10px;
+  width: 100%;
+  height: 50px;
+  font-size: 23px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.inquiry_box_content_remove {
+  margin-right: 10px;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+.inquiry_box_content_remove:hover {
+  text-decoration: underline;
+}
+
+/*1:1문의 작성*/
+#inquiry_request_go {
+  position: relative;
+  width: 550px;
+  height: 650px;
+  padding: 20px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-sizing: border-box;
+  position: absolute;
+  background-color: white;
+  border-radius: 20px;
+  z-index: 1000;
+  border: 1px solid black;
+  box-shadow: 5px 5px 5px 5px gray;
+}
+
+#inquiry_request_go_none {
+  display: none;
+}
+
+.inquiry_request_go_title {
+  font-size: 30px;
+  margin-bottom: 30px;
+}
+
+.inquiry_request_go_content {
+  width: "100%";
+  height: 70%;
+}
+
+.inquiry_request_go_content_title {
+  font-size: 25px;
+  font-weight: 700;
+  text-align: left;
+  margin-left: 20px;
+}
+
+.inquiry_request_go_content_warning {
+  font-size: 20px;
+  position: relative;
+  margin-top: 20px;
+}
+
+.inquiry_request_go_btn {
+  background-color: white;
+}
+
+.inquiry_request_go_btn:hover {
+  color: white;
+  background-color: black;
+}
+/*별점*/
+.star_review_none{
+  display: none;
+  width:700px;
+  height: 550px;
+  padding:20px;
+  top:50%;
+  left:50%;
+  transform: translate(-50%,-50%);
+  box-sizing: border-box;
+  position: absolute;
+  background-color: white;
+  border-radius: 10px;
+  border:3px solid rgba(59, 59, 59, 0.3);
+}
+.star_review{
+  width:500px;
+  height: 350px;
+  padding:20px;
+  top:50%;
+  left:50%;
+  transform: translate(-50%,-50%);
+  box-sizing: border-box;
+  position: absolute;
+  background-color: white;
+  border-radius: 20px;
+  z-index: 1000;
+  border:1px solid black;
+  box-shadow: 5px 5px 5px 5px gray;
+}
+.StarRateIcon {
+  color: gold; /* 기본 별 색상 */
+  cursor: pointer; /* 커서를 포인터로 변경하여 클릭 가능한 것처럼 보이도록 함 */
 }

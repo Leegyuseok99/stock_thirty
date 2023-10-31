@@ -24,6 +24,8 @@ import CallIcon from '@mui/icons-material/Call';
 import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import Marker4 from "./../img/marker4.gif";
+import MessageIcon from '@mui/icons-material/Message';
+import StarRateIcon from '@mui/icons-material/StarRate';
 function Home_user() {
   /*마이페이지*/
   const [Image, setImage] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png")
@@ -36,7 +38,7 @@ function Home_user() {
   const [showFilter, setShowFilter] = useState(true);
   const [showDetail, setShowDetail] = useState(false);
   const [shopInfo, setShopInfo] = useState([]);
-  const [selectedShop, setSelectedShop] = useState(null);
+  const [selectedShop, setSelectedShop] = useState([]);
   const mapContainer = useRef(null);
   function getBarColor(trust) {
     if (trust * 40 >= 360) {
@@ -135,6 +137,8 @@ function Home_user() {
                   } else {
                     infowindow.open(map, marker);
                     const clickedShopName = shop.shopName;
+
+                    console.log(clickedShopName);
 
                     // shopInfo 배열에서 같은 이름을 가진 가게를 찾습니다.
                     const selectedShopInfo = shopInfo.find(info => info.shopName === clickedShopName);
@@ -335,8 +339,13 @@ function Home_user() {
                     infowindow.open(map, marker);
                     const clickedShopName = shop.shopName;
 
+                    console.log(clickedShopName);
+                    console.log(shopInfo1);
+
                     // shopInfo 배열에서 같은 이름을 가진 가게를 찾습니다.
                     const selectedShopInfo = shopInfo1.find(info => info.shopName === clickedShopName);
+
+                    console.log(selectedShopInfo);
 
                     // 만약 해당 정보를 찾았다면 selectedShopInfo에 그 정보가 저장됩니다.
                     if (selectedShopInfo) {
@@ -480,7 +489,7 @@ function Home_user() {
   /*즐겨찾기*/
 
   let [temp3, setTemp3] = useState(true);
-  let [shopsData, setShopsData] = useState([{ latitude: "37.65479", longitude: "127.2430", shopName: "나윤호" }, { latitude: "37.65522", longitude: "127.2459", shopName: "나ㅁㅇ윤호" }]);
+  let [shopsData, setShopsData] = useState([]);
   let [fv_store, setFv_store] = useState([]);
   useEffect(() => {
     console.log(shopsData); // 상태가 변경될 때마다 호출됨
@@ -503,7 +512,7 @@ function Home_user() {
   let [search_switch3, setSearch_switch3] = useState(true);
   let [search_switch4, setSearch_switch4] = useState(false);
   let [tapmenu1, setTapmenu1] = useState(true);
-  let [confirmstate,setConfirmstate] = useState(null); 
+  let [confirmstate, setConfirmstate] = useState('wait');
 
   /*필터 꾸미기*/
   const [rangeValue, setRangeValue] = useState(0); // 초기 슬라이더 값
@@ -543,6 +552,27 @@ function Home_user() {
   }
   /*신뢰점수*/
   let [trust_popup, setTrust_popup] = useState(true);
+  /*1대1문의*/
+  let [temp8, setTemp8] = useState(true);
+  let [message, setMessage] = useState([]);
+  let [temp9, setTemp9] = useState(true);
+  const [inquiry, setInquiry] = useState('');
+  const handleInquiryChange = (e) => {
+    setInquiry(e.target.value);
+  };
+  /*별점 */
+  let [temp7, setTemp7] = useState(true);
+  const [clicked, setClicked] = useState([false, false, false, false, false]);
+  const array = [0, 1, 2, 3, 4]
+  const handleStarClick = index => {
+    let clickStates = [...clicked];
+    for (let i = 0; i < 5; i++) {
+      clickStates[i] = i <= index ? true : false;
+    }
+     setClicked(clickStates);
+   };
+  let score = clicked.filter(Boolean).length;
+  let [starreservation,setStarreservation] = useState([]);
   return (
     <div className="App">
       <div className="home_user_App">
@@ -583,9 +613,17 @@ function Home_user() {
 
                 <li>
                   <a onClick={() => {
-                    setTemp(!temp);
+
+                    axios.get('/inquiry/view')
+                      .then(response => {
+                        setMessage(response.data);
+                      })
+                      .catch(error => {
+                        console.error('세션 데이터를 가져오는데 실패함', error);
+                      });
+                      setTemp8(!temp8);
                   }} style={{ cursor: "pointer" }}>
-                    <SearchIcon fontSize="large" />
+                    <MessageIcon fontSize="large"/>
                   </a>
                 </li>
                 <li>
@@ -768,16 +806,16 @@ function Home_user() {
                       }
                     }}> menu </a>
                   </div>
-                  <div className={`find_text_id ${tapmenu == true ? "" : "tapmenu_hidden"}`} >
-                    <div className='detail_store_img'><img src={"/shopimages/" + `${shopInfo.imageFilename}`} alt={shopInfo.imageFilename}></img></div>
-                    <div className='detail_store_name' style={{ marginTop: "20px", borderTop: "1px solid rgb(225, 223, 223)", fontSize: "28px", fontWeight: "600", textAlign: "center" }}><span>{shopInfo.shopName}</span></div>
-                    <div style={{ marginTop: "8px", marginBottom: "10px", textAlign: "center" }}><span style={{ fontSize: "20px", fontWeight: "600" }}>평점 : {shopInfo.rating}</span><span style={{ fontSize: "20px", color: "gray" }}>/5</span><StarBorderIcon style={{ marginBottom: "-2px" }}></StarBorderIcon></div>
+                                    <div className={`find_text_id ${tapmenu == true ? "" : "tapmenu_hidden"}`} >
+                    <div className='detail_store_img'><img src={"/shopimages/" + `${selectedShop.imageFilename}`} alt={selectedShop.imageFilename}></img></div>
+                    <div className='detail_store_name' style={{ marginTop: "20px", borderTop: "1px solid rgb(225, 223, 223)", fontSize: "28px", fontWeight: "600", textAlign: "center" }}><span>{selectedShop.shopame}</span></div>
+                    <div style={{ marginTop: "8px", marginBottom: "10px", textAlign: "center" }}><span style={{ fontSize: "20px", fontWeight: "600" }}>평점 : {selectedShop.rating}</span><span style={{ fontSize: "20px", color: "gray" }}>/5</span><StarBorderIcon style={{ marginBottom: "-2px" }}></StarBorderIcon></div>
                     <div style={{ paddingBottom: "20px", borderBottom: "1px solid rgb(225, 223, 223)", textAlign: "center", fontSize: "20px" }}></div>
-                    <div style={{ textAlign: "left", fontSize: "20px", marginTop: "10px", borderBottom: "1px solid rgb(225, 223, 223)", paddingBottom: "10px" }}><WebAssetIcon style={{ marginLeft: "40px", marginBottom: "-6px", marginRight: "10px" }}></WebAssetIcon><a href="https://www.naver.com" style={{ textDecoration: "underline", color: "blue" }}></a></div>
-                    <div style={{ textAlign: "left", fontSize: "20px", marginTop: "10px", borderBottom: "1px solid rgb(225, 223, 223)", paddingBottom: "10px" }}> <CallIcon style={{ marginLeft: "40px", marginBottom: "-6px", marginRight: "10px" }}></CallIcon><a></a></div>
+                    <div style={{ textAlign: "left", fontSize: "20px", marginTop: "10px", borderBottom: "1px solid rgb(225, 223, 223)", paddingBottom: "10px" }}><WebAssetIcon style={{ marginLeft: "40px", marginBottom: "-6px", marginRight: "10px" }}></WebAssetIcon><a href="https://www.naver.com" style={{ textDecoration: "underline", color: "blue" }}>{selectedShop.website}</a></div>
+                    <div style={{ textAlign: "left", fontSize: "20px", marginTop: "10px", borderBottom: "1px solid rgb(225, 223, 223)", paddingBottom: "10px" }}> <CallIcon style={{ marginLeft: "40px", marginBottom: "-6px", marginRight: "10px" }}></CallIcon><a>{selectedShop.phone}</a></div>
                     <div><button className="fv_btn" onClick={() => {
                       if (selectedShop) {
-                        axios.post('/', selectedShop)
+                        axios.post('/member/bookmark/registration', selectedShop)
                           .then((response) => {
                             window.alert("즐겨찾기 추가 완료");
                             window.location.href = response.data;
@@ -788,19 +826,7 @@ function Home_user() {
                       }
                     }
                     }><StarBorderIcon style={{ fontSize: "xxLarger", marginBottom: "-4px", marginRight: "15px" }}></StarBorderIcon><span>즐겨찾기</span></button></div>
-
-                    {/* <div className='point' style={{marginTop:"10px", marginRight:"110px"}}> <span style={{fontSize:"18px", fontWeight:"600", paddingRight:"20px"}}> 평점 : </span> {[0,1,2,3,4].map((index) => (
-                      <StarRateIcon
-                        style={{marginBottom:"-4px"}}
-                        key={index}
-                        onClick={() => handleStarClick(index)}
-                        className={`StarRateIcon ${index < rating ? 'checked' : ''}`}
-                        size="35"
-                      />))}
-                    </div>
-                    {console.log(score)} */}
-                  </div>
-                  <div className={`find_text_pw ${tapmenu == true ? "tapmenu_hidden" : ""}`}>
+                  </div><div className={`find_text_pw ${tapmenu == true ? "tapmenu_hidden" : ""}`}>
                     <ul>
                       <div style={{ marginTop: "80px" }}></div>
                       {menuData.map((menuitem, index) => (
@@ -897,16 +923,21 @@ function Home_user() {
                             <button className="addreservation_sub" onClick={() => {
                               const formData = new FormData();
 
-                              formData.append('memberidx', userInfo.member);
+                              formData.append('memberidx', userInfo.memberIdx);
                               formData.append('shopidx', selectedShop.shopidx);
                               formData.append('itemidx', selectedMenuItem.itemidx);
-                              formData.append('quantity', quantity);
-                              axios.post('/shopRegistration', formData)
+                              formData.append('number', quantity);
+                              formData.append('itemname', selectedMenuItem.itemname);
+                              formData.append('shopname', selectedShop.shopName);
+
+                              axios.post('/item/reservation', formData)
                                 .then((response) => {
-                                  window.alert("가게 등록 완료");
+
+                                  window.alert("예약 완료");
                                   window.location.href = response.data;
                                 })
                                 .catch(error => {
+                                  console.log(error);
                                   window.alert(error.response.data);
                                 })
                               setReViewVisible(false);
@@ -974,8 +1005,13 @@ function Home_user() {
           </div>
           <div id="popsec2" style={{ cursor: "pointer" }}>
             <a onClick={() => {
-              setConfirmstate("wait");
-              axios.get('/item/reservation/getreservations')
+              setConfirmstate("wait")
+              setTapmenu1(true);
+              axios.get('/item/reservation/getreservations', {
+                params: {
+                  confirm: confirmstate
+                }
+              })
                 .then(response => {
                   setRegervation(response.data);
                   setTemp6(!temp6);
@@ -1085,14 +1121,14 @@ function Home_user() {
               {shopsData.map((store, index) => (
                 <div key={index} className="fv_store" style={{ display: "flex", borderBottom: "2px solid rgba(0,0,0,0.3)" }}>
                   <div className='fv_store_image'>
-                    <img src={"/shopimages/" + `${store.imagefilename}`} alt={store.imagefilename} style={{ backgroundCover: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat", width: "100%", height: "100px", float: "Left" }} />
+                    <img src={"/shopimages/" + `${store.imageFilename}`} alt={store.imageFilename} style={{ backgroundCover: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat", width: "100%", height: "100px", float: "Left" }} />
                   </div>
                   <div style={{ width: "1000px", marginTop: "10px", lineHeight: "1.8" }}>
                     <div className='fv_store_name' style={{ textAlign: "left" }}>
-                      {store.shopname}
+                      {store.shopName}
                     </div>
                     <div className='fv_store_address'>
-                      {store.shopaddress}
+                      {store.shopAddress}
                     </div>
                   </div>
 
@@ -1114,14 +1150,14 @@ function Home_user() {
             {shopsData.map((store, index) => (
               <div key={index} className="fv_store" style={{ display: "flex", borderBottom: "2px solid rgba(0,0,0,0.3)", position: "relative" }}>
                 <div className='fv_store_image'>
-                  <img src={"/shopimages/" + `${store.imagefilename}`} alt={store.imagefilename} style={{ backgroundCover: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat", width: "100%", height: "100px", float: "Left" }} />
+                  <img src={"/shopimages/" + `${store.imageFilename}`} alt={store.imageFilename} style={{ backgroundCover: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat", width: "100%", height: "100px", float: "Left" }} />
                 </div>
                 <div style={{ width: "1000px", marginTop: "10px", lineHeight: "1.8" }}>
                   <div className='fv_store_name' style={{ textAlign: "left" }}>
-                    {store.shopname}
+                    {store.shopName}
                   </div>
                   <div className='fv_store_address'>
-                    {store.shopaddress}
+                    {store.shopAddress}
                   </div>
                 </div>
 
@@ -1207,56 +1243,60 @@ function Home_user() {
           <div className='regervation_title' style={{ borderBottom: "2px solid rgba(0,0,0,0.3)", paddingBottom: "30px" }}>
             <span>예약 내역</span>
           </div>
-          <div className='reservation_check'>
+          <div className='reservation_check' >
             <div className='reservation_select' style={{ position: "fixed" }}>
               <a className={`res_select_btn1 ${search_switch3 == true ? "res_select_btn1_open" : ""}`} onClick={() => {
                 if (search_switch4 == true) {
+                  setConfirmstate('wait');
                   setSearch_switch3(true);
                   setSearch_switch4(false);
                   setTapmenu1(true);
-                  setConfirmstate("wait");
-                  {console.log(confirmstate)}
-                  axios.post('/', {
-                    memberidx:memberidx,
-                    confirm:confirmstate
+                  console.log("confirm = " + confirmstate)
+                  axios.get('/item/reservation/getreservations', {
+                    params: {
+                      confirm: 'wait'
+                    }
                   })
-                      .then((response) => {
-                        window.location.href = response.data;
-                      })
-                      .catch(error => {
-                        window.alert(error.response.data.result);
-                      })
-                  }
-                 else {
+                    .then((response) => {
+                      setRegervation(response.data);
+                      console.log(tapmenu1);
+                    })
+                    .catch(error => {
+                      setRegervation([]);
+                      window.alert(error.response.data.result);
+                    })
+                }
+                else {
 
                 }
               }}> waiting </a>
               <a className={`res_select_btn2 ${search_switch4 == true ? "res_select_btn2_open" : ""}`} onClick={() => {
                 if (search_switch3 == true) {
+                  setConfirmstate('true');
                   setSearch_switch3(false);
                   setSearch_switch4(true);
                   setTapmenu1(false);
-
-                  setConfirmstate("true");
-                  {console.log(confirmstate)}
-                  axios.post('/', {
-                    memberidx:memberidx,
-                    confirm:confirmstate
+                  console.log(confirmstate)
+                  axios.get('/item/reservation/getreservations', {
+                    params: {
+                      confirm: 'true',
+                    }
                   })
-                      .then((response) => {
-                        window.location.href = response.data;
-                      })
-                      .catch(error => {
-                        window.alert(error.response.data.result);
-                      })
-                  }
-                 else {
+                    .then((response) => {
+                      setRegervation(response.data);
+                      console.log(tapmenu1);
+                    })
+                    .catch(error => {
+                      window.alert(error.response.data.result);
+                    })
+                }
+                else {
 
                 }
               }}> complete </a>
             </div>
             <div className={`find_text_id ${tapmenu1 == true ? "" : "tapmenu1_hidden"}`} >
-              <div className="regervation_content" style={{ width: "90%", height: "70%", paddingTop:"20px",margin: "0 auto" }}>
+              <div className="regervation_content" style={{ width: "90%", height: "380px", paddingTop: "50px", margin: "0 auto"}}>
                 {regervation.map((store, index) => (
                   <div key={index} className="regervation_store" style={{ display: "flex", borderBottom: "2px solid rgba(0,0,0,0.3)", position: "relative" }}>
                     <div className='regervation_store_image'>
@@ -1276,7 +1316,6 @@ function Home_user() {
                         </div>
                         <div style={{ marginLeft: "20px" }}>
                           수량: {store.number}
-                          {confirmstate}
                         </div>
                       </div>
                     </div>
@@ -1305,9 +1344,9 @@ function Home_user() {
                   </div>
                 ))}
               </div>
-          </div>
-          <div className={`find_text_pw ${tapmenu1 == true ? "tapmenu1_hidden" : ""}`}>
-          <div className="regervation_content" style={{ width: "90%", height: "70%", paddingTop:"20px",margin: "0 auto" }}>
+            </div>
+            <div className={`find_text_pw ${tapmenu1 == true ? "tapmenu1_hidden" : ""}`}>
+              <div className="regervation_content" style={{ width: "90%", height: "380px", paddingTop: "50px", margin: "0 auto"}}>
                 {regervation.map((store, index) => (
                   <div key={index} className="regervation_store" style={{ display: "flex", borderBottom: "2px solid rgba(0,0,0,0.3)", position: "relative" }}>
                     <div className='regervation_store_image'>
@@ -1327,39 +1366,22 @@ function Home_user() {
                         </div>
                         <div style={{ marginLeft: "20px" }}>
                           수량: {store.number}
-                          {confirmstate}
                         </div>
                       </div>
                     </div>
-
-                    <input
-                      type="checkbox"
-                      checked={selectedregervationStores.includes(store)}
-                      onChange={(e) => {
-                        let isChecked = e.target.checked;
-                        let address = store.shopaddress;
-                        if (isChecked) {
-                          if (selectedregervationStores.some(item => item.shopaddress === address)) {
-                            // 이미 선택된 주소인 경우, 아무것도 하지 않음
-                          } else {
-                            // 새로운 배열을 생성하여 선택된 항목을 추가
-                            let copy = [...selectedregervationStores, store];
-                            setSelectedregervationStores(copy);
-                          }
-                        } else {
-                          // 선택 해제된 경우, 해당 주소를 가진 항목을 배열에서 제거
-                          setSelectedregervationStores(prevStores => prevStores.filter(item => item.shopaddress !== address));
-                        }
-                      }}
-                      style={{ position: "absolute", top: "0", right: "0", width: "25px", height: "25px", cursor: "pointer" }} />
-
+                    <div>
+                      <button style={{position: "absolute",top: "50px",right:"0",borderRadius:"20px", width: "80px", height: "35px", cursor: "pointer"}} onClick={()=>{
+                        setTemp7(!temp7);
+                        setStarreservation(store);
+                      }}>
+                        <span>별점</span>
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
+            </div>
           </div>
-          </div>
-          
-          
           <button className="remove_regervation_Store" style={{ marginTop: "20px", padding: "10px 50px", borderRadius: "50px", border: "1px solid rgba(0,0,0,0.3)", cursor: "pointer", fontWeight: "700", fontSize: "25px" }} onClick={() => {
             console.log(selectedregervationStores);
             axios.post('/item/reservation/cancel', selectedregervationStores
@@ -1383,6 +1405,147 @@ function Home_user() {
           </button>
         </div>
       </div>
+
+      <div className={`${temp7 == true ? "star_review_none" : 'star_review'}`}>
+        <span className="star_review_close" style={{ fontSize: "25px", position: "absolute", top: "10px", right: "19px", cursor: "pointer", padding: "0px 10px", fontSize: "25px", fontWeight: "700" }} onClick={() => {
+          setTemp7(!temp7);
+        }}>X</span>
+        <div className='point' style={{width:"100%",marginTop:"10px", marginRight:"110px"}}> <div style={{borderBottom:"1px solid rgb(150,150,150)",paddingBottom:"20px"}}><span style={{fontSize:"25px", fontWeight:"600"}}> 평점 작성 하기</span></div> {array.map((index) => (
+          <StarRateIcon
+            style={{marginTop:"50px"
+                    ,fontSize:"5rem"}}
+            key={index}
+            onClick={() => handleStarClick(index)}
+            className={clicked[index] && 'StarRateIcon'}
+          />))}
+        </div>
+        <div><button onClick={() => {
+          setTemp7(!temp7);
+          console.log(starreservation.shopidx)
+          const formdata = new FormData();
+          formdata.append("shopidx",starreservation.shopidx);
+          formdata.append("rating",score);
+          if(score){
+            axios.post('/setRating',formdata)
+            .then(response => {
+           console.log(starreservation.shopidx)
+              window.alert("별점 추가 완료");
+              window.location.href = response.data;
+            }).catch(error => {
+              window.alert(error.response.data.result);
+            })
+          }
+        }} 
+        style={{width:"200px",height:"40px",borderRadius:"15px",backgroundColor:"black",color:"white",fontSize:"20px",fontWeight:"600", marginTop:"40px",cursor:"pointer"}}><span>Submit</span></button></div>
+
+      </div>
+      <div id={`${temp8 == true ? "inquiry_none" : "inquiry"}`}>
+        <span className="fv_view_close" style={{ fontSize: "25px", position: "absolute", top: "10px", right: "19px", cursor: "pointer", padding: "0px 10px", fontSize: "25px", fontWeight: "700" }} onClick={() => {
+          setTemp8(!temp8);
+        }}>X</span>
+        <div className='inquiry_title'>
+          <span>문의함</span>
+        </div>
+
+        <div className='divide'><span style={{ display: "none" }}>asd</span></div>
+        <div className='inquiry_content' style={{ position: "relative" }}>
+          <div style={{ marginTop: "20px" }}>
+
+            {message.map((message, index) => (
+              <div key={index} className="inquiry_box" style={{ borderBottom: "2px solid rgba(0,0,0,0.3)" }}>
+                <div style={{ marginTop: "10px", lineHeight: "1.8" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <div className='inquiry_box_date'>
+                      날짜: {message.redate}
+                    </div>
+                  </div>
+                  <div style={{ display: "flex", width: "100%" }}>
+                    <div className='inquiry_box_content' style={{ width: "80%" }}>
+                      {message.content_inquiry}
+                    </div>
+                    <div className='inquiry_box_content_remove' style={{ width: "20%" }} onClick={() => {
+                      axios.delete('/inquiry/delete', {
+                        params: {
+                          inquiryidx: message.inquiryidx,
+                        }
+                      }).then(response => {
+                        window.alert("삭제 성공.");
+                        axios.get('/member/bookmark/check')
+                          .then(response => {
+                            setMessage(response.data);
+                          })
+                          .catch(error => {
+                            console.error('세션 데이터를 가져오는데 실패함', error);
+                          });
+
+                          setTemp8(!temp8);
+                      }).catch(error => {
+                        console.error('세션 데이터를 가져오는데 실패함', error);
+                      });
+                    }}>
+                      삭제
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div style={{ marginTop: "30px" }}>
+          <span className='inquiry_request' style={{ marginTop: "20px", padding: "10px 50px", borderRadius: "50px", border: "1px solid rgba(0,0,0,0.3)", cursor: "pointer", fontWeight: "700", fontSize: "25px" }} onClick={() => {
+            setTemp9(!temp9);
+          }}>1:1문의</span>
+        </div>
+      </div>
+
+      <div id={`${temp9 == true ? "inquiry_request_go_none" : "inquiry_request_go"}`}>
+        <span className="inquiry_request_go_close" style={{ fontSize: "25px", position: "absolute", top: "10px", right: "19px", cursor: "pointer", padding: "0px 10px", fontSize: "25px", fontWeight: "700" }} onClick={() => {
+          setTemp9(!temp9);
+        }}>X</span>
+        <div className='inquiry_request_go_title' style={{ marginTop: "20px" }}>
+          <span>1:1 Q&A</span>
+        </div>
+        <div className='divide' style={{ height: "10px" }}><span style={{ display: "none" }}>asd</span></div>
+        <div className="inquiry_request_go_content" style={{ marginTop: "10px" }}>
+          <div className='inquiry_request_go_content_title'>
+            문의 작성
+          </div>
+          <div>
+            <textarea
+              className="inquiry_textarea"
+              placeholder="문의 내용을 작성하세요..."
+              value={inquiry}
+              onChange={handleInquiryChange}
+              style={{ width: "90%", height: "200px", resize: "vertical", fontSize: "25px", marginTop: "10px", maxHeight: "300px" }}
+            ></textarea>
+          </div>
+          <div className="inquiry_request_go_content_warning">
+            <span >악성글을 작성하게 되면 회원이<br /> <strong style={{ color: "blue" }}>강제 탈퇴 처리</strong>가 될수도 있습니다.</span>
+          </div>
+        </div>
+        <button className="inquiry_request_go_btn" style={{ marginTop: "10px", padding: "10px 50px", borderRadius: "50px", border: "1px solid rgba(0,0,0,0.3)", cursor: "pointer", fontWeight: "700", fontSize: "25px" }} onClick={() => {
+          const formData = new FormData();
+
+             formData.append('content_inquiry', inquiry);
+          axios.post('/inquiry/register', formData
+          ).then(response => {
+            window.alert("작성 성공.");
+            axios.get('/inquiry/view')
+              .then(response => {
+                setMessage(response.data);
+              })
+              .catch(error => {
+                console.error('세션 데이터를 가져오는데 실패함', error);
+              });
+          }).catch(error => {
+            console.error('세션 데이터를 가져오는데 실패함', error);
+          });
+          setTemp9(!temp9);
+        }}>
+          작성하기
+        </button>
+      </div>
+
     </div>
   );
 }
