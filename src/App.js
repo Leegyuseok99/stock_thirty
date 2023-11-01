@@ -174,6 +174,12 @@ function App() {
            <Route path="/owner_notice" element={<div><Owner_notice /></div>}></Route>
            <Route path="/owner_noticeview/:id" element={<Owner_noticeView />} />
         </Route>
+        {/* <Route path="/owner_notice" element={<div>
+          <Owner_notice />
+        </div>} />
+        <Route path="/owner_noticeview" element={<div>
+          <Owner_noticeView />
+        </div>} /> */}
         <Route path='*' element={<div>없는 페이지</div>} />
         <Route path="/owner_storelist" element={<div>
           <Owner_storelist />

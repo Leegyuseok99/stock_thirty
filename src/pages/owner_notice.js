@@ -22,140 +22,6 @@ function Owner_notice() {
     function switchTemp() {
         setTemp(!temp);
     }
-    const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 번호
-    const postsPerPage = 10;//페이지당 게시글수
-    const allPosts = [
-        {
-            id: 1,
-            title: '첫 번째 게시글',
-            date: '2023.09.28',
-            content: '이것은 첫 번째 게시글 내용입니다.',
-        },
-        {
-            id: 2,
-            title: '두 번째 게시글',
-            date: '2023.09.29',
-            content: '이것은 두 번째 게시글 내용입니다.',
-        },
-        {
-            id: 3,
-            title: '세 번째 게시글',
-            date: '2023.09.30',
-            content: '이것은 세 번째 게시글 내용입니다.',
-        }, {
-            id: 4,
-            title: '첫 번째 게시글',
-            date: '2023.09.28',
-            content: '이것은 첫 번째 게시글 내용입니다.',
-        },
-        {
-            id: 5,
-            title: '두 번째 게시글',
-            date: '2023.09.29',
-            content: '이것은 두 번째 게시글 내용입니다.',
-        },
-        {
-            id: 6,
-            title: '세 번째 게시글',
-            date: '2023.09.30',
-            content: '이것은 세 번째 게시글 내용입니다.',
-        }, {
-            id: 7,
-            title: '첫 번째 게시글',
-            date: '2023.09.28',
-            content: '이것은 첫 번째 게시글 내용입니다.',
-        },
-        {
-            id: 8,
-            title: '두 번째 게시글',
-            date: '2023.09.29',
-            content: '이것은 두 번째 게시글 내용입니다.',
-        },
-        {
-            id: 9,
-            title: '세 번째 게시글',
-            date: '2023.09.30',
-            content: '이것은 세 번째 게시글 내용입니다.',
-        }, {
-            id: 10,
-            title: '첫 번째 게시글',
-            date: '2023.09.28',
-            content: '이것은 첫 번째 게시글 내용입니다.',
-        },
-        {
-            id: 11,
-            title: '두 번째 게시글',
-            date: '2023.09.29',
-            content: '이것은 두 번째 게시글 내용입니다.',
-        },
-        {
-            id: 12,
-            title: '세 번째 게시글',
-            date: '2023.09.30',
-            content: '이것은 세 번째 게시글 내용입니다.',
-        }, {
-            id: 13,
-            title: '첫 번째 게시글',
-            date: '2023.09.28',
-            content: '이것은 첫 번째 게시글 내용입니다.',
-        },
-        {
-            id: 14,
-            title: '두 번째 게시글',
-            date: '2023.09.29',
-            content: '이것은 두 번째 게시글 내용입니다.',
-        },
-        {
-            id: 15,
-            title: '세 번째 게시글',
-            date: '2023.09.30',
-            content: '이것은 세 번째 게시글 내용입니다.',
-        }, {
-            id: 16,
-            title: '첫 번째 게시글',
-            date: '2023.09.28',
-            content: '이것은 첫 번째 게시글 내용입니다.',
-        },
-        {
-            id: 17,
-            title: '두 번째 게시글',
-            date: '2023.09.29',
-            content: '이것은 두 번째 게시글 내용입니다.',
-        },
-        {
-            id: 18,
-            title: '세 번째 게시글',
-            date: '2023.09.30',
-            content: '이것은 세 번째 게시글 내용입니다.',
-        },
-        {
-            id: 19,
-            title: '세 번째 게시글',
-            date: '2023.09.30',
-            content: '이것은 세 번째 게시글 내용입니다.',
-        },
-        {
-            id: 20,
-            title: '세 번째 게시글',
-            date: '2023.09.30',
-            content: '이것은 세 번째 게시글 내용입니다.',
-        },
-        {
-            id: 21,
-            title: '세 번째 게시글',
-            date: '2023.09.30',
-            content: '이것은 세 번째 게시글 내용입니다.',
-        },
-    ];
-    const indexOfLastPost = currentPage * postsPerPage;
-    const indexOfFirstPost = indexOfLastPost - postsPerPage;
-    const currentPosts = allPosts.slice(indexOfFirstPost, indexOfLastPost);
-
-    const pageNumbers = [];
-
-    for (let i = 1; i <= Math.ceil(allPosts.length / postsPerPage); i++) {
-        pageNumbers.push(i);
-    }
     useEffect(() => {
         // 스프링에서 세션 데이터를 가져오는 호출
         axios.get('/getSessionMember')
@@ -175,6 +41,34 @@ function Owner_notice() {
                 console.error('세션 데이터를 가져오는데 실패함', error);
             });
     }, [recall]);
+    /*공지사항 가져오기*/
+    let [noticepost,setNoticePost] = useState([]);
+    useEffect(() => {
+        axios.get('/manager/notice/readall')
+            .then(response => {
+                const noticepost = response.data;
+                console.log(noticepost);
+                console.log(noticepost.redirect)
+                if (noticepost.redirect) {
+                    console.log("페이지 이동");
+                    window.location.href = noticepost.redirect;
+                } else {
+                    setNoticePost(noticepost);
+                    console.log("세션데이터가 존재");
+                }
+            },[userInfo]);
+    }, []);
+    const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 번호
+    const postsPerPage = 10;//페이지당 게시글수
+    const indexOfLastPost = currentPage * postsPerPage;
+    const indexOfFirstPost = indexOfLastPost - postsPerPage;
+    const currentPosts = noticepost.slice(indexOfFirstPost, indexOfLastPost);
+
+    const pageNumbers = [];
+
+    for (let i = 1; i <= Math.ceil(noticepost.length / postsPerPage); i++) {
+        pageNumbers.push(i);
+    }
     return (
         <div>
             <div className='owner_noticeWrap' >
@@ -238,13 +132,28 @@ function Owner_notice() {
                             <th>제목</th>
                             <th style={{ width: "150px", borderTopRightRadius: '20px' }}>등록일</th>
                         </tr>
-                        {currentPosts.map(post => (
-                            <tr className='notice_main_content' key={post.id} style={{ height: "40px", fontSize: "20px" }}>
-                                <td id="notice_row">{post.id}</td>
+                        {currentPosts.map((nti, index) => (
+                            <tr className='notice_main_content' key={index} style={{ height: "40px", fontSize: "20px" }}>
+                                <td id="notice_row">{nti.noticeIdx}</td>
                                 <td id="notice_row" onClick= {()=>{
-                                    navigate(`/owner_noticeview/${post.id}`)
-                                }} style={{ textAlign: "left" }}><span>{post.title}</span></td>
-                                <td id="notice_row">{post.date}</td>
+                                    navigate(`/owner_noticeview/${nti.noticeIdx}`)
+                                    axios.get('/manager/notice/read',{
+                                        params: {
+                                            noticeIdx:nti.noticeIdx,
+                                            title:nti.title
+                                        }
+                                    })
+                                    .then(response => {
+                                        const not = response.data;
+                                        const noticep = `?notititle=${not.title}&notidate=${not.noticeDate}&noticontent=${not.content}`;
+                                        const popupURL = `/owner_noticeview/${nti.noticeIdx}${noticep}`;
+                                        navigate(popupURL);
+                                      })
+                                      .catch(error => {
+                                        console.error('세션 데이터를 가져오는데 실패함', error);
+                                      });
+                                }} style={{ textAlign: "left" }}><span>{nti.title}</span></td>
+                                <td id="notice_row">{nti.noticeDate}</td>
                             </tr>
                         ))}
 
@@ -265,7 +174,7 @@ function Owner_notice() {
                             </a>
                         ))}
                         {/* 다음 페이지로 이동 버튼 */}
-                        <button className="next" onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage === Math.ceil(allPosts.length / postsPerPage)} style={{ cursor: "pointer", margin: "0px 10px", fontSize: "20px", padding: "0px 10px", boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.5)' }}>▶️</button>
+                        <button className="next" onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage === Math.ceil(noticepost.length / postsPerPage)} style={{ cursor: "pointer", margin: "0px 10px", fontSize: "20px", padding: "0px 10px", boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.5)' }}>▶️</button>
                     </div>
 
 

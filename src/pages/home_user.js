@@ -507,7 +507,7 @@ function Home_user() {
   let [tapmenu, setTapmenu] = useState(true);
   /*예약확인*/
   let [temp6, setTemp6] = useState(true);
-  let [regervation, setRegervation] = useState([]);
+  let [regervation, setRegervation] = useState([{shopname:"ds",quantity:"1",shopaddress:"Dsd"},{shopname:"ds",quantity:"1",shopaddress:"Dsd"}]);
   let [selectedregervationStores, setSelectedregervationStores] = useState([]);
   let [search_switch3, setSearch_switch3] = useState(true);
   let [search_switch4, setSearch_switch4] = useState(false);
@@ -807,7 +807,7 @@ function Home_user() {
                     }}> menu </a>
                   </div>
                                     <div className={`find_text_id ${tapmenu == true ? "" : "tapmenu_hidden"}`} >
-                    <div className='detail_store_img'><img src={"/shopimages/" + `${selectedShop.imageFilename}`} alt={selectedShop.imageFilename}></img></div>
+                    <div className='detail_store_img'><img src={"/shopimages/" + `${selectedShop.imageFilename}`} alt={selectedShop.imageFilename} style={{backgroundCover: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat",width:"100%"}}></img></div>
                     <div className='detail_store_name' style={{ marginTop: "20px", borderTop: "1px solid rgb(225, 223, 223)", fontSize: "28px", fontWeight: "600", textAlign: "center" }}><span>{selectedShop.shopame}</span></div>
                     <div style={{ marginTop: "8px", marginBottom: "10px", textAlign: "center" }}><span style={{ fontSize: "20px", fontWeight: "600" }}>평점 : {selectedShop.rating}</span><span style={{ fontSize: "20px", color: "gray" }}>/5</span><StarBorderIcon style={{ marginBottom: "-2px" }}></StarBorderIcon></div>
                     <div style={{ paddingBottom: "20px", borderBottom: "1px solid rgb(225, 223, 223)", textAlign: "center", fontSize: "20px" }}></div>
@@ -1239,6 +1239,7 @@ function Home_user() {
             setSearch_switch3(true);
             setSearch_switch4(false);
             setTapmenu1(false);
+            setSelectedregervationStores([]); // 삭제 체크 박스 초기화 
           }}>X</span>
           <div className='regervation_title' style={{ borderBottom: "2px solid rgba(0,0,0,0.3)", paddingBottom: "30px" }}>
             <span>예약 내역</span>
@@ -1276,6 +1277,7 @@ function Home_user() {
                   setSearch_switch3(false);
                   setSearch_switch4(true);
                   setTapmenu1(false);
+                  setSelectedregervationStores([]);// 삭제 체크 박스 초기화
                   console.log(confirmstate)
                   axios.get('/item/reservation/getreservations', {
                     params: {
@@ -1326,17 +1328,22 @@ function Home_user() {
                       onChange={(e) => {
                         let isChecked = e.target.checked;
                         let address = store.shopaddress;
+                        let rsidx = store.reservationidx;
                         if (isChecked) {
                           if (selectedregervationStores.some(item => item.shopaddress === address)) {
                             // 이미 선택된 주소인 경우, 아무것도 하지 않음
+                            if(selectedregervationStores.reservationidx !== store.reservationidx){
+                              let copy = [...selectedregervationStores, store];
+                              setSelectedregervationStores(copy);
+                            }
                           } else {
                             // 새로운 배열을 생성하여 선택된 항목을 추가
                             let copy = [...selectedregervationStores, store];
-                            setSelectedregervationStores(copy);
+                              setSelectedregervationStores(copy);
                           }
                         } else {
                           // 선택 해제된 경우, 해당 주소를 가진 항목을 배열에서 제거
-                          setSelectedregervationStores(prevStores => prevStores.filter(item => item.shopaddress !== address));
+                          setSelectedregervationStores(prevStores => prevStores.filter(item => item.reservationidx !== rsidx));
                         }
                       }}
                       style={{ position: "absolute", top: "0", right: "0", width: "25px", height: "25px", cursor: "pointer" }} />
@@ -1400,6 +1407,7 @@ function Home_user() {
               setSelectedregervationStores([]);
               window.alert(error.response.data.result);
             })
+            setTemp6(!temp6);
           }}>
             삭제 {selectedregervationStores.length}
           </button>

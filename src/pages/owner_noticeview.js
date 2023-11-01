@@ -15,25 +15,30 @@ function Owner_noticeview() {
     function switchTemp() {
         setTemp(!temp);
     }
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const notititle = urlParams.get("notititle");
     useEffect(() => {
         // 스프링에서 세션 데이터를 가져오는 호출
         axios.get('/getSessionMember')
             .then(response => {
                 const userData = response.data;
-                console.log(userData.redirect)
+                console.log(userData.redirect);
                 if (userData.redirect) {
                     console.log("페이지 이동");
                     window.location.href = userData.redirect;
                 } else {
                     setUserInfo(userData);
-                    console.log("세션데이터가 존재");
+                    console.log("세션 데이터가 존재");
                     console.log(userData.id);
                 }
             })
             .catch(error => {
                 console.error('세션 데이터를 가져오는데 실패함', error);
             });
-    }, [recall]);
+
+        // 공지사항 데이터 가져오기
+    }, []);
     return (
         <div>
             <div className='owner_noticeWrap' >
@@ -84,13 +89,16 @@ function Owner_noticeview() {
             <div className='notview_header'>
                 <h1>공지사항</h1>
             </div>
-            <div className='notinfo'>
-                <p className='nottitle'>title</p>
-                <p className='notdate'>2023-10-23</p>
-            </div>
-            <div className='nottxt'>
-                <p>content</p>
-            </div>
+                <div>
+                <div className='notinfo'>
+                    <p className='nottitle'>{notititle}</p>
+                    <p className='notdate'></p>
+                </div>
+                <div className='nottxt'>
+                    <p></p>
+                </div>
+                </div>
+
             <div className='notfooter'>
                 <div className='curnot'><a >다음 게시글</a></div>
                 <div className='curnot'><a>이전 게시글</a></div>

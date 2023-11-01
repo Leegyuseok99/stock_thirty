@@ -11,14 +11,6 @@ import { lazy, Suspense, createContext, useState, useEffect } from "react";
 function Join() {
     let navigate = useNavigate();
 
-    axios.get("http://localhost:8080/signll_up").then((res) => {
-        console.log(res.data)
-    })
-        .catch(() => {
-            console.log('실패함')
-        })
-
-
     const [id, setId] = useState("");
     const [pw, setpw] = useState("");
     const [name, setName] = useState("");
@@ -64,6 +56,7 @@ function Join() {
                             required
                             name="id"
                             type="email"
+                            value={id}
                             autoComplete="id"
                             sx={{
                                 width: { sm: 200, md: 350 },
@@ -93,6 +86,7 @@ function Join() {
                                 type="pw"
                                 required
                                 name="pw"
+                                value={pw}
                                 autoComplete="current-pw"
                                 sx={{
                                     width: { sm: 200, md: 350 },
@@ -118,6 +112,7 @@ function Join() {
                                 placeholder='비밀번호를 재입력해주세요'
                                 label="check_pw"
                                 type="pw"
+                                value={check_pw}
                                 required
                                 name="setCehck_pw"
                                 autoComplete="current-pw"
@@ -149,6 +144,7 @@ function Join() {
                             placeholder='이름을 입력해주세요'
                             label="Name"
                             required
+                            value={name}
                             name="name"
                             sx={{
                                 width: { sm: 200, md: 350 },
@@ -172,7 +168,8 @@ function Join() {
                             placeholder='전화 번호를 입력해주세요'
                             label="Phone phone"
                             required
-                            name="phone"
+                            name="pn"
+                            value={phone}
                             sx={{
                                 width: { sm: 200, md: 350 },
                                 "& .MuiInputBase-root": {
@@ -194,7 +191,17 @@ function Join() {
                         }}></input>
                     </div>
 
-                    <Button onClick={() => { SetTemp(!temp) }} id="textFeild" className="btn" type="submit" Width variant="contained"><span>sign up</span></Button>
+                    <Button onClick={() => { 
+                         if (hasNotSameError('newpw_check') == true) {
+                            window.alert(" 비밀번호가 일치하지 않습니다.")
+                            setId("");
+                setName("");
+                setCehck_pw("");
+                setpw("");
+                setphone("");
+                        } else{
+                            SetTemp(!temp)
+                        } }} id="textFeild" className="btn" type="submit" Width variant="contained"><span>sign up</span></Button>
 
                 </div>
                 <div className="imgarea" style={{borderTopRightRadius: "20px",borderBottomRightRadius: "20px"}}>
@@ -207,20 +214,32 @@ function Join() {
         </div>
     )
     function sendUserData() {
+      console.log("id = ", id);
+      console.log("name = ", name);
+      console.log("pw = ", pw);
+      console.log("phone = ", phone);
+      console.log("role = ", role);
         return (
             axios.post('/join', {
                     id: id,
                     name: name,
                     pw: pw,
                     phone: phone,
-                    role: role,
-        
+                    role: role
             }).then(() => {
                 window.alert("회원가입 완료")
                 navigate("/login")
-            }).catch(function () {
-                console.log('실패함')
-            })
+                setId("");
+                setName("");
+                setCehck_pw("");
+                setpw("");
+                setphone("");
+                
+            }).catch(error => {
+             let errorMessages = Object.values(error.response.data).join('\n');
+             console.log(error);
+             window.alert(errorMessages);
+         })
         )
     }
 }
