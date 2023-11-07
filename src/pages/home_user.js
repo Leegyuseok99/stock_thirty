@@ -26,6 +26,9 @@ import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import Marker4 from "./../img/marker4.gif";
 import MessageIcon from '@mui/icons-material/Message';
 import StarRateIcon from '@mui/icons-material/StarRate';
+import LogoutIcon from '@mui/icons-material/Logout';
+
+
 function Home_user() {
   /*마이페이지*/
   const [Image, setImage] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png")
@@ -53,6 +56,19 @@ function Home_user() {
       return "#e74c3c";
     }
   }
+  function formatDate(dateString) {
+     const originalDate = new Date(dateString);
+     const options = {
+       year: "numeric",
+       month: "2-digit",
+       day: "2-digit",
+       hour: "2-digit",
+       minute: "2-digit",
+       second: "2-digit",
+     };
+     const formattedDate = originalDate.toLocaleString("ko-KR", options);
+     return formattedDate;
+   }
   let [search_store_switch, setSearch_store_switch] = useState(true);
   let [search_store_switch2, setSearch_store_switch2] = useState(true);
   let [switch3, setSwitch3] = useState(0);
@@ -145,6 +161,8 @@ function Home_user() {
 
                     // 만약 해당 정보를 찾았다면 selectedShopInfo에 그 정보가 저장됩니다.
                     if (selectedShopInfo) {
+                  let formattedPhoneNumber = selectedShopInfo.shopTel.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
+                  selectedShopInfo.shopTel=formattedPhoneNumber;
                       setSelectedShop(selectedShopInfo);
                     }
                     const iwInner = document.getElementById('showDetails');
@@ -198,9 +216,10 @@ function Home_user() {
             longitude: position.coords.longitude,
             distance: rangeValue,
             unit: "km",
-            price: maxPrice,
+            minPrice: minPrice,
+            maxprice: maxPrice,
             time: endTime,
-            rating: maxStars.toFixed(1),
+            rating: maxStars,
           }
         }).then(response => {//데이터를받아오는게성공시 다른페이지호출
           let search_store = response.data;
@@ -251,6 +270,8 @@ function Home_user() {
 
                   // 만약 해당 정보를 찾았다면 selectedShopInfo에 그 정보가 저장됩니다.
                   if (selectedShopInfo) {
+                 let formattedPhoneNumber = selectedShopInfo.shopTel.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
+                  selectedShopInfo.shopTel=formattedPhoneNumber;
                     setSelectedShop(selectedShopInfo);
                   }
                   const iwInner = document.getElementById('showDetails');
@@ -349,6 +370,8 @@ function Home_user() {
 
                     // 만약 해당 정보를 찾았다면 selectedShopInfo에 그 정보가 저장됩니다.
                     if (selectedShopInfo) {
+                  let formattedPhoneNumber = selectedShopInfo.shopTel.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
+                  selectedShopInfo.shopTel=formattedPhoneNumber;
                       setSelectedShop(selectedShopInfo);
                     }
                     const iwInner = document.getElementById('showDetails');
@@ -507,7 +530,7 @@ function Home_user() {
   let [tapmenu, setTapmenu] = useState(true);
   /*예약확인*/
   let [temp6, setTemp6] = useState(true);
-  let [regervation, setRegervation] = useState([{shopname:"ds",quantity:"1",shopaddress:"Dsd"},{shopname:"ds",quantity:"1",shopaddress:"Dsd"}]);
+  let [regervation, setRegervation] = useState([{shopName:'ds'},{shopName:'ds'},{shopName:'ds'},{shopName:'ds'}]);
   let [selectedregervationStores, setSelectedregervationStores] = useState([]);
   let [search_switch3, setSearch_switch3] = useState(true);
   let [search_switch4, setSearch_switch4] = useState(false);
@@ -520,8 +543,10 @@ function Home_user() {
   const handleRangeChange = (event) => {
     setRangeValue(event.target.value);
   }
-
-  const [maxPrice, setMaxPrice] = useState(0);
+  /*필터 가격 선택*/
+  const [minPrice, setMinPrice] = useState("0");
+  const [minPrice1, setMinPrice1] = useState(0);
+  const [maxPrice, setMaxPrice] = useState("");
   const [maxPrice1, setMaxPrice1] = useState(0);
   function addCommasToNumber(number) {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -535,7 +560,32 @@ function Home_user() {
       setMaxPrice1(addCommasToNumber(inputValue)); // 문자열로 설정
     }
   }
+  useEffect(() => {
+    console.log(maxPrice)
+  },[maxPrice])
+    const checkOnlyOne1 = (checkThis) => {
+    const checkboxes = document.getElementsByName('price')
+    let selectedPrice = "0";
+    let selectedPrice1 = 0;
+    for (let i = 0; i < checkboxes.length; i++) {
+      if (checkboxes[i] !== checkThis) {
+        checkboxes[i].checked = false;
+        setMaxPrice(checkThis.value);
+        setMaxPrice1(checkThis.value);
+      }
+    }
 
+    checkboxes.forEach((checkbox) => {
+      if (checkbox.checked) {
+        selectedPrice = checkbox.value;
+        selectedPrice1 = parseInt(selectedPrice, 10);
+      }
+    });
+
+    setMaxPrice(selectedPrice);
+    setMaxPrice1(addCommasToNumber(selectedPrice1));
+  }
+  /*필터 마감 선택*/
   const [endTime, setEndTime] = useState(0); // 초기값 설정 (예: 24시간 마감시간)
 
   const handleEndTimeChange = (event) => {
@@ -543,13 +593,70 @@ function Home_user() {
     setEndTime(selectedTime);
   }
 
-  const [maxStars, setMaxStars] = useState(0); // 최대 별점
 
-
-  const handleMaxStarsChange = (event) => {
-    const selectedMaxStars = parseInt(event.target.value, 10);
-    setMaxStars(selectedMaxStars);
+  const checkOnlyOne2 = (checkThis) => {
+    const checkboxes = document.getElementsByName('endTime')
+    let selectedTime = 0;
+    for (let i = 0; i < checkboxes.length; i++) {
+      if (checkboxes[i] !== checkThis) {
+        checkboxes[i].checked = false;
+        setEndTime(checkThis.value);
+      }
+    }
+    checkboxes.forEach((checkbox) => {
+      if (checkbox.checked) {
+        selectedTime = parseInt(checkbox.value, 10);
+      }
+    });
+  
+    setEndTime(selectedTime);
   }
+  //필터 별점 선택 
+  let [maxStars, setMaxStars] = useState(0); // 최대 별점
+
+  const checkOnlyOne = (checkThis) => {
+    const checkboxes = document.getElementsByName('rating')
+    let selectedrate = 0;
+    for (let i = 0; i < checkboxes.length; i++) {
+      if (checkboxes[i] !== checkThis) {
+        checkboxes[i].checked = false;
+        setMaxStars(checkThis.value);
+      }
+    }
+    checkboxes.forEach((checkbox) => {
+      if (checkbox.checked) {
+        selectedrate = parseInt(checkbox.value, 10);
+      }
+    });
+  
+    setMaxStars(selectedrate);
+  }
+
+  const resetFilters = () => {
+    setRangeValue(0);
+    setEndTime(0);
+    setMinPrice("0");
+    setMinPrice1(0);
+    setMaxPrice("0");
+    setMaxPrice1(0);
+    setMaxStars(0);
+  
+    // Reset the checkboxes by unchecking them
+    const checkboxes = document.getElementsByName('price');
+    checkboxes.forEach((checkbox) => {
+      checkbox.checked = false;
+    });
+  
+    const endTimeCheckboxes = document.getElementsByName('endTime');
+    endTimeCheckboxes.forEach((checkbox) => {
+      checkbox.checked = false;
+    });
+  
+    const ratingCheckboxes = document.getElementsByName('rating');
+    ratingCheckboxes.forEach((checkbox) => {
+      checkbox.checked = false;
+    });
+  };
   /*신뢰점수*/
   let [trust_popup, setTrust_popup] = useState(true);
   /*1대1문의*/
@@ -560,6 +667,13 @@ function Home_user() {
   const handleInquiryChange = (e) => {
     setInquiry(e.target.value);
   };
+  /*문의 세부 및 답변*/
+  let [temp10, setTemp10] = useState(true);
+  let [user_redate, setUser_redate] = useState("");
+  let [user_content_inquiry, setUser_content_inquiry] = useState("");
+  let [manager_redate, setManager_redate] = useState("");
+  let [manager_content_inquiry, setManager_content_inquiry] = useState("");
+  let [manager_status, setManager_status] = useState("");
   /*별점 */
   let [temp7, setTemp7] = useState(true);
   const [clicked, setClicked] = useState([false, false, false, false, false]);
@@ -569,10 +683,10 @@ function Home_user() {
     for (let i = 0; i < 5; i++) {
       clickStates[i] = i <= index ? true : false;
     }
-     setClicked(clickStates);
-   };
+    setClicked(clickStates);
+  };
   let score = clicked.filter(Boolean).length;
-  let [starreservation,setStarreservation] = useState([]);
+  let [starreservation, setStarreservation] = useState([]);
   return (
     <div className="App">
       <div className="home_user_App">
@@ -621,9 +735,9 @@ function Home_user() {
                       .catch(error => {
                         console.error('세션 데이터를 가져오는데 실패함', error);
                       });
-                      setTemp8(!temp8);
+                    setTemp8(!temp8);
                   }} style={{ cursor: "pointer" }}>
-                    <MessageIcon fontSize="large"/>
+                    <MessageIcon fontSize="large" />
                   </a>
                 </li>
                 <li>
@@ -654,7 +768,7 @@ function Home_user() {
                     window.alert("로그아웃되었습니다.");
                   }
                   }>
-                    <ExitToAppIcon fontSize="large" />
+                    <LogoutIcon fontSize="large" />
                   </a>
                 </li>
                 <li>
@@ -669,20 +783,21 @@ function Home_user() {
           </header>
           <div style={{ width: "100%", height: "25px" }}></div>
           <div style={{ width: "100%", height: "91%", overflow: "hidden" }}>
-            <div className={`contents_slide ${showFilter == true ? "" : "filter_slide"}`} style={{ width: "122%", height: "100%", display: "flex" }}>
+            <div className={`contents_slide ${showFilter == true ? "" : "filter_slide"}`} style={{ width: "140%", height: "100%", display: "flex" }}>
 
               <div style={{ width: "1%", height: "100%" }}></div>
 
-              <div className={`filter`} style={{ width: "22%", borderRadius: "50px", height: "99%", backgroundColor: "white", boxShadow: '0px 2px 5px rgba(0, 0, 0, 1)' }}>
+              <div className={`filter`} style={{ width: "19%", borderRadius: "50px", height: "99%", backgroundColor: "white", boxShadow: '0px 2px 5px rgba(0, 0, 0, 1)' }}>
                 <div className='filter_title' style={{ paddingTop: "50px", height: "5%", fontWeight: "600", fontSize: "40px", textAlign: "center", marginBottom: "30px" }}>
                   필터
                 </div>
 
-                <div className='filter_contents' style={{ height: "95%" }}>
+                <div className='filter_contents' style={{ height: "83%" }}>
 
-                  <div className='filter_distance' style={{ height: "19%" }}>
-                    <h1 style={{ fontWeight: "700", fontSize: "30px", textAlign: "left", marginLeft: "50px" }}>거리</h1>
+                  <div className='filter_distance' style={{ height: "24%", borderTop:"1px solid rgb(180,180,180)",borderBottom:"1px solid rgb(180,180,180)"}}>
+                    <h1 style={{ fontSize: "20px", textAlign: "left", marginLeft: "30px", color: "#929292" }}>거리</h1>
                     <div>
+
                       <input
                         type="range"
                         min="0"
@@ -694,33 +809,118 @@ function Home_user() {
                       />
 
                       {rangeValue != 0 && (
-                        <p style={{ fontWeight: "600", fontSize: "25px", height: "12%" }}>
-                          선택된 거리: <span style={{ color: "gray", fontWeight: "700", fontSize: "40px" }}>{rangeValue} </span>Km</p>
+                        <p style={{ fontWeight: "600", fontSize: "20px", color: "#828282" }}>
+                          선택된 거리: <span style={{ color: "black", fontWeight: "700", fontSize: "22px" }}>{rangeValue} </span>Km</p>
                       )}
                     </div>
                   </div>
-                  <div className='filter_price' style={{ height: "19%" }}>
-                    <h1 style={{ fontWeight: "700", fontSize: "30px", textAlign: "left", marginLeft: "50px" }}>가격</h1>
-                    <div >
-                      <input
-                        type="range"
-                        min="0"
-                        max="59999"
-                        step="1000"
+                  <div className='filter_price' style={{ height: "33%" , borderBottom:"1px solid rgb(180,180,180)"}}>
+                    <h1 style={{ fontSize: "20px", textAlign: "left", marginLeft: "30px",marginBottom:"20px", color: "#929292" }}>가격</h1>
+                    <div style={{marginBottom:"25px"}}>                      
+                        <input
+                          id="ft_price_btn1"
+                          type="checkbox"
+                          name='price'
+                          value='10000'
+                          onChange={(e) => {
+                            checkOnlyOne1(e.target);
+                          }}
+                        /><label for="ft_price_btn1"><span style={{ fontWeight: "600" ,marginRight:"20px"}}> ~ 10000원</span></label>
+
+                        <input
+                          id="ft_price_btn2"
+                          type="checkbox"
+                          name='price'
+                          value='30000'
+                          onChange={(e) => {
+                            checkOnlyOne1(e.target);
+                          }}
+                        /><label for="ft_price_btn2"><span style={{ fontWeight: "600" ,marginRight:"20px"}}> ~ 30000원</span></label>
+
+                        <input
+                          id="ft_price_btn3"
+                          type="checkbox"
+                          name='price'
+                          value='59000'
+                          onChange={(e) => {
+                            checkOnlyOne1(e.target);
+                          }}
+                        /><label for="ft_price_btn3"><span style={{ fontWeight: "600" }}> ~ 59000원</span></label>
+
+                    </div>
+                    <div>
+                      <TextField
+                        placeholder='최소 가격 0원'
+                        label="최소 가격"
+                        size='small'
+                        style = {{width: 130}}
+                        name='minprice' 
+                        value={minPrice}
+                        onChange={(e) => {
+                          setMinPrice(e.target.value);
+                          setMinPrice1(addCommasToNumber(e.target.value));
+                      }}                    
+                      >
+
+                      </TextField>
+                      <span style={{fontWeight:"600", padding:"0px 15px 0px 15px",display:"inline-block",marginTop:"8px"}}>~</span>
+                      <TextField
+                        label="최대 가격"
+                        size='small'
+                        style = {{width: 130}}
+                        name='maxprice'
                         value={maxPrice}
-                        onChange={handleMaxPriceChange}
-                        style={{ width: "80%", height: "80%", accentColor: "black" }}
-                      />
+                        onChange={(e) => {
+                          setMaxPrice(e.target.value);
+                          setMaxPrice1(addCommasToNumber(e.target.value));
+                      }}
+                      >
+                        
+                      </TextField>
+                    </div>
+                     <div >
+                    
                       {maxPrice != 0 && (
-                        <p style={{ fontWeight: "600", fontSize: "25px", height: "12%" }}>
-                          최대 가격: <span style={{ color: "gray", fontWeight: "700", fontSize: "40px" }}>{maxPrice1} </span>원</p>
+                        <p style={{ fontWeight: "600", fontSize: "20px", color: "#828282" }}>
+                          가격: <span style={{ color: "black", fontWeight: "700", fontSize: "22px" }}>{minPrice1} ~ {maxPrice1} </span>원</p>
                       )}
                     </div>
                   </div>
 
 
-                  <div className='filter_endtime' style={{ height: "19%" }}>
-                    <h1 style={{ fontWeight: "700", fontSize: "30px", textAlign: "left", marginLeft: "50px" }}>마감</h1>
+                  <div className='filter_endtime' style={{ height: "30%", borderBottom:"1px solid rgb(180,180,180)" }}>
+                    <h1 style={{ fontSize: "20px", textAlign: "left", marginLeft: "30px",marginBottom:"20px", color: "#929292" }}>마감</h1>
+                    <div style={{marginBottom:"25px"}}>
+                    <input
+                          id="ft_endtime_btn1"
+                          type="checkbox"
+                          name='endTime'
+                          value='6'
+                          onChange={(e) => {
+                            checkOnlyOne2(e.target);
+                          }}
+                        /><label for="ft_endtime_btn1"><span style={{ fontWeight: "600" ,marginRight:"20px"}}> 6시간 ~ </span></label>
+
+                        <input
+                          id="ft_endtime_btn2"
+                          type="checkbox"
+                          name='endTime'
+                          value='12'
+                          onChange={(e) => {
+                            checkOnlyOne2(e.target);
+                          }}
+                        /><label for="ft_endtime_btn2"><span style={{ fontWeight: "600" ,marginRight:"20px"}}> 12시간 ~ </span></label>
+
+                        <input
+                          id="ft_endtime_btn3"
+                          type="checkbox"
+                          name='endTime'
+                          value='24'
+                          onChange={(e) => {
+                            checkOnlyOne2(e.target);
+                          }}
+                        /><label for="ft_endtime_btn3"><span style={{ fontWeight: "600" }}> 24시간 ~ </span></label>
+                    </div>
                     <div>
                       <input
                         type="range"
@@ -732,34 +932,114 @@ function Home_user() {
                         style={{ width: "80%", height: "80%", accentColor: "black" }}
                       />
                       {endTime != 0 && (
-                        <p style={{ fontWeight: "600", fontSize: "25px", height: "12%" }}>
-                          마감까지 <span style={{ color: "gray", fontWeight: "700", fontSize: "40px" }}>{endTime}</span> 시간 이상 남음</p>
+                        <p style={{ fontWeight: "600", fontSize: "20px", color: "#828282" }}>
+                          마감까지 <span style={{ color: "black", fontWeight: "700", fontSize: "22px" }}>{endTime}</span> 시간 이상 남음</p>
                       )}
                     </div>
                   </div>
-                  <div className='filter_star' style={{ height: "19%" }}>
-                    <h1 style={{ fontWeight: "700", fontSize: "30px", textAlign: "left", marginLeft: "50px" }}>별점</h1>
-                    <div>
+                  <div className='filter_star' style={{ height: "50%" }}>
+                    <h1 style={{ fontSize: "20px", textAlign: "left", marginLeft: "30px", color: "#929292" }}>별점</h1>
+                    <div style={{ marginRight: "25px" }}>
                       <input
-                        type="range"
-                        min="0"
-                        max="5" // 0부터 5점까지 범위
-                        step="0.1" // 0.1씩 이동 (선택적)
-                        value={maxStars}
-                        onChange={handleMaxStarsChange}
-                        style={{ width: "80%", height: "80%", accentColor: "black" }}
-                      />
+                        id="ft_star_btn5"
+                        type="checkbox"
+                        name='rating'
+                        value='5'
+                        onChange={(e) => {
+                          checkOnlyOne(e.target);
+                        }}
+                      /><label for="ft_star_btn5"><span><StarRateIcon style={{ fontSize: "2rem" }} className='filterstar' />
+                        <StarRateIcon style={{ fontSize: "2rem" }} className='filterstar' />
+                        <StarRateIcon style={{ fontSize: "2rem" }} className='filterstar' />
+                        <StarRateIcon style={{ fontSize: "2rem" }} className='filterstar' />
+                        <StarRateIcon style={{ fontSize: "2rem" }} className='filterstar' /></span></label>
+                      <br />
+                      <input
+                        id="ft_star_btn4"
+                        type="checkbox"
+                        name='rating'
+                        value='4'
+                        onChange={(e) => {
+                          checkOnlyOne(e.target);
+
+                        }}
+                      /><label for="ft_star_btn4"><span><StarRateIcon style={{ fontSize: "2rem" }} className='filterstar' />
+                        <StarRateIcon style={{ fontSize: "2rem" }} className='filterstar' />
+                        <StarRateIcon style={{ fontSize: "2rem" }} className='filterstar' />
+                        <StarRateIcon style={{ fontSize: "2rem" }} className='filterstar' />
+                        <StarBorderIcon style={{ fontSize: "2rem", fontWeight: "100", color: "#828282" }} />
+                      </span></label>
+                      <br />
+                      <input
+                        id="ft_star_btn3"
+                        type="checkbox"
+                        name='rating'
+                        value='3'
+                        onChange={(e) => {
+                          checkOnlyOne(e.target);
+
+                        }}
+                      /><label for="ft_star_btn3"><span><StarRateIcon style={{ fontSize: "2rem" }} className='filterstar' />
+                        <StarRateIcon style={{ fontSize: "2rem" }} className='filterstar' />
+                        <StarRateIcon style={{ fontSize: "2rem" }} className='filterstar' />
+                        <StarBorderIcon style={{ fontSize: "2rem", fontWeight: "100", color: "#828282" }} />
+                        <StarBorderIcon style={{ fontSize: "2rem", fontWeight: "100", color: "#828282" }} />
+                      </span></label>
+                      <br />
+                      <input
+                        id="ft_star_btn2"
+                        type="checkbox"
+                        name='rating'
+                        value='2'
+                        onChange={(e) => {
+                          checkOnlyOne(e.target);
+
+                        }}
+                        /><label for="ft_star_btn2"><span><StarRateIcon style={{ fontSize: "2rem" }} className='filterstar' />
+                        <StarRateIcon style={{ fontSize: "2rem" }} className='filterstar' />
+                        <StarBorderIcon style={{ fontSize: "2rem", fontWeight: "100", color: "#828282" }} />
+                        <StarBorderIcon style={{ fontSize: "2rem", fontWeight: "100", color: "#828282" }} />
+                        <StarBorderIcon style={{ fontSize: "2rem", fontWeight: "100", color: "#828282" }} />
+                      </span></label>
+                      <br />
+                      <input
+                        id="ft_star_btn1"
+                        type="checkbox"
+                        size="larger"
+                        name='rating'
+                        value='1'
+                        onChange={(e) => {
+                          checkOnlyOne(e.target);
+
+                        }}
+                      /><label for="ft_star_btn1"><span><StarRateIcon style={{ fontSize: "2rem" }} className='filterstar' />
+                        <StarBorderIcon style={{ fontSize: "2rem", fontWeight: "100", color: "#828282" }} />
+                        <StarBorderIcon style={{ fontSize: "2rem", fontWeight: "100", color: "#828282" }} />
+                        <StarBorderIcon style={{ fontSize: "2rem", fontWeight: "100", color: "#828282" }} />
+                        <StarBorderIcon style={{ fontSize: "2rem", fontWeight: "100", color: "#828282" }} />
+                      </span></label>
+
                       {maxStars != 0 && (
-                        <p style={{ fontWeight: "600", fontSize: "25px", height: "12%" }}>
-                          최대 별점 : <span style={{ color: "gray", fontWeight: "700", fontSize: "40px" }}>{maxStars.toFixed(1)}</span></p>
+                        <p style={{ fontWeight: "600", fontSize: "20px", color: "#828282" }}>
+                          최대 별점 : <span style={{ color: "black", fontWeight: "700", fontSize: "22px" }}>{maxStars}</span></p>
                       )}
                     </div>
                   </div>
                   <div className='filter_btn'>
-                    <button className="remove_regervation_Store" style={{ marginTop: "5px", padding: "10px 50px", borderRadius: "50px", border: "1px solid rgba(0,0,0,0.3)", cursor: "pointer", fontWeight: "700", fontSize: "25px" }} onClick={() => {
+                    <button className='refresh_btn' style={{width:"180px",marginTop: "5px", padding: "10px 50px", backgroundColor:"white",borderRadius: "50px", border: "1px solid rgba(0,0,0,0.3)", cursor: "pointer", fontWeight: "700", fontSize: "25px"}} onClick={
+                      resetFilters
+                    }>
+                      초기화
+                    </button>
+                    <button className="remove_regervation_Store" style={{ width:"180px",marginTop: "5px", padding: "10px 50px", borderRadius: "50px", border: "1px solid rgba(0,0,0,0.3)", cursor: "pointer", fontWeight: "700", fontSize: "25px" ,backgroundColor:"black",color:"white"}} onClick={() => {
                       setSwitch3(1);
                       setSearch_store_switch(!search_store_switch);
                       setB(1);
+                      console.log(rangeValue);
+                      console.log(minPrice);
+                      console.log(maxPrice);
+                      console.log(maxStars);
+                      console.log(endTime);
                     }}>적용</button>
                   </div>
                 </div>
@@ -768,7 +1048,7 @@ function Home_user() {
 
               <div style={{ width: "1%", height: "100%" }} ></div>
 
-              <div style={{ width: "76%", height: "100%" }}>
+              <div style={{ width: "49.5%", height: "100%" }}>
                 <div ref={mapContainer} style={{ width: "100%", height: "99%", borderRadius: "50px", boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.2)' }}>
 
                 </div>
@@ -776,18 +1056,18 @@ function Home_user() {
 
               <div style={{ width: "1%", height: "100%" }} ></div>
 
-              <div className='detail_store' style={{ width: "21%", borderRadius: "20px", height: "100%", boxShadow: "3px 3px 3px 3px gray" }}>
-                <div style={{ width: "394px", height: "90px", marginTop: "10px", borderBottom: "1px solid gray" }}>
-                  <div className='detail_store_close' style={{ position: "absolute", top: "50px", right: "370px", fontSize: "25px", cursor: "pointer" }} onClick={() => {
+              <div className='detail_store' style={{ width: "20%", borderRadius: "20px", height: "100%", boxShadow: "3px 3px 3px 3px gray", position: "relative" }}>
+                <div style={{ width: "100%", height: "90px", marginTop: "10px", borderBottom: "1px solid gray" }}>
+                  <div className='detail_store_close' style={{ position: "absolute", top: "50px", left: "20px", fontSize: "25px", cursor: "pointer" }} onClick={() => {
                     setShowFilter(!showFilter);
                     setShowDetail(!showDetail);
                   }}><ArrowBackIosIcon id={`${showFilter == true ? "aa" : null}`}></ArrowBackIosIcon></div>
 
                   <div className='detail_store_name'><span>{selectedShop ? selectedShop.shopName : '선택된 가게 없음'}</span></div>
                 </div>
-                <div className='detail_store_ex'>
-                  <div className='detail_store_select' style={{ position: "fixed" }}>
-                    <a className={`select_btn1 ${search_switch1 == true ? "select_btn1_open" : ""}`} onClick={() => {
+                <div className='detail_store_ex1'>
+                  <div className='detail_store_select'>
+                    <div className={`select_btn1 ${search_switch1 == true ? "select_btn1_open" : ""}`} onClick={() => {
                       if (search_switch2 == true) {
                         setSearch_switch1(true);
                         setSearch_switch2(false);
@@ -795,8 +1075,8 @@ function Home_user() {
                       } else {
 
                       }
-                    }}> home </a>
-                    <a className={`select_btn2 ${search_switch2 == true ? "select_btn2_open" : ""}`} onClick={() => {
+                    }}> home </div>
+                     <div className={`select_btn2 ${search_switch2 == true ? "select_btn2_open" : ""}`} onClick={() => {
                       if (search_switch1 == true) {
                         setSearch_switch1(false);
                         setSearch_switch2(true);
@@ -804,15 +1084,15 @@ function Home_user() {
                       } else {
 
                       }
-                    }}> menu </a>
+                    }}> menu </div>
                   </div>
-                                    <div className={`find_text_id ${tapmenu == true ? "" : "tapmenu_hidden"}`} >
-                    <div className='detail_store_img'><img src={"/shopimages/" + `${selectedShop.imageFilename}`} alt={selectedShop.imageFilename} style={{backgroundCover: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat",width:"100%"}}></img></div>
+                  <div className={`find_text_id ${tapmenu == true ? "" : "tapmenu_hidden"}`} >
+                    <div className='detail_store_img'><img src={"/shopimages/" + `${selectedShop.imageFilename}`} alt={selectedShop.imageFilename} style={{ backgroundCover: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat", width: "100%", height: "300px" }}></img></div>
                     <div className='detail_store_name' style={{ marginTop: "20px", borderTop: "1px solid rgb(225, 223, 223)", fontSize: "28px", fontWeight: "600", textAlign: "center" }}><span>{selectedShop.shopame}</span></div>
-                    <div style={{ marginTop: "8px", marginBottom: "10px", textAlign: "center" }}><span style={{ fontSize: "20px", fontWeight: "600" }}>평점 : {selectedShop.rating}</span><span style={{ fontSize: "20px", color: "gray" }}>/5</span><StarBorderIcon style={{ marginBottom: "-2px" }}></StarBorderIcon></div>
+                    <div style={{ marginTop: "15px", textAlign: "center" }}><span style={{ fontSize: "20px", fontWeight: "600" }}>평점 : {selectedShop.rating}</span><span style={{ fontSize: "20px", color: "gray" }}>/5</span><StarBorderIcon style={{ marginBottom: "-2px" }}></StarBorderIcon></div>
                     <div style={{ paddingBottom: "20px", borderBottom: "1px solid rgb(225, 223, 223)", textAlign: "center", fontSize: "20px" }}></div>
-                    <div style={{ textAlign: "left", fontSize: "20px", marginTop: "10px", borderBottom: "1px solid rgb(225, 223, 223)", paddingBottom: "10px" }}><WebAssetIcon style={{ marginLeft: "40px", marginBottom: "-6px", marginRight: "10px" }}></WebAssetIcon><a href="https://www.naver.com" style={{ textDecoration: "underline", color: "blue" }}>{selectedShop.website}</a></div>
-                    <div style={{ textAlign: "left", fontSize: "20px", marginTop: "10px", borderBottom: "1px solid rgb(225, 223, 223)", paddingBottom: "10px" }}> <CallIcon style={{ marginLeft: "40px", marginBottom: "-6px", marginRight: "10px" }}></CallIcon><a>{selectedShop.phone}</a></div>
+                    <div style={{ textAlign: "left", fontSize: "20px", marginTop: "10px", borderBottom: "1px solid rgb(225, 223, 223)", paddingBottom: "10px" }}><WebAssetIcon style={{ marginLeft: "40px", marginBottom: "-6px", marginRight: "10px" }}></WebAssetIcon><a href="https://www.naver.com" style={{ textDecoration: "underline", color: "blue" }}>{selectedShop.shopWebsite}</a></div>
+                    <div style={{ textAlign: "left", fontSize: "20px", marginTop: "10px", borderBottom: "1px solid rgb(225, 223, 223)", paddingBottom: "10px" }}> <CallIcon style={{ marginLeft: "40px", marginBottom: "-6px", marginRight: "10px" }}></CallIcon><a>{selectedShop.shopTel}</a></div>
                     <div><button className="fv_btn" onClick={() => {
                       if (selectedShop) {
                         axios.post('/member/bookmark/registration', selectedShop)
@@ -826,26 +1106,29 @@ function Home_user() {
                       }
                     }
                     }><StarBorderIcon style={{ fontSize: "xxLarger", marginBottom: "-4px", marginRight: "15px" }}></StarBorderIcon><span>즐겨찾기</span></button></div>
-                  </div><div className={`find_text_pw ${tapmenu == true ? "tapmenu_hidden" : ""}`}>
+                  </div>
+                  <div className={`detail_store_ex ${tapmenu == true ? "tapmenu_hidden" : ""}`}>
                     <ul>
-                      <div style={{ marginTop: "80px" }}></div>
                       {menuData.map((menuitem, index) => (
                         <li key={index} style={{ width: "100%", height: "220px", marginLeft: "-20px", marginTop: "20px", borderBottom: "1px solid #eae7e7" }}>
-                          <div style={{ backgroundColor: "blue", width: "37%", height: "180px", float: "left", borderRadius: "20px", marginRight: "10px" }}>{menuitem.image}</div>
-                          <div style={{ width: "45%", marginLeft: "125px", fontSize: "30px", fontWeight: "600", textAlign: "left", paddingLeft: "20px", paddingTop: "10px", cursor: "pointer" }}><span onClick={() => {
+                          <div style={{  width: "37%", height: "180px", float: "left", borderRadius: "20px", marginRight: "10px" }}><img src={"/itemimages/" + `${menuitem.image}`} alt={menuitem.image} style={{ backgroundCover: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat", width: "100%", height: "100%" }}></img></div>
+                          <div style={{ width: "45%", marginLeft: "125px", fontSize: "25px", fontWeight: "600", textAlign: "left", paddingLeft: "20px", cursor: "pointer" }}><span onClick={() => {
                             setTimeout(() => {
                               setSelectedMenuItem(menuitem);
                               setCViewVisible(true);
+                              setReViewVisible(false);
                             }, 100);
                           }}>{menuitem.itemname}</span></div>
                           <div style={{ width: "55%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", color: "rgb(150, 150, 150)" }}>{menuitem.itemnotice}</div>
-                          <div style={{ width: "100%", marginTop: "10px", marginLeft: "-25px" }}><AccessAlarmIcon style={{ marginBottom: "-15px" }}></AccessAlarmIcon> {menuitem.starttime} ~ </div>
-                          <div style={{ width: "100%", marginLeft: "-10px" }}><span>{menuitem.endtime}</span></div>
+                          <div style={{ width: "100%", marginTop: "10px", marginLeft: "-25px" }}><AccessAlarmIcon style={{ marginBottom: "-25px" }}></AccessAlarmIcon> {formatDate(menuitem.starttime)} </div>
+                          <div> ~ </div>
+                          <div style={{ width: "100%", marginLeft: "5px" }}><span> {formatDate(menuitem.endtime)} </span></div>
                           <div style={{ marginLeft: "-80px", width: "100%", height: "40px", lineHeight: "40px" }}><span style={{ textAlign: "right", textDecoration: "line-through", fontSize: "20px", fontWeight: "600", color: "rgb(150, 150, 150)", marginRight: "5px" }}>{menuitem.cost}</span><span style={{ fontSize: "25px", fontWeight: "600", color: "Red" }}>{menuitem.salecost}원</span></div>
-                          <button style={{ width: "150px", height: "40px", borderRadius: "20px", backgroundColor: "black", color: "white", fontSize: "18px", fontWeight: "600", float: "right" }} onClick={() => {
+                          <button style={{ width: "150px", height: "40px", borderRadius: "20px", backgroundColor: "black", color: "white", fontSize: "18px", fontWeight: "600", float: "right", cursor: "pointer" }} onClick={() => {
                             setTimeout(() => {
                               setSelectedMenuItem(menuitem);
                               setReViewVisible(true);
+                              setCViewVisible(false);
                             }, 100);
                           }}><AddShoppingCartIcon style={{ marginBottom: "-5px", marginRight: "5px" }}></AddShoppingCartIcon>예약하기</button>
                         </li>
@@ -861,8 +1144,19 @@ function Home_user() {
                       <div style={{ marginTop: "30px" }}>
                         {selectedMenuItem && (
                           <div>
-                            <div style={{ width: "98%", height: "280px", backgroundColor: "white", borderRadius: "30px", boxShadow: "inset 0 10px 10px -10px #333,inset 0 -10px 10px -10px #333" }}></div>
-                            <div style={{ width: "85%", height: "auto", border: "1px solid rgb(150,150,150)", borderRadius: "7px", marginTop: "-20px", marginLeft: "30px", backgroundColor: "white" }}>
+                            <div style={{ marginLeft: "40px", width: "87%", height: "280px", borderRadius: "30px", boxShadow: "inset 0 10px 10px -10px #333, inset 0 -10px 10px -10px #333" }}>
+                       <img
+                         src={"/itemimages/" + `${selectedMenuItem.image}`}
+                         alt={selectedMenuItem.image}
+                         style={{
+                           objectFit: "cover", // 이미지가 영역에 맞게 조절되도록 함
+                           width: "100%", // 가로 크기를 100%로 지정
+                           height: "100%", // 세로 크기를 100%로 지정
+                           borderRadius: "30px", // 이미지에 둥근 테두리를 추가할 경우 지정
+                         }}
+                       />
+                     </div>
+                            <div style={{ width: "85%", height: "auto", border: "1px solid rgb(150,150,150)", borderRadius: "7px", marginTop: "-20px", margin: "0 auto" }}>
                               <div style={{ margin: "20px 0px", paddingBottom: "20px", borderBottom: "1px solid rgb(195, 192, 192)" }}>
                                 <span style={{ fontSize: "35px", fontWeight: "600" }}>{selectedMenuItem.itemname}</span>
                               </div>
@@ -871,7 +1165,7 @@ function Home_user() {
                                   <span style={{ fontSize: "25px", fontWeight: "600" }}>가격 : </span><span style={{ textAlign: "right", textDecoration: "line-through", fontSize: "20px", fontWeight: "600", color: "rgb(150, 150, 150)", marginRight: "5px" }}>{selectedMenuItem.cost}</span>
                                   <span style={{ fontSize: "25px", fontWeight: "600", color: "Red" }}>{selectedMenuItem.salecost}원</span>
                                 </div>
-                                <button style={{ width: "150px", height: "50px", borderRadius: "20px", backgroundColor: "black", color: "white", fontSize: "20px", fontWeight: "600" }} onClick={() => {
+                                <button style={{ width: "150px", height: "50px", borderRadius: "20px", backgroundColor: "black", color: "white", fontSize: "20px", fontWeight: "600", cursor: "pointer" }} onClick={() => {
                                   setTimeout(() => {
                                     setSelectedMenuItem(selectedMenuItem);
                                     setReViewVisible(true);
@@ -880,13 +1174,17 @@ function Home_user() {
                                 }}><AddShoppingCartIcon style={{ marginBottom: "-5px", marginRight: "5px" }}></AddShoppingCartIcon>예약하기</button>
                                 <span style={{ fontSize: "18px", marginLeft: "10px" }}>남은 수량 : {selectedMenuItem.quantity} </span>
                               </div>
-                              <div style={{ fontSize: "18px", color: "rgb(95,95,95)", padding: "50px 0px", marginLeft: "40px", width: "80%", height: "auto", wordBreak: "break-all" }}>{selectedMenuItem.itemnotice}</div>
-                              <div>
-                                <div style={{ width: "100%", marginTop: "10px", marginLeft: "-5px", fontSize: "20px" }}><AccessAlarmIcon style={{ marginBottom: "-7px" }}></AccessAlarmIcon> {selectedMenuItem.starttime} ~ </div>
-                                <div style={{ width: "100%", marginLeft: "0", fontSize: "20px" }}><span>{selectedMenuItem.endtime}</span></div>
-                              </div>
-                            </div>
-                          </div>
+                          <div style={{ fontSize: "18px", color: "rgb(95,95,95)", padding: "50px 0px", marginLeft: "40px", width: "80%", height: "auto", wordBreak: "break-all" }}>{selectedMenuItem.itemnotice}</div>
+                     <div>
+                       <div style={{ width: "100%", marginTop: "10px", marginLeft: "-5px", fontSize: "20px", marginBottom: "10px" }}>
+                         <AccessAlarmIcon style={{ marginBottom: "-7px" }}></AccessAlarmIcon>할인 시작일 : {formatDate(selectedMenuItem.starttime)}
+                       </div>
+                       <div style={{ width: "100%", marginLeft: "-5px", fontSize: "20px" }}>
+                         <AccessAlarmIcon style={{ marginBottom: "-7px" }}></AccessAlarmIcon>할인 마일일 :  {formatDate(selectedMenuItem.endtime)}
+                       </div>
+                     </div>
+                        </div>
+                      </div>
                         )}
                       </div>
                     </div>
@@ -895,12 +1193,11 @@ function Home_user() {
                         setTimeout(() => {
                           setReViewVisible(false);
                         }, 100)
-                        setSelectedMenuItem(null);
                       }}> </div>
                       {selectedMenuItem && (
                         <div style={{ marginTop: "30px" }}>
                           <div style={{ width: "98%", height: "280px", backgroundColor: "white", borderRadius: "5px", border: "1px solid rgb(150,150,150)", padding: "10px 0px 0px 10px" }}>
-                            <div style={{ backgroundColor: "blue", width: "37%", height: "50%", borderRadius: "20px", float: "left" }}>{selectedMenuItem.image}
+                            <div style={{ width: "37%", height: "50%", borderRadius: "20px", float: "left" }}><img src={"/itemimages/" + `${selectedMenuItem.image}`} alt={selectedMenuItem.image} style={{ backgroundCover: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat", width: "100%", height: "100%" }}></img>
                             </div>
                             <div style={{ float: "left", margin: "20px 0px 0px 20px" }}><span style={{ fontSize: "25px", fontWeight: "600" }}>{selectedMenuItem.itemname}</span>
                             </div>
@@ -909,8 +1206,8 @@ function Home_user() {
                               <span style={{ textDecoration: "line-through", fontSize: "20px", fontWeight: "600", color: "rgb(150, 150, 150)", marginRight: "5px" }}>{selectedMenuItem.cost}</span>
                               <span style={{ fontSize: "25px", fontWeight: "600", color: "Red" }}>{selectedMenuItem.salecost}원</span>
                             </div>
-                            <div>
-                              <span>수량 : </span>
+                            <div style={{ display: "flex", justifyContent: "center" }}>
+                              <div style={{ fontWeight: "700", marginTop: "18px" }}>수량 : </div>
                               <TextField
                                 placeholder='예약 하실 수량을 입력'
                                 required
@@ -918,9 +1215,10 @@ function Home_user() {
                                 onChange={(e) => {
                                   setQuantity(e.target.value);
                                 }}
+                                style={{ marginLeft: "10px" }}
                               ></TextField>
                             </div>
-                            <button className="addreservation_sub" onClick={() => {
+                            <div onClick={() => {
                               const formData = new FormData();
 
                               formData.append('memberidx', userInfo.memberIdx);
@@ -938,11 +1236,11 @@ function Home_user() {
                                 })
                                 .catch(error => {
                                   console.log(error);
-                                  window.alert(error.response.data);
+                                  window.alert(error.response.data.result);
                                 })
                               setReViewVisible(false);
                               setSelectedMenuItem(null);
-                            }}><a>[ SUBMIT ]</a></button>
+                            }} style={{ cursor: "pointer", width: "150px", height: "40px", borderRadius: "20px", backgroundColor: "black", color: "white", fontSize: "18px", fontWeight: "600", margin: "0 auto", marginTop: "20px" }}><span style={{ lineHeight: "2" }}>[ SUBMIT ]</span></div>
                           </div>
                         </div>
                       )}
@@ -950,8 +1248,6 @@ function Home_user() {
                   </div>
                 </div>
               </div>
-
-
               <div style={{ width: "1%", height: "100%" }} ></div>
             </div>
           </div>
@@ -1033,9 +1329,6 @@ function Home_user() {
                 <div style={{ backgroundColor: getBarColor(userInfo.trust), borderRadius: "20px", height: `${userInfo.trust * 60}px`, width: "20px", margin: "0 auto", marginTop: "5px", position: "absolute", bottom: "5px", left: "5px" }}></div> {/* 연두색 바 */}
               </div>
             </div>
-          </div>
-          <div id="popsec2" style={{ cursor: "pointer" }}>
-            <a href="owner_main_page"><span>내 가게</span></a>
           </div>
           <button className="popup_btn" onClick={() => {
             setTemp1(!temp1)
@@ -1239,13 +1532,13 @@ function Home_user() {
             setSearch_switch3(true);
             setSearch_switch4(false);
             setTapmenu1(false);
-            setSelectedregervationStores([]); // 삭제 체크 박스 초기화 
+            setSelectedregervationStores([]);
           }}>X</span>
           <div className='regervation_title' style={{ borderBottom: "2px solid rgba(0,0,0,0.3)", paddingBottom: "30px" }}>
             <span>예약 내역</span>
           </div>
           <div className='reservation_check' >
-            <div className='reservation_select' style={{ position: "fixed" }}>
+            <div className='reservation_select'>
               <a className={`res_select_btn1 ${search_switch3 == true ? "res_select_btn1_open" : ""}`} onClick={() => {
                 if (search_switch4 == true) {
                   setConfirmstate('wait');
@@ -1277,7 +1570,7 @@ function Home_user() {
                   setSearch_switch3(false);
                   setSearch_switch4(true);
                   setTapmenu1(false);
-                  setSelectedregervationStores([]);// 삭제 체크 박스 초기화
+                  setSelectedregervationStores([]);
                   console.log(confirmstate)
                   axios.get('/item/reservation/getreservations', {
                     params: {
@@ -1298,7 +1591,7 @@ function Home_user() {
               }}> complete </a>
             </div>
             <div className={`find_text_id ${tapmenu1 == true ? "" : "tapmenu1_hidden"}`} >
-              <div className="regervation_content" style={{ width: "90%", height: "380px", paddingTop: "50px", margin: "0 auto"}}>
+              <div className="regervation_content" style={{ width: "90%", height: "370px", margin: "0 auto",marginTop:"-15px"}}>
                 {regervation.map((store, index) => (
                   <div key={index} className="regervation_store" style={{ display: "flex", borderBottom: "2px solid rgba(0,0,0,0.3)", position: "relative" }}>
                     <div className='regervation_store_image'>
@@ -1332,14 +1625,14 @@ function Home_user() {
                         if (isChecked) {
                           if (selectedregervationStores.some(item => item.shopaddress === address)) {
                             // 이미 선택된 주소인 경우, 아무것도 하지 않음
-                            if(selectedregervationStores.reservationidx !== store.reservationidx){
+                            if (selectedregervationStores.reservationidx !== store.reservationidx) {
                               let copy = [...selectedregervationStores, store];
                               setSelectedregervationStores(copy);
                             }
                           } else {
                             // 새로운 배열을 생성하여 선택된 항목을 추가
                             let copy = [...selectedregervationStores, store];
-                              setSelectedregervationStores(copy);
+                            setSelectedregervationStores(copy);
                           }
                         } else {
                           // 선택 해제된 경우, 해당 주소를 가진 항목을 배열에서 제거
@@ -1353,7 +1646,7 @@ function Home_user() {
               </div>
             </div>
             <div className={`find_text_pw ${tapmenu1 == true ? "tapmenu1_hidden" : ""}`}>
-              <div className="regervation_content" style={{ width: "90%", height: "380px", paddingTop: "50px", margin: "0 auto"}}>
+              <div className="regervation_content" style={{ width: "90%", height: "370px", margin: "0 auto", marginTop:"-15px" }}>
                 {regervation.map((store, index) => (
                   <div key={index} className="regervation_store" style={{ display: "flex", borderBottom: "2px solid rgba(0,0,0,0.3)", position: "relative" }}>
                     <div className='regervation_store_image'>
@@ -1377,7 +1670,7 @@ function Home_user() {
                       </div>
                     </div>
                     <div>
-                      <button style={{position: "absolute",top: "50px",right:"0",borderRadius:"20px", width: "80px", height: "35px", cursor: "pointer"}} onClick={()=>{
+                      <button style={{ position: "absolute", top: "50px", right: "0", borderRadius: "20px", width: "80px", height: "35px", cursor: "pointer" }} onClick={() => {
                         setTemp7(!temp7);
                         setStarreservation(store);
                       }}>
@@ -1389,7 +1682,7 @@ function Home_user() {
               </div>
             </div>
           </div>
-          <button className="remove_regervation_Store" style={{ marginTop: "20px", padding: "10px 50px", borderRadius: "50px", border: "1px solid rgba(0,0,0,0.3)", cursor: "pointer", fontWeight: "700", fontSize: "25px" }} onClick={() => {
+          <button className="remove_regervation_Store" style={{ marginTop: "25px", padding: "10px 50px", borderRadius: "50px", border: "1px solid rgba(0,0,0,0.3)", cursor: "pointer", fontWeight: "700", fontSize: "25px" }} onClick={() => {
             console.log(selectedregervationStores);
             axios.post('/item/reservation/cancel', selectedregervationStores
             ).then(response => {//데이터를받아오는게성공시 다른페이지호출
@@ -1418,10 +1711,12 @@ function Home_user() {
         <span className="star_review_close" style={{ fontSize: "25px", position: "absolute", top: "10px", right: "19px", cursor: "pointer", padding: "0px 10px", fontSize: "25px", fontWeight: "700" }} onClick={() => {
           setTemp7(!temp7);
         }}>X</span>
-        <div className='point' style={{width:"100%",marginTop:"10px", marginRight:"110px"}}> <div style={{borderBottom:"1px solid rgb(150,150,150)",paddingBottom:"20px"}}><span style={{fontSize:"25px", fontWeight:"600"}}> 평점 작성 하기</span></div> {array.map((index) => (
+        <div className='point' style={{ width: "100%", marginTop: "10px", marginRight: "110px" }}> <div style={{ borderBottom: "1px solid rgb(150,150,150)", paddingBottom: "20px" }}><span style={{ fontSize: "25px", fontWeight: "600" }}> 평점 작성 하기</span></div> {array.map((index) => (
           <StarRateIcon
-            style={{marginTop:"50px"
-                    ,fontSize:"5rem"}}
+            style={{
+              marginTop: "50px"
+              , fontSize: "5rem"
+            }}
             key={index}
             onClick={() => handleStarClick(index)}
             className={clicked[index] && 'StarRateIcon'}
@@ -1431,22 +1726,23 @@ function Home_user() {
           setTemp7(!temp7);
           console.log(starreservation.shopidx)
           const formdata = new FormData();
-          formdata.append("shopidx",starreservation.shopidx);
-          formdata.append("rating",score);
-          if(score){
-            axios.post('/setRating',formdata)
-            .then(response => {
-           console.log(starreservation.shopidx)
-              window.alert("별점 추가 완료");
-              window.location.href = response.data;
-            }).catch(error => {
-              window.alert(error.response.data.result);
-            })
+          formdata.append("shopidx", starreservation.shopidx);
+          formdata.append("rating", score);
+          if (score) {
+            axios.post('/setRating', formdata)
+              .then(response => {
+                console.log(starreservation.shopidx)
+                window.alert("별점 추가 완료");
+                window.location.href = response.data;
+              }).catch(error => {
+                window.alert(error.response.data.result);
+              })
           }
-        }} 
-        style={{width:"200px",height:"40px",borderRadius:"15px",backgroundColor:"black",color:"white",fontSize:"20px",fontWeight:"600", marginTop:"40px",cursor:"pointer"}}><span>Submit</span></button></div>
+        }}
+          style={{ width: "200px", height: "40px", borderRadius: "15px", backgroundColor: "black", color: "white", fontSize: "20px", fontWeight: "600", marginTop: "40px", cursor: "pointer" }}><span>Submit</span></button></div>
 
       </div>
+      {/*문의함*/}
       <div id={`${temp8 == true ? "inquiry_none" : "inquiry"}`}>
         <span className="fv_view_close" style={{ fontSize: "25px", position: "absolute", top: "10px", right: "19px", cursor: "pointer", padding: "0px 10px", fontSize: "25px", fontWeight: "700" }} onClick={() => {
           setTemp8(!temp8);
@@ -1457,14 +1753,21 @@ function Home_user() {
 
         <div className='divide'><span style={{ display: "none" }}>asd</span></div>
         <div className='inquiry_content' style={{ position: "relative" }}>
-          <div style={{ marginTop: "20px" }}>
+          <div className="box_hover" >
 
             {message.map((message, index) => (
-              <div key={index} className="inquiry_box" style={{ borderBottom: "2px solid rgba(0,0,0,0.3)" }}>
-                <div style={{ marginTop: "10px", lineHeight: "1.8" }}>
+              <div key={index} className="inquiry_box" style={{ borderBottom: "2px solid rgba(0,0,0,0.3)" }} onClick={() => {
+                setUser_redate(message.redate);
+                setUser_content_inquiry(message.content_inquiry);
+                setManager_redate(message.answer_redate);
+                setManager_content_inquiry(message.content_answer);
+                setManager_status(message.status);
+                setTemp10(!temp10);
+              }}>
+                <div style={{ lineHeight: "1.8" }}>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
                     <div className='inquiry_box_date'>
-                      날짜: {message.redate}
+                      <div>작성일: {message.redate}</div> <div>상태: <span style={{ textAlign: "right", color: message.status === "답변 대기" ? "rgb(237, 87, 71)" : "rgb(17, 195, 239)" }}>{message.status}</span></div>
                     </div>
                   </div>
                   <div style={{ display: "flex", width: "100%" }}>
@@ -1486,7 +1789,7 @@ function Home_user() {
                             console.error('세션 데이터를 가져오는데 실패함', error);
                           });
 
-                          setTemp8(!temp8);
+                        setTemp8(!temp8);
                       }).catch(error => {
                         console.error('세션 데이터를 가져오는데 실패함', error);
                       });
@@ -1534,7 +1837,7 @@ function Home_user() {
         <button className="inquiry_request_go_btn" style={{ marginTop: "10px", padding: "10px 50px", borderRadius: "50px", border: "1px solid rgba(0,0,0,0.3)", cursor: "pointer", fontWeight: "700", fontSize: "25px" }} onClick={() => {
           const formData = new FormData();
 
-             formData.append('content_inquiry', inquiry);
+          formData.append('content_inquiry', inquiry);
           axios.post('/inquiry/register', formData
           ).then(response => {
             window.alert("작성 성공.");
@@ -1553,7 +1856,30 @@ function Home_user() {
           작성하기
         </button>
       </div>
+      {/*각 문의함 세부내용 및 답변*/}
+      <div id={`${temp10 == true ? "inquiry_answer_none" : "inquiry_answer"}`}>
+        <span className="inquiry_answer_close" style={{ fontSize: "25px", position: "absolute", top: "10px", right: "19px", cursor: "pointer", padding: "0px 10px", fontSize: "25px", fontWeight: "700" }} onClick={() => {
+          setTemp10(!temp10);
+          setManager_redate("");
+          setManager_content_inquiry("");
+        }}>X</span>
+        <div className='inquiry_answer_title'>
+          <span>문의함</span>
+        </div>
 
+        <div className='divide'><span style={{ display: "none" }}>asd</span></div>
+        <div className='inquiry_answer_content' style={{ position: "relative" }}>
+          <div className="inquiry_answer_user" >
+            <div className='inquiry_answer_user_redate'>
+              <div>작성일: {user_redate}</div> <div>상태: <span style={{ textAlign: "right", color: manager_status === "답변 대기" ? "rgb(237, 87, 71)" : "rgb(17, 195, 239)" }}>{manager_status}</span></div>
+            </div>
+          </div>
+          <div className="inquiry_answer_manager" >
+            <div className="inquiry_answer_manager_redate">작성일 : {manager_redate}</div>
+            <div className="inquiry_answer_manager_content">{manager_content_inquiry}</div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

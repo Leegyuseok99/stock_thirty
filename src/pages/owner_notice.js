@@ -22,9 +22,22 @@ function Owner_notice() {
     function switchTemp() {
         setTemp(!temp);
     }
+      function formatDate(dateString) {
+     const originalDate = new Date(dateString);
+     const options = {
+       year: "numeric",
+       month: "2-digit",
+       day: "2-digit",
+       hour: "2-digit",
+       minute: "2-digit",
+       second: "2-digit",
+     };
+     const formattedDate = originalDate.toLocaleString("ko-KR", options);
+     return formattedDate;
+   }
     useEffect(() => {
         // 스프링에서 세션 데이터를 가져오는 호출
-        axios.get('/getSessionMember')
+        axios.get('/getSessionMember/business')
             .then(response => {
                 const userData = response.data;
                 console.log(userData.redirect)
@@ -130,7 +143,7 @@ function Owner_notice() {
                         <tr style={{ fontSize: "25px", backgroundColor: "rgba(0,0,0,0.1)" }}>
                             <th style={{ width: "150px", height: "40px", borderTopLeftRadius: '20px' }}>No</th>
                             <th>제목</th>
-                            <th style={{ width: "150px", borderTopRightRadius: '20px' }}>등록일</th>
+                            <th style={{ width: "300px", borderTopRightRadius: '20px' }}>등록일</th>
                         </tr>
                         {currentPosts.map((nti, index) => (
                             <tr className='notice_main_content' key={index} style={{ height: "40px", fontSize: "20px" }}>
@@ -145,7 +158,7 @@ function Owner_notice() {
                                     })
                                     .then(response => {
                                         const not = response.data;
-                                        const noticep = `?notititle=${not.title}&notidate=${not.noticeDate}&noticontent=${not.content}`;
+                                        const noticep = `?notititle=${not.title}&notidate=${formatDate(not.noticeDate)}&noticontent=${not.content}`;
                                         const popupURL = `/owner_noticeview/${nti.noticeIdx}${noticep}`;
                                         navigate(popupURL);
                                       })
@@ -153,7 +166,7 @@ function Owner_notice() {
                                         console.error('세션 데이터를 가져오는데 실패함', error);
                                       });
                                 }} style={{ textAlign: "left" }}><span>{nti.title}</span></td>
-                                <td id="notice_row">{nti.noticeDate}</td>
+                                <td id="notice_row">{formatDate(nti.noticeDate)}</td>
                             </tr>
                         ))}
 

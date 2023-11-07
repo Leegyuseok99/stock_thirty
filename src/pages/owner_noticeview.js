@@ -18,9 +18,11 @@ function Owner_noticeview() {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const notititle = urlParams.get("notititle");
+    const noticontent = urlParams.get("noticontent");
+    const notidate = urlParams.get("notidate");
     useEffect(() => {
         // 스프링에서 세션 데이터를 가져오는 호출
-        axios.get('/getSessionMember')
+        axios.get('/getSessionMember/business')
             .then(response => {
                 const userData = response.data;
                 console.log(userData.redirect);
@@ -92,10 +94,10 @@ function Owner_noticeview() {
                 <div>
                 <div className='notinfo'>
                     <p className='nottitle'>{notititle}</p>
-                    <p className='notdate'></p>
+                    <p className='notdate'>{notidate}</p>
                 </div>
                 <div className='nottxt'>
-                    <p></p>
+                    <p>{noticontent}</p>
                 </div>
                 </div>
 

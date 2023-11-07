@@ -83,7 +83,7 @@ function Join() {
                                 }}
                                 placeholder='비밀번호를 입력해주세요'
                                 label="pw"
-                                type="pw"
+                                type="password"
                                 required
                                 name="pw"
                                 value={pw}
@@ -111,7 +111,7 @@ function Join() {
                                 }}
                                 placeholder='비밀번호를 재입력해주세요'
                                 label="check_pw"
-                                type="pw"
+                                type="password"
                                 value={check_pw}
                                 required
                                 name="setCehck_pw"
@@ -195,20 +195,16 @@ function Join() {
                          if (hasNotSameError('newpw_check') == true) {
                             window.alert(" 비밀번호가 일치하지 않습니다.")
                             setId("");
-                setName("");
-                setCehck_pw("");
-                setpw("");
-                setphone("");
+                         setName("");
+                         setCehck_pw("");
+                         setpw("");
+                         setphone("");
                         } else{
                             SetTemp(!temp)
                         } }} id="textFeild" className="btn" type="submit" Width variant="contained"><span>sign up</span></Button>
 
                 </div>
                 <div className="imgarea" style={{borderTopRightRadius: "20px",borderBottomRightRadius: "20px"}}>
-                    <div className="text">
-                        <h2>제목</h2>
-                        <span>환영합니다</span>
-                    </div>
                 </div>
             </div>
         </div>

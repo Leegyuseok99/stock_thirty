@@ -11,7 +11,9 @@ import StoreIcon from '@mui/icons-material/Store';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import { Brightness1 } from '@material-ui/icons';
 import zIndex from '@material-ui/core/styles/zIndex';
+import { useNavigate } from "react-router-dom";
 function Owner_main_page() {
+    let navigate = useNavigate();
     const [userInfo, setUserInfo] = useState("");
     let [recall, setRecall] = useState(false);
     let [temp1, setTemp1] = useState(true);
@@ -42,6 +44,28 @@ function Owner_main_page() {
                 console.error('세션 데이터를 가져오는데 실패함', error);
             });
     }, [recall]);
+    let [noticepost,setNoticePost] = useState([{noticeIdx:"1",title:"sss",content:"ssss"},{noticeIdx:"2",title:"aaaa",content:"aaaaa"},{noticeIdx:"3",title:"dddd",content:"ddddd"}]);
+    useEffect(() => {
+        axios.get('/manager/notice/readall')
+            .then(response => {
+                const noticepost = response.data;
+                console.log(noticepost);
+                console.log(noticepost.redirect)
+                if (noticepost.redirect) {
+                    console.log("페이지 이동");
+                    window.location.href = noticepost.redirect;
+                } else {
+                    setNoticePost(noticepost);
+                    console.log("세션데이터가 존재");
+                }
+            },[userInfo]);
+    }, []);
+    const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 번호
+    const postsPerPage = 10;//페이지당 게시글수
+    const indexOfLastPost = currentPage * postsPerPage;
+    const indexOfFirstPost = indexOfLastPost - postsPerPage;
+    const currentPosts = noticepost.slice(indexOfFirstPost, indexOfLastPost);
+
     return (
         <div>
             <div className='owner_main_pageWrap' >
@@ -59,8 +83,8 @@ function Owner_main_page() {
                             <li>
                                 <a onClick={() => {
                                     setTemp(switchTemp);
-                                }} style={{ cursor: "pointer" }} href='/owner'>
-                                    가게등록
+                                }} style={{ cursor: "pointer" }} href='/owner_storelist'>
+                                    내가게
                                 </a>
                             </li>
                             <li>
@@ -130,33 +154,57 @@ function Owner_main_page() {
                                 <div><span>홍보 및 마케팅은 다음 페이지이용</span></div>
                                 <div style={{borderBottom:"4px solid black", borderRadius:"30px",width:"100px",marginTop:"10px"}}><span></span></div>
                             </div>
-                            <div className='cont_text1'>
+                            <div className='cont_text1' style={{marginLeft:"80px",marginTop:"130px"}}>
                                 <span style={{ width:"400px",fontSize: "50px", fontWeight: "600", textAlign: "left", marginBottom: "10px" }}>내 가게 확인하기</span>
                                 <span>사장님들의 가게를 등록해보세요! 등록한 가게들을 한 눈에 살펴 볼 수 있고, 가게에 대한 정보를 입력해 홍보해보세요</span>
-                                <span style={{ marginTop: "30px" }}><a style={{ borderBottom: "1px dashed black" }}>알아보기 ${">"}</a></span>
+                                <span style={{ marginTop: "30px" }}><a style={{ borderBottom: "1px dashed black", cursor:"pointer" }} onClick={()=>{navigate("/owner_storelist");}}>알아보기 {">"}</a></span>
                             </div>                                
-                            <a style={{ marginLeft: "-430px", marginTop: "-550px", position: "absolute" }}><img style={{ width: "900px" , filter: "contrast(130%)"}} src='https://i.pinimg.com/564x/a6/54/72/a65472b2e830a9fc1d5cff837443656c.jpg'></img><div style={{ marginLeft: "200px", marginTop: "-500px", width: "1000px", height: "550px", backgroundColor: "#f3eded" }}></div></a>
+                            <a style={{ marginLeft: "-430px", marginTop: "-450px", position: "absolute" }}><img style={{ width: "900px" , filter: "contrast(130%)"}} src='https://i.pinimg.com/564x/a6/54/72/a65472b2e830a9fc1d5cff837443656c.jpg'></img><div style={{ marginLeft: "200px", marginTop: "-500px", width: "1000px", height: "550px", backgroundColor: "#f3eded" }}></div></a>
                         </div>
                     </div>
                     <div className='text'><span>상품 등록</span></div>
                     <div className={`content2 ${temp1 == true ? "" : "contents_hidden"}`}>
-                    <div>
-                            <div style ={{fontSize:"20px", textAlign:"left",lineHeight:"2"}} className='cont_text0'>
+                        <div>
+                            <div style ={{fontSize:"20px", textAlign:"left",lineHeight:"2",marginTop:"100px"}} className='cont_text0'>
                                 <div><span>재고 상품 등록 및 관리</span></div>
                                 <div><span>홍보 및 마케팅은 다음 페이지이용</span></div>
                                 <div style={{borderBottom:"4px solid black", borderRadius:"30px",width:"100px",marginTop:"10px"}}><span></span></div>
                             </div>
-                            <div className='cont_text1'>
+                            <div className='cont_text1' style={{marginLeft:"80px",marginTop:"130px"}}>
                                 <span style={{ width:"400px",fontSize: "50px", fontWeight: "600", textAlign: "left", marginBottom: "10px" }}>재고 등록&수정</span>
                                 <span>사장님들의 가게를 등록해보세요! 등록한 가게들을 한 눈에 살펴 볼 수 있고, 가게에 대한 정보를 입력해 홍보해보세요</span>
-                                <span style={{ marginTop: "30px" }}><a style={{ borderBottom: "1px dashed black" }}>알아보기 ${">"}</a></span>
+                                <span style={{ marginTop: "30px" }}><a style={{ borderBottom: "1px dashed black", cursor:"pointer" }} onClick={()=>{navigate("/owner_addmenu");}}>알아보기 {">"}</a></span>
                             </div>                                
-                            <a style={{ marginLeft: "-430px", marginTop: "-550px", position: "absolute" }}><img style={{ width: "700px" , filter: "contrast(130%)"}} src='https://i.pinimg.com/564x/96/25/1c/96251c1125878e948918e151def81ca0.jpg'></img><div style={{ marginLeft: "200px", marginTop: "-500px", width: "1000px", height: "550px", backgroundColor: "#f3eded" }}></div></a>
+                            <a style={{ marginLeft: "-430px", marginTop: "-450px", position: "absolute" }}><img style={{ width: "650px" , filter: "contrast(130%)"}} src='https://i.pinimg.com/564x/96/25/1c/96251c1125878e948918e151def81ca0.jpg'></img><div style={{ marginLeft: "250px", marginTop: "-500px", width: "800px", height: "550px", backgroundColor: "#f3eded" }}></div></a>
                         </div>
                     </div>
                     <div className='text'><span>공지사항</span></div>
                     <div className={`content3 ${temp1 == true ? "" : "contents_hidden"}`}>
-                        <div className='text'>
+                        <div>
+                        {currentPosts.map((nti, index) => (
+                            <tr className='notice_main_content' key={index} style={{ height: "40px", fontSize: "20px" }}>
+                                <td id="notice_row">{nti.noticeIdx}</td>
+                                <td id="notice_row" onClick= {()=>{
+                                    navigate(`/owner_noticeview/${nti.noticeIdx}`)
+                                    axios.get('/manager/notice/read',{
+                                        params: {
+                                            noticeIdx:nti.noticeIdx,
+                                            title:nti.title
+                                        }
+                                    })
+                                    .then(response => {
+                                        const not = response.data;
+                                        const noticep = `?notititle=${not.title}&notiDate=${not.noticeDate}&noticontent=${not.content}`;
+                                        const popupURL = `/owner_noticeview/${nti.noticeIdx}${noticep}`;
+                                        navigate(popupURL);
+                                      })
+                                      .catch(error => {
+                                        console.error('세션 데이터를 가져오는데 실패함', error);
+                                      });
+                                }} style={{ textAlign: "left" }}><span>{nti.title}</span></td>
+                                <td id="notice_row">{nti.noticeDate}</td>
+                            </tr>
+                        ))}
                         </div>
                     </div>
                 </div>

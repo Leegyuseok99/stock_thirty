@@ -79,22 +79,22 @@ function Pw_result() {
                         error={hasNotSameError('check_pw')} // 해당 텍스트필드에 error 핸들러 추가
                         helperText={
                             hasNotSameError('check_pw') ? "입력한 비밀번호와 일치하지 않습니다." : null
-                            
                         } // 에러일 경우에만 안내 문구 표시
                     />
                 </div>
                 <div className='pw_change_btn'><a onClick={() => {
-                    axios.put('/join', {
-                        params: {
-                            new_pw: new_pw
-                        }
-                    }).then((response) => {
+                    axios.put('/updatepw', {
+                            pw: new_pw
+                    }).then((reponse) => {
                         const dataToSend = { key1: "/login" }; // 전달할 데이터 객체
+                        window.alert("비밀번호 변경 완료")
                         window.opener.postMessage(dataToSend, "*"); // 부모 창으로 데이터 전송
                         window.close(); // 팝업 창 닫기
 
-                    }).catch(function () {
-                        console.log('실패함')
+                    }).catch(error => {
+                      let errorMessages = Object.values(error.response.data).join('\n');
+                      console.log(error);
+                      window.alert(errorMessages);
                     })
                 }} type='submit'>완료</a></div>
                 <div id="pw_change_list">

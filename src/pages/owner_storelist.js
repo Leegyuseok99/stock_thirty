@@ -401,34 +401,8 @@ function Owner_Storelist() {
                     ></TextField>
                 </div>
                 <a className="owner_store_btn" type="submit" Width variant="contained" style={{ marginTop: "40px", marginBottom: "50px", cursor: "pointer", borderRadius: "20px", width: "150px", height: "60px", fontSize: "23px", fontWeight: "700", lineHeight: "40px", color: "white", backgroundColor: "rgb(74, 74, 247)", border: "3px solid rgb(74, 74, 247)" }} onClick={() => {
-               console.log(store_name)
-               console.log(store_phon)
-               console.log(selectedFile.name)
-               console.log(selectedAddress)
-                    if (store_name == "" && store_phon == "" && selectedFile.name == "" && selectedAddress == "") {
-                        window.alert("가게등록실패 다시입력");
-                        setTemp2(!temp2)
-                        navigate("/owner_storelist")
-                    } else if (store_name == "") {
-                        window.alert("가게이름을 등록해주세요");
-                        setTemp2(!temp2)
-                        navigate("/owner_storelist")
-                    } else if (store_phon == "") {
-                        window.alert("가게 전화번호를 등록해주세요");
-                        setTemp2(!temp2)
-                        navigate("/owner_storelist")
-                    } else if (selectedFile.name == "") {
-                        window.alert("가게이미지을 등록해주세요");
-                        setTemp2(!temp2)
-                        navigate("/owner_storelist")
-                    } else if (selectedAddress == "") {
-                        window.alert("가게주소을 등록해주세요");
-                        setTemp2(!temp2)
-                        navigate("/owner_storelist")
-                    } else {
                         setTemp(!temp)
                         setTemp2(!temp2)
-                    }
                 }}>가게 등록</a>
             </div>
             <div className={`${temp3 == true ? "addstpop_view_none" : "addstpop_view"}`} >
