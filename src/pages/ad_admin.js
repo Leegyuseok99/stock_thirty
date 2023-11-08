@@ -1,23 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect,useState } from 'react';
 import axios from "axios";
 import './../App.css';
+import { useNavigate } from "react-router-dom";
+
 function Ad_admin() {
-    const [memberInfo, setMemberInfo] = useState([]);
+    let [manager, setManager] = useState([]);
     useEffect(() => {
-        axios.get('/manager/member/user')
-        .then(response =>{
-            const memberData = response.data;
-            if (memberData.redirect) {
-                console.log("페이지 이동");
-                window.location.href = memberData.redirect;
-                setMemberInfo(memberData);
-              }
-        })
-        .catch(error => {
-            console.error('세션 데이터를 가져오는데 실패함', error);
-          });
-    },[memberInfo]);
-    
+        axios.get('/manager/member/admin')
+            .then(response => {
+                setManager(response.data);
+            })
+            .catch(error => {
+                console.error('세션 데이터를 가져오는데 실패함', error);
+            });
+    }, []);
     return (
         <div>
             <div className="main_bar">
@@ -29,31 +25,31 @@ function Ad_admin() {
                 </div>
                 <div className="content">
                     <div>회원 관리</div>
-                    <div className="sub" id="one"><a href="/ad_user">사용자</a></div>
-                    <div className="sub"><a href="#">상업자</a></div>
-                    <div className="sub"><a href="#" style={{color:"red"}}>관리자</a></div>
+                    <div className="sub" id="one"><a href="/ad_user" style={{color:"red"}}>사용자</a></div>
+                    <div className="sub"><a href="/ad_businessman">상업자</a></div>
+                    <div className="sub"><a href="/ad_admin">관리자</a></div>
                 </div>
                 <div className="content">
                     <div>콘텐츠 관리</div>
-                    <div className="sub"><a href="#">문의 내역</a></div>
-                    <div className="sub"><a href="#">공지사항</a></div>
-                    <div className="sub"><a href="#">가게 등록</a></div>
+                    <div className="sub"><a href="/ad_inquiry">문의 내역</a></div>
+                    <div className="sub"><a href="/ad_notice">공지사항</a></div>
+                    <div className="sub"><a href="/ad_store_management">가게 등록</a></div>
                 </div>
                 <div className="content">
                     <div>인사이트 분석</div>
-                    <div className="sub"><a href="#">가게 분석</a></div>
+                    <div className="sub"><a href="/ad_analysis_shop">가게 분석</a></div>
                 </div>
                 <div className="logout">
-                    <div><a href="#" id="logout">로그아웃</a></div>
+                    <div><a href="/ad_login" id="logout">로그아웃</a></div>
                 </div>
             </div>
 
 
-            <main>
-                <div className="title">전체 멤버(1)</div>
+            <main className='ad_main'>
+                <div className="ad_title">전체 멤버({manager.length})</div>
                 <div className="tb">
-                    <table>
-                        <thead>
+                    <table className='ad_table'>
+                        <thead >
                             <tr style={{ height: "50px", fontSize: "25px", fontWeight: "700" }}>
                                 <td style={{ width: "5%" }}>IDX</td>
                                 <td style={{ width: "35%" }}>이름</td>
@@ -62,15 +58,15 @@ function Ad_admin() {
                             </tr>
                         </thead>
                         <tbody>
-                            {memberInfo.map((member,index) => (
-                            <tr key={index} style={{ height: "50px", fontSize: "20px" }}>
-                                <td style={{ fontWeight: "700" }}>21</td>
-                                <td>{member.name}</td>
-                                <td>2023.05.11</td>
-                                <td>ahj30420@naver.com</td>
-                            </tr>
+                            {manager.map((manager, index) => (
+                                <tr style={{ height: "50px", fontSize: "20px" }}>
+                                    <td style={{ fontWeight: "700" }}>{manager.memberIdx}</td>
+                                    <td>{manager.name}</td>
+                                    <td>{manager.redate}</td>
+                                    <td>{manager.id}</td>
+                                </tr>
                             ))}
-                            
+
                         </tbody>
                     </table>
                 </div>

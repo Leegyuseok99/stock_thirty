@@ -7,6 +7,7 @@ import Login from "./pages/login.js"
 import { useNavigate } from "react-router-dom";
 import Kakao_Loading from "./pages/Kakao_Loading.js";
 import Naver_Loading2 from './pages/Naver_Loading2.js';
+import Owner from './pages/owner';
 import Home_user from './pages/home_user';
 import Finde_id from './pages/find_id.js';
 import Finde_pw from './pages/find_pw.js';
@@ -41,12 +42,21 @@ import Ad_businessman_item from './pages/ad_businessman_item.js';
 import Ad_admin from './pages/ad_admin.js';
 import Ad_inquiry from './pages/ad_inquiry.js';
 import Ad_inquiry_wanswer from './pages/ad_inquiry_wanswer.js';
+import Ad_inquiry_wanswer_update from './pages/ad_inquiry_wanswer_update.js';
 import Ad_inquiry_canswer from './pages/ad_inquiry_canswer.js';
 import Ad_analysis_shop from './pages/ad_analysis_shop.js';
 import Ad_analysis_shop_rating from './pages/ad_analysis_shop_rating.js';
 import Ad_analysis_shop_rating_member from './pages/ad_analysis_shop_rating_member.js';
 import Ad_analysis_shop_num from './pages/ad_analysis_shop_num.js';
 import Ad_analysis_shop_item from './pages/ad_analysis_shop_item.js';
+import Ad_business_trust from './pages/ad_business_trust.js';
+import Ad_business_trust_content from './pages/ad_business_trust_content.js';
+import Ad_notice from './pages/ad_notice.js';
+import Ad_notice_write from './pages/ad_notice_write.js';
+import Ad_notice_update from './pages/ad_notice_update.js';
+import Ad_noticeview from './pages/ad_noticeview.js';
+import Ad_login from './pages/ad_login.js';
+import Ad_store_management from './pages/ad_store_management.js';
 function App() {
   const fileInput = useRef(null)
   /*지도*/
@@ -548,12 +558,12 @@ function App() {
                   필터
                 </div>
 
-                <div className='filter_contents' style={{ height: "83%" }}>
+                                <div className='filter_contents' style={{ height: "83%" }}>
 
                   <div className='filter_distance' style={{ height: "24%", borderTop:"1px solid rgb(180,180,180)",borderBottom:"1px solid rgb(180,180,180)"}}>
                     <h1 style={{ fontSize: "20px", textAlign: "left", marginLeft: "30px", color: "#929292" }}>거리</h1>
                     <div>
-
+                  <br />
                       <input
                         type="range"
                         min="0"
@@ -565,51 +575,24 @@ function App() {
                       />
 
                       {rangeValue != 0 && (
-                        <p style={{ fontWeight: "600", fontSize: "20px", color: "#828282" }}>
-                          선택된 거리: <span style={{ color: "black", fontWeight: "700", fontSize: "22px" }}>{rangeValue} </span>Km</p>
+                        <p style={{ fontWeight: "600", fontSize: "25px", color: "#828282" }}>
+                          선택된 거리: <span style={{ color: "black", fontWeight: "700", fontSize: "25px" }}>{rangeValue} </span>Km</p>
                       )}
                     </div>
                   </div>
-                  <div className='filter_price' style={{ height: "33%" , borderBottom:"1px solid rgb(180,180,180)"}}>
+                  <div className='filter_price' style={{ height: "27%" , borderBottom:"1px solid rgb(180,180,180)"}}>
                     <h1 style={{ fontSize: "20px", textAlign: "left", marginLeft: "30px",marginBottom:"20px", color: "#929292" }}>가격</h1>
                     <div style={{marginBottom:"25px"}}>                      
-                        <input
-                          id="ft_price_btn1"
-                          type="checkbox"
-                          name='price'
-                          value='10000'
-                          onChange={(e) => {
-                            checkOnlyOne1(e.target);
-                          }}
-                        /><label for="ft_price_btn1"><span style={{ fontWeight: "600" ,marginRight:"20px"}}> ~ 10000원</span></label>
+                        
 
-                        <input
-                          id="ft_price_btn2"
-                          type="checkbox"
-                          name='price'
-                          value='30000'
-                          onChange={(e) => {
-                            checkOnlyOne1(e.target);
-                          }}
-                        /><label for="ft_price_btn2"><span style={{ fontWeight: "600" ,marginRight:"20px"}}> ~ 30000원</span></label>
-
-                        <input
-                          id="ft_price_btn3"
-                          type="checkbox"
-                          name='price'
-                          value='59000'
-                          onChange={(e) => {
-                            checkOnlyOne1(e.target);
-                          }}
-                        /><label for="ft_price_btn3"><span style={{ fontWeight: "600" }}> ~ 59000원</span></label>
 
                     </div>
                     <div>
                       <TextField
+                        style = {{width: 200, height:60 ,fontSize:20}}
                         placeholder='최소 가격 0원'
-                        label="최소 가격"
-                        size='small'
-                        style = {{width: 130}}
+                        inputProps={{style: {fontSize: 25}}}
+                        InputLabelProps={{style: {fontSize: 20, lineHeight:60}}}
                         name='minprice' 
                         value={minPrice}
                         onChange={(e) => {
@@ -619,11 +602,12 @@ function App() {
                       >
 
                       </TextField>
-                      <span style={{fontWeight:"600", padding:"0px 15px 0px 15px",display:"inline-block",marginTop:"8px"}}>~</span>
+                      <span style={{fontWeight:"600", padding:"0px 15px 0px 15px",display:"inline-block",marginTop:"8px", fontSize:"30px"}}>~</span>
                       <TextField
-                        label="최대 가격"
-                        size='small'
-                        style = {{width: 130}}
+                        style = {{width: 200, height:60}}
+                        placeholder='최대 가격'
+                        inputProps={{style: {fontSize: 25}}}
+                        InputLabelProps={{style: {fontSize: 20, lineHeight:60}}}
                         name='maxprice'
                         value={maxPrice}
                         onChange={(e) => {
@@ -637,8 +621,8 @@ function App() {
                      <div >
                     
                       {maxPrice != 0 && (
-                        <p style={{ fontWeight: "600", fontSize: "20px", color: "#828282" }}>
-                          가격: <span style={{ color: "black", fontWeight: "700", fontSize: "22px" }}>{minPrice1} ~ {maxPrice1} </span>원</p>
+                        <p style={{ fontWeight: "600", fontSize: "30px", color: "#828282" }}>
+                          가격: <span style={{ color: "black", fontWeight: "700", fontSize: "30px" }}>{minPrice1} ~ {maxPrice1} </span>원</p>
                       )}
                     </div>
                   </div>
@@ -647,49 +631,23 @@ function App() {
                   <div className='filter_endtime' style={{ height: "30%", borderBottom:"1px solid rgb(180,180,180)" }}>
                     <h1 style={{ fontSize: "20px", textAlign: "left", marginLeft: "30px",marginBottom:"20px", color: "#929292" }}>마감</h1>
                     <div style={{marginBottom:"25px"}}>
-                    <input
-                          id="ft_endtime_btn1"
-                          type="checkbox"
-                          name='endTime'
-                          value='6'
-                          onChange={(e) => {
-                            checkOnlyOne2(e.target);
-                          }}
-                        /><label for="ft_endtime_btn1"><span style={{ fontWeight: "600" ,marginRight:"20px"}}> 6시간 ~ </span></label>
-
-                        <input
-                          id="ft_endtime_btn2"
-                          type="checkbox"
-                          name='endTime'
-                          value='12'
-                          onChange={(e) => {
-                            checkOnlyOne2(e.target);
-                          }}
-                        /><label for="ft_endtime_btn2"><span style={{ fontWeight: "600" ,marginRight:"20px"}}> 12시간 ~ </span></label>
-
-                        <input
-                          id="ft_endtime_btn3"
-                          type="checkbox"
-                          name='endTime'
-                          value='24'
-                          onChange={(e) => {
-                            checkOnlyOne2(e.target);
-                          }}
-                        /><label for="ft_endtime_btn3"><span style={{ fontWeight: "600" }}> 24시간 ~ </span></label>
+                    
                     </div>
-                    <div>
-                      <input
-                        type="range"
-                        min="0"
-                        max="24" // 예: 24시간 범위 설정
-                        step="0.5" // 1시간씩 이동
-                        value={endTime}
-                        onChange={handleEndTimeChange}
-                        style={{ width: "80%", height: "80%", accentColor: "black" }}
-                      />
+                    <br />
+                    <div style={{display:"inline-block", marginRight:"250px"}}>
+                      <select
+                   value={endTime}
+                   onChange={handleEndTimeChange}
+                   style={{ width: "150px", height: "60px", accentColor: "black" , fontSize:"20px" }}
+                 >
+                   <option value="0">0 시간</option>
+                   <option value="1">1 시간</option>
+                   <option value="2">2 시간</option>
+                   {/* 다른 시간 옵션들 추가 */}
+                 </select>
                       {endTime != 0 && (
-                        <p style={{ fontWeight: "600", fontSize: "20px", color: "#828282" }}>
-                          마감까지 <span style={{ color: "black", fontWeight: "700", fontSize: "22px" }}>{endTime}</span> 시간 이상 남음</p>
+                        <p style={{ fontWeight: "600", fontSize: "25px", color: "#828282" ,display:"inline-block"}}>
+                          마감까지 <span style={{ color: "black", fontWeight: "700", fontSize: "25px" }}>{endTime}</span> 시간 이상 남음</p>
                       )}
                     </div>
                   </div>
@@ -1028,6 +986,9 @@ function App() {
         <Route path="/home_user" element={<div>
           <Home_user />
         </div>} />
+        <Route path="/owner" element={<div>
+          <Owner />
+        </div>} />
         <Route path="/find_id" element={<div>
           <Finde_id />
         </div>} />
@@ -1093,6 +1054,9 @@ function App() {
         <Route path="/ad_inquiry_canswer" element={<div>
           < Ad_inquiry_canswer />
         </div>} />
+         <Route path="/ad_inquiry_wanswer_update" element={<div>
+          < Ad_inquiry_wanswer_update />
+        </div>} />
         <Route path="/ad_analysis_shop" element={<div>
           < Ad_analysis_shop />
         </div>} />
@@ -1107,6 +1071,30 @@ function App() {
         </div>} />
         <Route path="/ad_analysis_shop_item" element={<div>
           < Ad_analysis_shop_item />
+        </div>} />
+        <Route path="/ad_business_trust" element={<div>
+          < Ad_business_trust />
+        </div>} />
+        <Route path="/ad_business_trust_content" element={<div>
+          < Ad_business_trust_content />
+        </div>} />
+        <Route path="/ad_notice" element={<div>
+          < Ad_notice />
+        </div>} />
+        <Route path="/ad_notice_write" element={<div>
+          < Ad_notice_write />
+        </div>} />
+        <Route path="/ad_noticeview" element={<div>
+          < Ad_noticeview />
+        </div>} />
+        <Route path="/ad_notice_update" element={<div>
+          < Ad_notice_update />
+        </div>} />
+        <Route path="/ad_login" element={<div>
+          < Ad_login />
+        </div>} />
+        <Route path="/ad_store_management" element={<div>
+          < Ad_store_management />
         </div>} />
       </Routes>
     </div>

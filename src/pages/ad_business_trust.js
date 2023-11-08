@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import './../App.css';
 import axios from 'axios';
-function Ad_user_trust() {
+function Ad_business_trust() {
     let a =localStorage.getItem("user_store");
     var user = JSON.parse(a);
     let b =localStorage.getItem("member");
@@ -66,7 +66,7 @@ function Ad_user_trust() {
                                         .then(response => {
                                           localStorage.setItem('user_store_content', JSON.stringify(response.data));
                                           localStorage.setItem('shop', JSON.stringify(user));  
-                                          navigate("/ad_user_trust_content");
+                                          navigate("/ad_business_trust_content");
                                         })
                                         .catch(error => {
                                           console.error('세션 데이터를 가져오는데 실패함', error);
@@ -84,4 +84,4 @@ function Ad_user_trust() {
     )
 }
 
-export default Ad_user_trust;
+export default Ad_business_trust;

@@ -18,30 +18,30 @@ function Ad_user_trust_content() {
                 </div>
                 <div className="content">
                     <div>회원 관리</div>
-                    <div className="sub" id="one"><a href="#" style={{ color: "red" }}>사용자</a></div>
-                    <div className="sub"><a href="#">상업자</a></div>
-                    <div className="sub"><a href="#">관리자</a></div>
+                    <div className="sub" id="one"><a href="/ad_user" style={{color:"red"}}>사용자</a></div>
+                    <div className="sub"><a href="/ad_businessman">상업자</a></div>
+                    <div className="sub"><a href="/ad_admin">관리자</a></div>
                 </div>
                 <div className="content">
                     <div>콘텐츠 관리</div>
-                    <div className="sub"><a href="#">문의 내역</a></div>
-                    <div className="sub"><a href="#">공지사항</a></div>
-                    <div className="sub"><a href="#">가게 등록</a></div>
+                    <div className="sub"><a href="/ad_inquiry">문의 내역</a></div>
+                    <div className="sub"><a href="/ad_notice">공지사항</a></div>
+                    <div className="sub"><a href="/ad_store_management">가게 등록</a></div>
                 </div>
                 <div className="content">
                     <div>인사이트 분석</div>
-                    <div className="sub"><a href="#">가게 분석</a></div>
+                    <div className="sub"><a href="/ad_analysis_shop">가게 분석</a></div>
                 </div>
                 <div className="logout">
-                    <div><a href="#" id="logout">로그아웃</a></div>
+                    <div><a href="/ad_login" id="logout">로그아웃</a></div>
                 </div>
             </div>
 
-            <main>
-                <div className="title" ><span style ={{color:"blue"}}>{shop.shopname}</span> 예약내역({content.length})</div>
+            <main className='ad_main'>
+                <div className="ad_title" ><span style ={{color:"blue"}}>{shop.shopname}</span> 예약내역({content.length})</div>
                 <div className="comment" style={{ float: "right", marginTop: "0px", marginRight: "90px", fontSize: "20px" }}><span>🟥</span><span>신뢰도 차감</span></div>
                 <div className="tb">
-                    <table>
+                    <table className='ad_table'>
                         <thead>
                             <tr style={{ height: "50px", fontSize: "25px", fontWeight: "700" }}>
                                 <td style={{ width: "15%" }}>상품 번호</td>

@@ -3,13 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useRef } from 'react';
 import './../App.css';
 import axios from 'axios';
-function Ad_inquiry_wanswer() {
-   let b =localStorage.getItem("inquiry");
-    var inquiry = JSON.parse(b);
+function Ad_notice_update() {
+    let b =localStorage.getItem("notice");
+    var notice = JSON.parse(b);
     let navigate = useNavigate();
     let [recall, setRecall] = useState(false);
     const [userInfo, setUserInfo] = useState("");
-    let [content_answer, setContent_answer] = useState("");
+    let [content_notice, setContent_notice] = useState("");
+    let [title_notice, setTitle_notice] = useState("");
     useEffect(() => {
         // 스프링에서 세션 데이터를 가져오는 호출
         axios.get('/getSessionMember/manager')
@@ -60,33 +61,43 @@ function Ad_inquiry_wanswer() {
             </div>
 
             <main className='ad_inquiry_wanswer_main'>
-                <div className="ad_inquiry_wanswer_title">답변 달기</div>
+                <div className="ad_inquiry_wanswer_title">공지사항 수정</div>
                 <div className="question">
                     <div className="qu">
-                        <div className="d"><div style={{fontWeight:"700",fontSize:"35px"}}>Q</div><div style={{fontWeight:"700",fontSize:"25px"}}>{inquiry.content_inquiry}</div><div style={{fontWeight:"700",fontSize:"20px"}}>{inquiry.redate}</div></div> 
+                        <div className="d"><div style={{fontWeight:"700",fontSize:"35px"}}>Q</div><div style={{fontWeight:"700",fontSize:"25px"}}>{notice.content_inquiry}</div><div style={{fontWeight:"700",fontSize:"20px"}}>{notice.redate}</div></div> 
                             <div className="qu_con">
-                                <div>A</div>
+                                <div style={{marginLeft:"60px"}}><textarea 
+                                   rows="1" 
+                                   cols="83" 
+                                   placeholder={notice.title}
+                                   name="title_notice"
+                                   onChange={(e) => {
+                                    setTitle_notice(e.target.value);
+                                 }}
+                                   ></textarea></div>
                                 <div><textarea 
                                    rows="8" 
                                    cols="83" 
-                                   placeholder="답변을 작성해주세요."
-                                   name="content_answer"
+                                   placeholder={notice.content}
+                                   name="content_notice"
                                    onChange={(e) => {
-                                     setContent_answer(e.target.value);
+                                     setContent_notice(e.target.value);
                                  }}
                                    ></textarea></div>
                                 
                             <div>
                                <button onClick={()=>{
                            const formData = new FormData();
-                           formData.append("inquiryidx",inquiry.inquiryidx);
-                           formData.append("adminidx",userInfo.memberIdx);
-                           formData.append("content_answer",content_answer);
-                           axios.post('/inquiry/answer',formData)
+                           formData.append("noticeIdx",notice.noticeidx);
+                           formData.append("title",title_notice);
+                           formData.append("memberIdx",userInfo.memberIdx);
+                           formData.append("content",content_notice);
+                           
+                           axios.put('/manager/notice/update',formData)
                                  .then(response => {
-                                 window.alert("작성 완료.")
-                                     localStorage.setItem('inquiry', JSON.stringify(response.data)); 
-                                            navigate("/ad_inquiry_canswer");
+                                     window.alert("작성 완료.")
+                                     localStorage.setItem('notice', JSON.stringify(response.data)); 
+                                     navigate("/ad_noticeview");
                                  })
                                  .catch(error => {
                                      console.error('세션 데이터를 가져오는데 실패함', error);
@@ -105,4 +116,4 @@ function Ad_inquiry_wanswer() {
     )
 }
 
-export default Ad_inquiry_wanswer;
+export default Ad_notice_update;

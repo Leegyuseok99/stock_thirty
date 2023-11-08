@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import './../App.css';
-function Ad_analysis_shop_num() {
+import { useNavigate } from "react-router-dom";
+function Ad_business_trust_content() {
+    let a =localStorage.getItem("user_store_content");
+    var content = JSON.parse(a);
+     let b =localStorage.getItem("shop");
+    var shop = JSON.parse(b);
 
     return (
         <div>
@@ -11,7 +16,7 @@ function Ad_analysis_shop_num() {
                 <div className="ad">
                     관리자 님, 환영합니다!
                 </div>
-                <div className="content">
+                 <div className="content">
                     <div>회원 관리</div>
                     <div className="sub" id="one"><a href="/ad_user" style={{color:"red"}}>사용자</a></div>
                     <div className="sub"><a href="/ad_businessman">상업자</a></div>
@@ -32,40 +37,34 @@ function Ad_analysis_shop_num() {
                 </div>
             </div>
 
-            <main>
-                <div className="title">파스쿠찌 예약자(2)</div>
+            <main className='ad_main'>
+                <div className="ad_title" ><span style ={{color:"blue"}}>{shop.shopname}</span> 예약내역({content.length})</div>
+                <div className="comment" style={{ float: "right", marginTop: "0px", marginRight: "90px", fontSize: "20px" }}><span>🟥</span><span>신뢰도 차감</span></div>
                 <div className="tb">
-                    <table>
+                    <table className='ad_table'>
                         <thead>
                             <tr style={{ height: "50px", fontSize: "25px", fontWeight: "700" }}>
-                                <td style={{ width: "15%" }}>회원번호</td>
-                                <td style={{ width: "40%" }}>아이디</td>
-                                <td style={{ width: "20%" }}>상품 이름</td>
-                                <td style={{ width: "10%" }}>예약 수</td>
-                                <td style={{ width: "15%" }}>참여일</td>
+                                <td style={{ width: "15%" }}>상품 번호</td>
+                                <td style={{ width: "50%" }}>상품 이름</td>
+                                <td style={{ width: "20%" }}>수량</td>
+                                <td style={{ width: "15%" }}>예약 날짜</td>
                             </tr>
                         </thead>
                         <tbody>
+                            {content.map((content,index) => (
                             <tr style={{ height: "50px", fontSize: "20px" }}>
-                                <td style={{ fontWeight: "700" }}>21</td>
-                                <td>ahj30420@naver.com</td>
-                                <td>블랙그라운드(원두)</td>
-                                <td>2</td>
-                                <td>2023.10.21</td>
+                                <td style={{ fontWeight: "700" }}>{content.itemidx}</td>
+                                <td style={{color: `${content.confirm === "false" ? "red" : "inherit"}`}}>{content.itemname}</td>
+                                <td>{content.number}</td>
+                                <td>{content.redate}</td>
                             </tr>
-                            <tr style={{ height: "50px", fontSize: "20px" }}>
-                                <td style={{ fontWeight: "700" }}>12</td>
-                                <td><a>sdzxc121@naver.com</a></td>
-                                <td>텀블러</td>
-                                <td>1</td>
-                                <td>2023.10.23</td>
-                            </tr>
+                            ))}
                         </tbody>
                     </table>
                 </div>
             </main>
-        </div >
+        </div>
     )
 }
 
-export default Ad_analysis_shop_num;
+export default Ad_business_trust_content;

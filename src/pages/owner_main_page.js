@@ -44,7 +44,7 @@ function Owner_main_page() {
                 console.error('세션 데이터를 가져오는데 실패함', error);
             });
     }, [recall]);
-    let [noticepost,setNoticePost] = useState([{noticeIdx:"1",title:"sss",content:"ssss"},{noticeIdx:"2",title:"aaaa",content:"aaaaa"},{noticeIdx:"3",title:"dddd",content:"ddddd"}]);
+    let [noticepost,setNoticePost] = useState([{noticeIdx:"1",title:"sss",content:"ssss",noticeDate:"2023-10-23"},{noticeIdx:"4",title:"sss",content:"ssss",noticeDate:"2023-10-23"},{noticeIdx:"2",title:"aaaa",content:"aaaaa",noticeDate:"2023-10-23"},{noticeIdx:"3",title:"dddd",content:"ddddd",noticeDate:"2023-10-23"}]);
     useEffect(() => {
         axios.get('/manager/notice/readall')
             .then(response => {
@@ -180,10 +180,10 @@ function Owner_main_page() {
                     </div>
                     <div className='text'><span>공지사항</span></div>
                     <div className={`content3 ${temp1 == true ? "" : "contents_hidden"}`}>
-                        <div>
+                        <div style={{marginTop:"20px",width:"100%", height:"50%", backgroundColor:'red',display:"flex",justifyContent:"space-between",alignContent: "flex-start"}}>
                         {currentPosts.map((nti, index) => (
+                            <div style={{width:"25%",height:"90%",border:"1px solid black"}}>
                             <tr className='notice_main_content' key={index} style={{ height: "40px", fontSize: "20px" }}>
-                                <td id="notice_row">{nti.noticeIdx}</td>
                                 <td id="notice_row" onClick= {()=>{
                                     navigate(`/owner_noticeview/${nti.noticeIdx}`)
                                     axios.get('/manager/notice/read',{
@@ -204,6 +204,7 @@ function Owner_main_page() {
                                 }} style={{ textAlign: "left" }}><span>{nti.title}</span></td>
                                 <td id="notice_row">{nti.noticeDate}</td>
                             </tr>
+                            </div>
                         ))}
                         </div>
                     </div>

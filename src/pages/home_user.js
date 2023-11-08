@@ -854,6 +854,7 @@ function Home_user() {
                         label="최소 가격"
                         size='small'
                         style = {{width: 130}}
+                        inputProps={{style: {fontSize: 20}}}
                         name='minprice' 
                         value={minPrice}
                         onChange={(e) => {

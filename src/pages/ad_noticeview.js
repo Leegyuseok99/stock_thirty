@@ -4,31 +4,25 @@ import { useEffect, useRef } from 'react';
 import './../App.css';
 import axios from 'axios';
 
-function Ad_inquiry_canswer() {
-   let b =localStorage.getItem("inquiry");
-    var inquiry = JSON.parse(b);
+function Ad_noticeview() {
+    let a =localStorage.getItem("notice");
+    var notice = JSON.parse(a);
     let navigate = useNavigate();
-    let [recall, setRecall] = useState(false);
-    const [userInfo, setUserInfo] = useState("");
-    useEffect(() => {
-        // 스프링에서 세션 데이터를 가져오는 호출
-        axios.get('/getSessionMember/manager')
-            .then(response => {
-                const userData = response.data;
-                console.log(userData.redirect)
-                if (userData.redirect) {
-                    console.log("페이지 이동");
-                    window.location.href = userData.redirect;
-                } else {
-                    setUserInfo(userData);
-                    console.log("세션데이터가 존재");
-                    console.log(userData.id);
-                }
-            })
-            .catch(error => {
-                console.error('세션 데이터를 가져오는데 실패함', error);
-            });
-    }, [recall]);
+    console.log(1)
+    console.log(notice);
+    function formatDate(dateString) {
+        const originalDate = new Date(dateString);
+        const options = {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        };
+        const formattedDate = originalDate.toLocaleString("ko-KR", options);
+        return formattedDate;
+      }
     return (
         <div>
             <div className="main_bar">
@@ -60,29 +54,29 @@ function Ad_inquiry_canswer() {
             </div>
 
             <main className='ad_inquiry_canswer_main'>
-                <div className="ad_inquiry_canswer_title">답변 확인</div>
+                <div className="ad_inquiry_canswer_title">공지사항</div>
                 <div className="ad_inquiry_canswer_question">
                     <div className="ad_inquiry_canswer_qu">
-                        <div className="ad_inquiry_canswer_d"><div style={{fontWeight:"700",fontSize:"35px"}}>Q</div><div style={{fontWeight:"700",fontSize:"25px"}}>{inquiry.content_inquiry}</div><div style={{fontWeight:"700",fontSize:"20px"}}>{inquiry.redate}</div></div>
+                        <div className="ad_inquiry_canswer_d"><div style={{fontWeight:"700",fontSize:"35px"}}>Q</div><div style={{fontWeight:"700",fontSize:"25px"}}>질문 내용</div><div style={{fontWeight:"700",fontSize:"20px"}}>2023-05-11</div></div>
                         <div className="ad_inquiry_canswer_qu_con">
                             <div style={{fontSize:"30px"}}>A</div>
-                            <div className='ad_inquiry_canswer_qu_con_result'>{inquiry.content_answer}</div>
-                            <div className='ad_inquiry_canswer_u_con_result_redate'>{inquiry.answer_redate}</div>
-                            <div>
+                            <div className='ad_inquiry_canswer_qu_con_result'>{notice.title}</div>
+                            <div className='ad_inquiry_canswer_u_con_result_redate'>{formatDate(notice.noticedate)}</div>
+                        </div>
+                        <div>
                             <button onClick={()=>{
-                                localStorage.setItem('inquiry',JSON.stringify(inquiry));
-                                navigate('/ad_inquiry_wanswer_update');
+                                localStorage.setItem('notice',JSON.stringify(notice));
+                                navigate('/ad_notice_update');
                             }}><span>수정</span></button>
                             <button onClick={()=>{
-                                const formData = new FormData();
-                              formData.append("inquiryidx",inquiry.inquiryidx);
-                              formData.append("adminidx",userInfo.memberIdx);
-
-                                axios.put('/inquiry/answer/delete',formData)
+                                axios.delete('/manager/notice/delete',{
+                           params:{
+                              noticeIdx:notice.noticeidx
+                           }
+                        })
                                  .then(response => {
                                      window.alert("삭제 완료.")
-                                     localStorage.setItem('inquiry', JSON.stringify(response.data)); 
-                                     navigate("/ad_inquiry_canswer");
+                                     navigate("/ad_notice");
                                  })
                                  .catch(error => {
                                      console.error('세션 데이터를 가져오는데 실패함', error);
@@ -93,7 +87,6 @@ function Ad_inquiry_canswer() {
                                 </span>
                             </button>
                         </div>
-                        </div>
                     </div>
                 </div>
             </main>
@@ -101,4 +94,4 @@ function Ad_inquiry_canswer() {
     )
 }
 
-export default Ad_inquiry_canswer;
+export default Ad_noticeview;

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useRef } from 'react';
 import './../App.css';
 import axios from 'axios';
-function Ad_inquiry_wanswer() {
+function Ad_inquiry_wanswer_update() {
    let b =localStorage.getItem("inquiry");
     var inquiry = JSON.parse(b);
     let navigate = useNavigate();
@@ -69,7 +69,7 @@ function Ad_inquiry_wanswer() {
                                 <div><textarea 
                                    rows="8" 
                                    cols="83" 
-                                   placeholder="답변을 작성해주세요."
+                                   placeholder={inquiry.content_answer}
                                    name="content_answer"
                                    onChange={(e) => {
                                      setContent_answer(e.target.value);
@@ -82,11 +82,11 @@ function Ad_inquiry_wanswer() {
                            formData.append("inquiryidx",inquiry.inquiryidx);
                            formData.append("adminidx",userInfo.memberIdx);
                            formData.append("content_answer",content_answer);
-                           axios.post('/inquiry/answer',formData)
+                           axios.put('/inquiry/answer/update',formData)
                                  .then(response => {
-                                 window.alert("작성 완료.")
+                                     window.alert("수정 완료.")
                                      localStorage.setItem('inquiry', JSON.stringify(response.data)); 
-                                            navigate("/ad_inquiry_canswer");
+                                     navigate("/ad_inquiry_canswer");
                                  })
                                  .catch(error => {
                                      console.error('세션 데이터를 가져오는데 실패함', error);
@@ -105,4 +105,4 @@ function Ad_inquiry_wanswer() {
     )
 }
 
-export default Ad_inquiry_wanswer;
+export default Ad_inquiry_wanswer_update;

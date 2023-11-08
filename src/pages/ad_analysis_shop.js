@@ -13,22 +13,22 @@ function Ad_analysis_shop() {
                 </div>
                 <div className="content">
                     <div>회원 관리</div>
-                    <div className="sub" id="one"><a href="#">사용자</a></div>
-                    <div className="sub"><a href="#">상업자</a></div>
-                    <div className="sub"><a href="#">관리자</a></div>
+                    <div className="sub" id="one"><a href="/ad_user" style={{color:"red"}}>사용자</a></div>
+                    <div className="sub"><a href="/ad_businessman">상업자</a></div>
+                    <div className="sub"><a href="/ad_admin">관리자</a></div>
                 </div>
                 <div className="content">
                     <div>콘텐츠 관리</div>
-                    <div className="sub"><a href="#">문의 내역</a></div>
-                    <div className="sub"><a href="#">공지사항</a></div>
-                    <div className="sub"><a href="#">가게 등록</a></div>
+                    <div className="sub"><a href="/ad_inquiry">문의 내역</a></div>
+                    <div className="sub"><a href="/ad_notice">공지사항</a></div>
+                    <div className="sub"><a href="/ad_store_management">가게 등록</a></div>
                 </div>
                 <div className="content">
                     <div>인사이트 분석</div>
-                    <div class="sub"><a href="#" style={{color:"red"}}>가게 분석</a></div>
+                    <div className="sub"><a href="/ad_analysis_shop">가게 분석</a></div>
                 </div>
                 <div className="logout">
-                    <div><a href="#" id="logout">로그아웃</a></div>
+                    <div><a href="/ad_login" id="logout">로그아웃</a></div>
                 </div>
             </div>
 
