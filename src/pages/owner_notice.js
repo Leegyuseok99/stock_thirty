@@ -9,6 +9,8 @@ import Avatar from 'react-avatar';
 import StoreIcon from '@mui/icons-material/Store';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import { Outlet } from 'react-router-dom';
+import LogoutIcon from '@mui/icons-material/Logout';
+import HouseIcon from '@mui/icons-material/House';
 function Owner_notice() {
     let [recall, setRecall] = useState(false);
     let [temp1, setTemp1] = useState(true);
@@ -22,22 +24,9 @@ function Owner_notice() {
     function switchTemp() {
         setTemp(!temp);
     }
-      function formatDate(dateString) {
-     const originalDate = new Date(dateString);
-     const options = {
-       year: "numeric",
-       month: "2-digit",
-       day: "2-digit",
-       hour: "2-digit",
-       minute: "2-digit",
-       second: "2-digit",
-     };
-     const formattedDate = originalDate.toLocaleString("ko-KR", options);
-     return formattedDate;
-   }
     useEffect(() => {
         // 스프링에서 세션 데이터를 가져오는 호출
-        axios.get('/getSessionMember/business')
+        axios.get('/getSessionMember')
             .then(response => {
                 const userData = response.data;
                 console.log(userData.redirect)
@@ -55,7 +44,7 @@ function Owner_notice() {
             });
     }, [recall]);
     /*공지사항 가져오기*/
-    let [noticepost,setNoticePost] = useState([]);
+    let [noticepost,setNoticePost] = useState([{noticeIdx:"1",title:"sss",content:"ssss"},{noticeIdx:"2",title:"aaaa",content:"aaaaa"},{noticeIdx:"3",title:"dddd",content:"ddddd"},{noticeIdx:"1",title:"sss",content:"ssss"},{noticeIdx:"1",title:"sss",content:"ssss"},{noticeIdx:"1",title:"sss",content:"ssss"},{noticeIdx:"1",title:"sss",content:"ssss"},{noticeIdx:"1",title:"sss",content:"ssss"},{noticeIdx:"1",title:"sss",content:"ssss"},{noticeIdx:"1",title:"sss",content:"ssss"},{noticeIdx:"1",title:"sss",content:"ssss"}]);
     useEffect(() => {
         axios.get('/manager/notice/readall')
             .then(response => {
@@ -76,16 +65,35 @@ function Owner_notice() {
     const indexOfLastPost = currentPage * postsPerPage;
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
     const currentPosts = noticepost.slice(indexOfFirstPost, indexOfLastPost);
-
+    function formatDate(dateString) {
+        const originalDate = new Date(dateString);
+        const options = {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        };
+        const formattedDate = originalDate.toLocaleString("ko-KR", options);
+        return formattedDate;
+      }
     const pageNumbers = [];
 
     for (let i = 1; i <= Math.ceil(noticepost.length / postsPerPage); i++) {
         pageNumbers.push(i);
     }
+    const handleClick = () => {
+        if (userInfo.role === '사용자') {
+          window.location.href="/home_user";
+        } else if (userInfo.role === '상업자') {
+          window.location.href="/home_owner";
+        }
+     };
     return (
         <div>
             <div className='owner_noticeWrap' >
-                <header id='header' className={`${temp1 == true ? "" : "header_hidden"}`} style={{
+            <header id='header' className={`${temp1 == true ? "" : "header_hidden"}`} style={{
                     backgroundColor: 'white', // 헤더 배경색
                     boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.2)', // 그림자 효과
                     position: 'sticky', // 스크롤과 함께 고정
@@ -93,14 +101,19 @@ function Owner_notice() {
                     zIndex: 1, // 다른 요소 위에 나타나도록 설정
                     borderRadius: "20px"
                 }}>
-                    <div className='logo'><a href="/owner_main_page">재고 30 </a></div>
+                    <div className='logo'><a onClick={handleClick} style={{ cursor: 'pointer' }}> 재고 30 </a></div>
                     <nav className='nav'>
                         <ul>
                             <li>
+                                <a href="/owner_main_page" style={{ cursor: "pointer" }}>
+                                    <HouseIcon fontSize="large" />
+                                </a>
+                            </li>
+                            <li>
                                 <a onClick={() => {
                                     setTemp(switchTemp);
-                                }} style={{ cursor: "pointer" }} href='/owner'>
-                                    가게등록
+                                }} style={{ cursor: "pointer" }} href='/owner_storelist'>
+                                    내가게
                                 </a>
                             </li>
                             <li>
@@ -114,59 +127,52 @@ function Owner_notice() {
                                 </a>
                             </li>
                             <li>
-                                <a href="/">
-                                    로그아웃
-                                </a>
-                            </li>
-                            <li>
-                                <a className='mypages' style={{ cursor: "pointer" }} onClick={() => {
-                                    setTemp1(!temp1);
-                                }}>
-                                    <AccountCircleIcon fontSize="large" /> <span>{userInfo.nickname}</span>
-                                </a>
-
+                            <a href="/" onClick={() => {
+                                        axios.get('/SessionLogout', {
+                                        })
+                                        window.alert("로그아웃되었습니다.");
+                                    }
+                                    }>
+                                        <LogoutIcon fontSize="large" />
+                                    </a>
                             </li>
                         </ul></nav>
                 </header>
                 <div className={`banner ${temp1 == true ? "" : "banner_hidden"}`} style={{ borderRadius: "20px", boxShadow: '0px 0px 5px rgba(0, 0, 0, 0.3)' }}>
-                    <div className={`text ${temp1 == true ? "" : "contents_hidden"}`}>
-                        <span >가게를 등록하여</span><br />
-                        <span>자신의 가게를 보여주세요!</span>
-                    </div>
-                </div>
-                <div className={`${temp1 == true ? "" : "contents_hidden"}`}>
                     <div className='notice_title'>공지사항</div>
                     <div className='notice_title_exception'>(주)재고30의 공지사항을 알려드립니다.</div>
                 </div>
-                <div className='notice_contents' style={{ margin: "0 auto", height: "444px" }}>
+                <div className='notice_contents' style={{height: "500px" }}>
                     <table className={`notice_table ${temp1 == true ? "" : "contents_hidden"}`} style={{ borderBottomLeftRadius: '20px', borderBottomRightRadius: '20px', borderTopLeftRadius: '20px', borderTopRightRadius: '20px', boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.5)' }} >
-                        <tr style={{ fontSize: "25px", backgroundColor: "rgba(0,0,0,0.1)" }}>
+                        <tr style={{ fontSize: "25px", backgroundColor: "rgb(220,220,220)"}}>
                             <th style={{ width: "150px", height: "40px", borderTopLeftRadius: '20px' }}>No</th>
                             <th>제목</th>
-                            <th style={{ width: "300px", borderTopRightRadius: '20px' }}>등록일</th>
+                            <th style={{ width: "150px"}}></th>
+                            <th style={{ width: "140px", borderTopRightRadius: '20px' }}>등록일</th>
                         </tr>
                         {currentPosts.map((nti, index) => (
-                            <tr className='notice_main_content' key={index} style={{ height: "40px", fontSize: "20px" }}>
-                                <td id="notice_row">{nti.noticeIdx}</td>
+                            <tr className='notice_main_content' key={index} style={{ height: "46px", fontSize: "20px" }}>
+                                <td id="notice_row">{nti.noticeidx}</td>
                                 <td id="notice_row" onClick= {()=>{
-                                    navigate(`/owner_noticeview/${nti.noticeIdx}`)
+                                    navigate(`/owner_noticeview/${nti.noticeidx}`)
                                     axios.get('/manager/notice/read',{
                                         params: {
-                                            noticeIdx:nti.noticeIdx,
+                                            noticeIdx:nti.noticeidx,
                                             title:nti.title
                                         }
                                     })
                                     .then(response => {
                                         const not = response.data;
-                                        const noticep = `?notititle=${not.title}&notidate=${formatDate(not.noticeDate)}&noticontent=${not.content}`;
-                                        const popupURL = `/owner_noticeview/${nti.noticeIdx}${noticep}`;
+                                        const noticep = `?notititle=${not.title}&notiDate=${formatDate(not.noticedate)}&noticontent=${not.content}`;
+                                        const popupURL = `/owner_noticeview/${nti.noticeidx}${noticep}`;
                                         navigate(popupURL);
                                       })
                                       .catch(error => {
                                         console.error('세션 데이터를 가져오는데 실패함', error);
                                       });
                                 }} style={{ textAlign: "left" }}><span>{nti.title}</span></td>
-                                <td id="notice_row">{formatDate(nti.noticeDate)}</td>
+                                <td id="notice_row" style={{color:"blue"}}>{nti.noticemodify}</td>
+                                <td id="notice_row">{formatDate(nti.noticedate)}</td>
                             </tr>
                         ))}
 
@@ -199,10 +205,18 @@ function Owner_notice() {
                     bottom: 0, // 화면 상단에 고정
                     zIndex: 1, // 다른 요소 위에 나타나도록 설정
                     borderRadius: "20px",
-                    marginTop: "32px"
+                    marginTop: "32px",
+                    height:"85px",
                 }}>
                     <div className='footer1'><a href="/"><Outlet></Outlet>재고 30</a></div>
-                    <div className='footer2'>개인정보 및 보호정책 등</div>
+                    <div className='footer2'>
+                    <ul className="footer_notice" style={{display:"flex",justifyContent:"center",lineHeight:"60px",fontSize:"18px",marginRight:"25px",marginTop:"15px"}}>
+                        <li><a href="#" style={{padding:"10px",borderRight:"1px solid black"}}>개인정보처리방침</a></li>
+                        <li><a href="#" style={{padding:"10px",borderRight:"1px solid black"}}>저작권보호정책</a></li>
+                        <li><a href="#" style={{padding:"10px",borderRight:"1px solid black"}}>이메일무단수집거부</a></li>
+                        <li><a href="#"style={{padding:"10px"}}>CCTV설치 및 운영지침</a></li>
+                    </ul>
+                    </div>
                 </footer>
                 <div className={`${temp1 == true ? "popup_view_none" : "popup_view"}`} style={{top:"50%"}}>
                     <div>
@@ -225,37 +239,6 @@ function Owner_notice() {
                         </h1>
                         </div>
                     </div>
-
-                    <div id="popsec1" style={{ cursor: "pointer" }}>
-                        <a onClick={() => {
-
-                            axios.get('/member/bookmark/check')
-                                .then(response => {
-                                    setShopsData(response.data);
-
-                                    setTemp3(!temp3);
-                                })
-                                .catch(error => {
-                                    console.error('세션 데이터를 가져오는데 실패함', error);
-                                });
-
-                            setTemp3(!temp3);
-                        }} style={{ cursor: "pointer" }} ><span>즐겨 찾기</span></a>
-
-                    </div>
-                    <div id="popsec2" style={{ cursor: "pointer" }}>
-                        <a href="" ><span>예약 확인</span></a>
-                    </div>
-                    <div id="popsec3" style={{ cursor: "pointer" }}>
-                        <a href=""> <span>내 신뢰점수</span></a>
-                    </div>
-                    <div id="popsec2" style={{ cursor: "pointer" }}>
-                        <a href="owner"><span>가게 등록</span></a>
-                    </div>
-                    <button className="popup_btn" onClick={() => {
-                        setTemp1(!temp1)
-                    }}><a>[ CLOSE ]</a></button>
-
                 </div>
             </div>
         </div>

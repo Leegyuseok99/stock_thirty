@@ -64,11 +64,11 @@ function Ad_notice_write() {
                     <div className="qu">
                         <div className="d"><div style={{fontWeight:"700",fontSize:"35px"}}></div><div style={{fontWeight:"700",fontSize:"25px"}}></div><div style={{fontWeight:"700",fontSize:"20px"}}></div></div> 
                             <div className="qu_con">
-                                 <div style={{marginLeft:"60px"}}><textarea 
-                                   rows="1" 
+                                 <div style={{marginLeft:"180px"}}><textarea 
                                    cols="83" 
                                    placeholder="제목을 작성해주세요."
                                    name="title_notice"
+                                   style={{resize: "vertical",maxHeight:"40px",minHeight:"40px",lineHeight:"1.7"}}
                                    onChange={(e) => {
                                     setTitle_notice(e.target.value);
                                  }}
@@ -76,8 +76,9 @@ function Ad_notice_write() {
                                 <div><textarea 
                                    rows="8" 
                                    cols="83" 
-                                   placeholder="공지사항 내용을 작성해주세요."
+                                   placeholder="공지사항 내용을 작성해주세요,,!"
                                    name="content_notice"
+                                   style={{resize: "vertical",minHeight:"200px"}}
                                    onChange={(e) => {
                                     setContent_notice(e.target.value);
                                  }}
@@ -85,7 +86,7 @@ function Ad_notice_write() {
                                 
                             <div>
                             
-                               <button onClick={()=>{   
+                               <button className="ad_write_btn" onClick={()=>{   
                          const formData = new FormData();
                          formData.append("title",title_notice); 
                          formData.append("content",content_notice); 

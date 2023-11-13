@@ -77,7 +77,7 @@ function Ad_inquiry_wanswer_update() {
                                    ></textarea></div>
                                 
                             <div>
-                               <button onClick={()=>{
+                               <button className="ad_write_btn" onClick={()=>{
                            const formData = new FormData();
                            formData.append("inquiryidx",inquiry.inquiryidx);
                            formData.append("adminidx",userInfo.memberIdx);

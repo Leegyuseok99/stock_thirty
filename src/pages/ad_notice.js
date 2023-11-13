@@ -94,7 +94,7 @@ function Ad_notice() {
             </div>
 
             <main className='ad_main'>
-                <div className="ad_title">가게 분석(2)</div>
+                <div className="ad_title">공지사항({noticepost.length})</div>
                 <div className="tb">
                     <table className="ad_table">
                         <thead>
@@ -122,7 +122,7 @@ function Ad_notice() {
                         </tbody>
                     </table>
                     <div>
-                        <button onClick={()=>{
+                        <button className="ad_write_btn" style={{float:"right",marginRight:"40px"}} onClick={()=>{
                             navigate("/ad_notice_write")
                         }}>
                             <span>글작성</span>

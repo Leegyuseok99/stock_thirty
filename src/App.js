@@ -82,19 +82,34 @@ function App() {
       return "#e74c3c";
     }
   }
-   function formatDate(dateString) {
-     const originalDate = new Date(dateString);
-     const options = {
-       year: "numeric",
-       month: "2-digit",
-       day: "2-digit",
-       hour: "2-digit",
-       minute: "2-digit",
-       second: "2-digit",
-     };
-     const formattedDate = originalDate.toLocaleString("ko-KR", options);
-     return formattedDate;
-   }
+  /*별점 */
+  let [temp7, setTemp7] = useState(true);
+  const [clicked, setClicked] = useState([false, false, false, false, false]);
+  const array = [1, 2, 3, 4, 5]
+
+  const handleSetStar = index => {
+    let clickStates = [...clicked];
+    for (let i = 0; i < 6; i++) {
+      clickStates[i] = i <= index ? true : false;
+    }
+    setClicked(clickStates);
+    setMaxStars(index);
+  };
+  let score = clicked.filter(Boolean).length;
+  let [starreservation, setStarreservation] = useState([]);
+  function formatDate(dateString) {
+    const originalDate = new Date(dateString);
+    const options = {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    };
+    const formattedDate = originalDate.toLocaleString("ko-KR", options);
+    return formattedDate;
+  }
   let [search_store_switch, setSearch_store_switch] = useState(true);
   let [search_store_switch2, setSearch_store_switch2] = useState(true);
   let [switch3, setSwitch3] = useState(0);
@@ -194,8 +209,8 @@ function App() {
 
                   // 만약 해당 정보를 찾았다면 selectedShopInfo에 그 정보가 저장됩니다.
                   if (selectedShopInfo) {
-               let formattedPhoneNumber = selectedShopInfo.shopTel.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
-               selectedShopInfo.shopTel=formattedPhoneNumber;
+                    let formattedPhoneNumber = selectedShopInfo.shopTel.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
+                    selectedShopInfo.shopTel = formattedPhoneNumber;
                     setSelectedShop(selectedShopInfo);
                   }
                   const iwInner = document.getElementById('showDetails');
@@ -294,8 +309,8 @@ function App() {
 
                     // 만약 해당 정보를 찾았다면 selectedShopInfo에 그 정보가 저장됩니다.
                     if (selectedShopInfo) {
-                  let formattedPhoneNumber = selectedShopInfo.shopTel.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
-                  selectedShopInfo.shopTel=formattedPhoneNumber;
+                      let formattedPhoneNumber = selectedShopInfo.shopTel.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
+                      selectedShopInfo.shopTel = formattedPhoneNumber;
                       setSelectedShop(selectedShopInfo);
                     }
                     const iwInner = document.getElementById('showDetails');
@@ -410,8 +425,8 @@ function App() {
   }
   useEffect(() => {
     console.log(maxPrice)
-  },[maxPrice])
-    const checkOnlyOne1 = (checkThis) => {
+  }, [maxPrice])
+  const checkOnlyOne1 = (checkThis) => {
     const checkboxes = document.getElementsByName('price')
     let selectedPrice = "0";
     let selectedPrice1 = 0;
@@ -456,28 +471,15 @@ function App() {
         selectedTime = parseInt(checkbox.value, 10);
       }
     });
-  
+
     setEndTime(selectedTime);
   }
   //필터 별점 선택 
   let [maxStars, setMaxStars] = useState(0); // 최대 별점
 
   const checkOnlyOne = (checkThis) => {
-    const checkboxes = document.getElementsByName('rating')
-    let selectedrate = 0;
-    for (let i = 0; i < checkboxes.length; i++) {
-      if (checkboxes[i] !== checkThis) {
-        checkboxes[i].checked = false;
-        setMaxStars(checkThis.value);
-      }
-    }
-    checkboxes.forEach((checkbox) => {
-      if (checkbox.checked) {
-        selectedrate = parseInt(checkbox.value, 10);
-      }
-    });
-  
-    setMaxStars(selectedrate);
+
+    setMaxStars(checkThis);
   }
 
   const resetFilters = () => {
@@ -488,18 +490,19 @@ function App() {
     setMaxPrice("0");
     setMaxPrice1(0);
     setMaxStars(0);
-  
+    handleSetStar(0);
+
     // Reset the checkboxes by unchecking them
     const checkboxes = document.getElementsByName('price');
     checkboxes.forEach((checkbox) => {
       checkbox.checked = false;
     });
-  
+
     const endTimeCheckboxes = document.getElementsByName('endTime');
     endTimeCheckboxes.forEach((checkbox) => {
       checkbox.checked = false;
     });
-  
+
     const ratingCheckboxes = document.getElementsByName('rating');
     ratingCheckboxes.forEach((checkbox) => {
       checkbox.checked = false;
@@ -532,7 +535,17 @@ function App() {
                   top: 0, // 화면 상단에 고정
                   zIndex: 1, // 다른 요소 위에 나타나도록 설정
                 }}>
-                  <div className='logo'><a href="/">재고 30</a></div>
+                  <div className='logo'>
+                    <a href="/">
+                      <div style={{ padding: "0px 40px 30px 40px", textAlign: "left" }}>
+                        <img style={{ marginBottom: "-11px" }} src={Marker4}></img>
+                        <div style={{ width: "150px", height: "11px", backgroundColor: "black", borderRadius: "40%", opacity: "0.1", marginLeft: "50px", marginTop: "-10px" }}></div>
+                        <div style={{ marginLeft: "60px", marginTop: "-50px" }}>
+                          <span style={{ fontWeight: "600", fontSize: "40px" }}>재고30</span>
+                        </div>
+                      </div>
+                    </a>
+                  </div>
                   <nav className='nav'>
                     <ul>
                       <li>
@@ -546,218 +559,146 @@ function App() {
                         </a>
                       </li>
                     </ul></nav>
-          </header>
-          <div style={{ width: "100%", height: "25px" }}></div>
-          <div style={{ width: "100%", height: "91%", overflow: "hidden" }}>
-            <div className={`contents_slide ${showFilter == true ? "" : "filter_slide"}`} style={{ width: "140%", height: "100%", display: "flex" }}>
+                </header>
+                <div style={{ width: "100%", height: "25px" }}></div>
+                <div style={{ width: "100%", height: "91%", overflow: "hidden" }}>
+                  <div className={`contents_slide ${showFilter == true ? "" : "filter_slide"}`} style={{ width: "140%", height: "100%", display: "flex" }}>
 
-              <div style={{ width: "1%", height: "100%" }}></div>
+                    <div style={{ width: "1%", height: "100%" }}></div>
 
-              <div className={`filter`} style={{ width: "19%", borderRadius: "50px", height: "99%", backgroundColor: "white", boxShadow: '0px 2px 5px rgba(0, 0, 0, 1)' }}>
-                <div className='filter_title' style={{ paddingTop: "50px", height: "5%", fontWeight: "600", fontSize: "40px", textAlign: "center", marginBottom: "30px" }}>
-                  필터
-                </div>
+                    <div className={`filter`} style={{ width: "19%", borderRadius: "50px", height: "99%", backgroundColor: "white", boxShadow: '0px 2px 5px rgba(0, 0, 0, 1)' }}>
+                      <div className='filter_title' style={{ paddingTop: "20px", height: "3%", fontWeight: "600", fontSize: "30px", textAlign: "center", marginBottom: "30px" }}>
+                        필터
+                      </div>
 
-                                <div className='filter_contents' style={{ height: "83%" }}>
+                      <div className='filter_contents' style={{ height: "92%" }}>
 
-                  <div className='filter_distance' style={{ height: "24%", borderTop:"1px solid rgb(180,180,180)",borderBottom:"1px solid rgb(180,180,180)"}}>
-                    <h1 style={{ fontSize: "20px", textAlign: "left", marginLeft: "30px", color: "#929292" }}>거리</h1>
-                    <div>
-                  <br />
-                      <input
-                        type="range"
-                        min="0"
-                        max="5"
-                        step="0.1"
-                        value={rangeValue}
-                        onChange={handleRangeChange}
-                        style={{ width: "80%", height: "80%", accentColor: "black" }}
-                      />
+                        <div className='filter_distance' style={{ height: "21%", borderTop: "1px solid rgb(180,180,180)", borderBottom: "1px solid rgb(180,180,180)" }}>
+                          <h1 style={{ fontSize: "20px", textAlign: "left", marginLeft: "30px", color: "#929292" }}>거리</h1>
+                          <div>
+                            <input
+                              type="range"
+                              min="0"
+                              max="5"
+                              step="0.1"
+                              value={rangeValue}
+                              onChange={handleRangeChange}
+                              style={{ width: "70%", height: "80%", accentColor: "black" }}
+                            />
 
-                      {rangeValue != 0 && (
-                        <p style={{ fontWeight: "600", fontSize: "25px", color: "#828282" }}>
-                          선택된 거리: <span style={{ color: "black", fontWeight: "700", fontSize: "25px" }}>{rangeValue} </span>Km</p>
-                      )}
+                            {rangeValue != 0 && (
+                              <p style={{ fontWeight: "600", fontSize: "25px", color: "#828282" }}>
+                                선택된 거리: <span style={{ color: "black", fontWeight: "700", fontSize: "30px" }}>{rangeValue} </span>Km</p>
+                            )}
+                          </div>
+                        </div>
+                        <div className='filter_price' style={{ height: "22%", borderBottom: "1px solid rgb(180,180,180)" }}>
+                          <h1 style={{ fontSize: "20px", textAlign: "left", marginLeft: "30px", marginBottom: "20px", color: "#929292" }}>가격</h1>
+                          <div style={{ marginBottom: "25px" }}>
+                          </div>
+                          <div>
+                            <TextField
+                              style={{ width: 150, height: 60, fontSize: 15 }}
+                              placeholder='0원'
+                              inputProps={{ style: { fontSize: 22 } }}
+                              InputLabelProps={{ style: { fontSize: 20, lineHeight: 60 } }}
+                              name='minprice'
+                              value={minPrice}
+                              onChange={(e) => {
+                                setMinPrice(e.target.value);
+                                setMinPrice1(addCommasToNumber(e.target.value));
+                              }}
+                            >
+
+                            </TextField>
+                            <span style={{ fontWeight: "600", padding: "0px 15px 0px 15px", display: "inline-block", marginTop: "8px", fontSize: "40px" }}>-</span>
+                            <TextField
+                              style={{ width: 150, height: 60, fontSize: 15 }}
+                              placeholder='최대 가격'
+                              inputProps={{ style: { fontSize: 22 } }}
+                              InputLabelProps={{ style: { fontSize: 20, lineHeight: 60 } }}
+                              name='maxprice'
+                              value={maxPrice}
+                              onChange={(e) => {
+                                setMaxPrice(e.target.value);
+                                setMaxPrice1(addCommasToNumber(e.target.value));
+                              }}
+                            >
+
+                            </TextField>
+                          </div>
+                          <div >
+
+                            {maxPrice != 0 && (
+                              <p style={{ fontWeight: "600", fontSize: "25px", color: "#828282" }}>
+                                <span style={{ color: "black", fontWeight: "700", fontSize: "28px" }}>{minPrice1} - {maxPrice1} </span>원</p>
+                            )}
+                          </div>
+                        </div>
+
+
+                        <div className='filter_endtime' style={{ height: "20%", borderBottom: "1px solid rgb(180,180,180)" }}>
+                          <h1 style={{ fontSize: "20px", textAlign: "left", marginLeft: "30px", marginBottom: "10px", color: "#929292" }}>마감</h1>
+
+                          <div>
+                            <input
+                              type="range"
+                              min="0"
+                              max="24" // 예: 24시간 범위 설정
+                              step="0.5" // 1시간씩 이동
+                              value={endTime}
+                              onChange={handleEndTimeChange}
+                              style={{ width: "70%", height: "80%", accentColor: "black" }}
+                            />
+                            {endTime != 0 && (
+                              <p style={{ fontWeight: "600", fontSize: "25px", color: "#828282" }}>
+                                마감까지 <span style={{ color: "black", fontWeight: "700", fontSize: "25px" }}>{endTime}</span> 시간 이상 남음</p>
+                            )}
+                          </div>
+                        </div>
+                        <div className='filter_star' style={{ height: "20%" }}>
+                          <h1 style={{ fontSize: "20px", textAlign: "left", marginLeft: "30px", color: "#929292" }}>별점</h1>
+                          <div style={{ marginRight: "25px" }}>
+                            <div className='point' style={{ width: "100%", marginTop: "0px", marginRight: "110px" }}>  {array.map((index) => (
+                              <StarRateIcon
+                                style={{
+                                  marginTop: "-10px"
+                                  , fontSize: "4rem"
+                                }}
+                                key={index}
+                                name='rating'
+                                onClick={() => handleSetStar(index)}
+                                className={clicked[index] && 'StarRateIcon'}
+                                value={index}
+
+
+                              />))}
+                            </div>
+                            {maxStars != 0 && (
+                              <p style={{ fontWeight: "600", fontSize: "25px", color: "#828282" }}>
+                                별점 : <span style={{ color: "black", fontWeight: "700", fontSize: "25px" }}>{maxStars}</span> 점 이상</p>
+                            )}
+                          </div>
+                        </div>
+                        <div className='filter_btn'>
+                          <button className='refresh_btn' style={{ width: "180px", marginTop: "5px", padding: "10px 50px", backgroundColor: "white", borderRadius: "50px", border: "1px solid rgba(0,0,0,0.3)", cursor: "pointer", fontWeight: "700", fontSize: "25px" }} onClick={
+                            resetFilters
+                          }>
+                            초기화
+                          </button>
+                          <button className="remove_regervation_Store" style={{ width: "180px", marginTop: "5px", padding: "10px 50px", borderRadius: "50px", border: "1px solid rgba(0,0,0,0.3)", cursor: "pointer", fontWeight: "700", fontSize: "25px", backgroundColor: "black", color: "white" }} onClick={() => {
+                            setSwitch3(1);
+                            setSearch_store_switch(!search_store_switch);
+                            setB(1);
+                            console.log(rangeValue);
+                            console.log(maxPrice);
+                            console.log(maxStars);
+                            console.log(endTime);
+                          }}>적용</button>
+                        </div>
+                      </div>
+
                     </div>
-                  </div>
-                  <div className='filter_price' style={{ height: "27%" , borderBottom:"1px solid rgb(180,180,180)"}}>
-                    <h1 style={{ fontSize: "20px", textAlign: "left", marginLeft: "30px",marginBottom:"20px", color: "#929292" }}>가격</h1>
-                    <div style={{marginBottom:"25px"}}>                      
-                        
-
-
-                    </div>
-                    <div>
-                      <TextField
-                        style = {{width: 200, height:60 ,fontSize:20}}
-                        placeholder='최소 가격 0원'
-                        inputProps={{style: {fontSize: 25}}}
-                        InputLabelProps={{style: {fontSize: 20, lineHeight:60}}}
-                        name='minprice' 
-                        value={minPrice}
-                        onChange={(e) => {
-                          setMinPrice(e.target.value);
-                          setMinPrice1(addCommasToNumber(e.target.value));
-                      }}                    
-                      >
-
-                      </TextField>
-                      <span style={{fontWeight:"600", padding:"0px 15px 0px 15px",display:"inline-block",marginTop:"8px", fontSize:"30px"}}>~</span>
-                      <TextField
-                        style = {{width: 200, height:60}}
-                        placeholder='최대 가격'
-                        inputProps={{style: {fontSize: 25}}}
-                        InputLabelProps={{style: {fontSize: 20, lineHeight:60}}}
-                        name='maxprice'
-                        value={maxPrice}
-                        onChange={(e) => {
-                          setMaxPrice(e.target.value);
-                          setMaxPrice1(addCommasToNumber(e.target.value));
-                      }}
-                      >
-                        
-                      </TextField>
-                    </div>
-                     <div >
-                    
-                      {maxPrice != 0 && (
-                        <p style={{ fontWeight: "600", fontSize: "30px", color: "#828282" }}>
-                          가격: <span style={{ color: "black", fontWeight: "700", fontSize: "30px" }}>{minPrice1} ~ {maxPrice1} </span>원</p>
-                      )}
-                    </div>
-                  </div>
-
-
-                  <div className='filter_endtime' style={{ height: "30%", borderBottom:"1px solid rgb(180,180,180)" }}>
-                    <h1 style={{ fontSize: "20px", textAlign: "left", marginLeft: "30px",marginBottom:"20px", color: "#929292" }}>마감</h1>
-                    <div style={{marginBottom:"25px"}}>
-                    
-                    </div>
-                    <br />
-                    <div style={{display:"inline-block", marginRight:"250px"}}>
-                      <select
-                   value={endTime}
-                   onChange={handleEndTimeChange}
-                   style={{ width: "150px", height: "60px", accentColor: "black" , fontSize:"20px" }}
-                 >
-                   <option value="0">0 시간</option>
-                   <option value="1">1 시간</option>
-                   <option value="2">2 시간</option>
-                   {/* 다른 시간 옵션들 추가 */}
-                 </select>
-                      {endTime != 0 && (
-                        <p style={{ fontWeight: "600", fontSize: "25px", color: "#828282" ,display:"inline-block"}}>
-                          마감까지 <span style={{ color: "black", fontWeight: "700", fontSize: "25px" }}>{endTime}</span> 시간 이상 남음</p>
-                      )}
-                    </div>
-                  </div>
-                  <div className='filter_star' style={{ height: "50%" }}>
-                    <h1 style={{ fontSize: "20px", textAlign: "left", marginLeft: "30px", color: "#929292" }}>별점</h1>
-                    <div style={{ marginRight: "25px" }}>
-                      <input
-                        id="ft_star_btn5"
-                        type="checkbox"
-                        name='rating'
-                        value='5'
-                        onChange={(e) => {
-                          checkOnlyOne(e.target);
-                        }}
-                      /><label for="ft_star_btn5"><span><StarRateIcon style={{ fontSize: "2rem" }} className='filterstar' />
-                        <StarRateIcon style={{ fontSize: "2rem" }} className='filterstar' />
-                        <StarRateIcon style={{ fontSize: "2rem" }} className='filterstar' />
-                        <StarRateIcon style={{ fontSize: "2rem" }} className='filterstar' />
-                        <StarRateIcon style={{ fontSize: "2rem" }} className='filterstar' /></span></label>
-                      <br />
-                      <input
-                        id="ft_star_btn4"
-                        type="checkbox"
-                        name='rating'
-                        value='4'
-                        onChange={(e) => {
-                          checkOnlyOne(e.target);
-
-                        }}
-                      /><label for="ft_star_btn4"><span><StarRateIcon style={{ fontSize: "2rem" }} className='filterstar' />
-                        <StarRateIcon style={{ fontSize: "2rem" }} className='filterstar' />
-                        <StarRateIcon style={{ fontSize: "2rem" }} className='filterstar' />
-                        <StarRateIcon style={{ fontSize: "2rem" }} className='filterstar' />
-                        <StarBorderIcon style={{ fontSize: "2rem", fontWeight: "100", color: "#828282" }} />
-                      </span></label>
-                      <br />
-                      <input
-                        id="ft_star_btn3"
-                        type="checkbox"
-                        name='rating'
-                        value='3'
-                        onChange={(e) => {
-                          checkOnlyOne(e.target);
-
-                        }}
-                      /><label for="ft_star_btn3"><span><StarRateIcon style={{ fontSize: "2rem" }} className='filterstar' />
-                        <StarRateIcon style={{ fontSize: "2rem" }} className='filterstar' />
-                        <StarRateIcon style={{ fontSize: "2rem" }} className='filterstar' />
-                        <StarBorderIcon style={{ fontSize: "2rem", fontWeight: "100", color: "#828282" }} />
-                        <StarBorderIcon style={{ fontSize: "2rem", fontWeight: "100", color: "#828282" }} />
-                      </span></label>
-                      <br />
-                      <input
-                        id="ft_star_btn2"
-                        type="checkbox"
-                        name='rating'
-                        value='2'
-                        onChange={(e) => {
-                          checkOnlyOne(e.target);
-
-                        }}
-                        /><label for="ft_star_btn2"><span><StarRateIcon style={{ fontSize: "2rem" }} className='filterstar' />
-                        <StarRateIcon style={{ fontSize: "2rem" }} className='filterstar' />
-                        <StarBorderIcon style={{ fontSize: "2rem", fontWeight: "100", color: "#828282" }} />
-                        <StarBorderIcon style={{ fontSize: "2rem", fontWeight: "100", color: "#828282" }} />
-                        <StarBorderIcon style={{ fontSize: "2rem", fontWeight: "100", color: "#828282" }} />
-                      </span></label>
-                      <br />
-                      <input
-                        id="ft_star_btn1"
-                        type="checkbox"
-                        size="larger"
-                        name='rating'
-                        value='1'
-                        onChange={(e) => {
-                          checkOnlyOne(e.target);
-
-                        }}
-                      /><label for="ft_star_btn1"><span><StarRateIcon style={{ fontSize: "2rem" }} className='filterstar' />
-                        <StarBorderIcon style={{ fontSize: "2rem", fontWeight: "100", color: "#828282" }} />
-                        <StarBorderIcon style={{ fontSize: "2rem", fontWeight: "100", color: "#828282" }} />
-                        <StarBorderIcon style={{ fontSize: "2rem", fontWeight: "100", color: "#828282" }} />
-                        <StarBorderIcon style={{ fontSize: "2rem", fontWeight: "100", color: "#828282" }} />
-                      </span></label>
-
-                      {maxStars != 0 && (
-                        <p style={{ fontWeight: "600", fontSize: "20px", color: "#828282" }}>
-                          최대 별점 : <span style={{ color: "black", fontWeight: "700", fontSize: "22px" }}>{maxStars}</span></p>
-                      )}
-                    </div>
-                  </div>
-                  <div className='filter_btn'>
-                    <button className='refresh_btn' style={{width:"180px",marginTop: "5px", padding: "10px 50px", backgroundColor:"white",borderRadius: "50px", border: "1px solid rgba(0,0,0,0.3)", cursor: "pointer", fontWeight: "700", fontSize: "25px"}} onClick={
-                      resetFilters
-                    }>
-                      초기화
-                    </button>
-                    <button className="remove_regervation_Store" style={{ width:"180px",marginTop: "5px", padding: "10px 50px", borderRadius: "50px", border: "1px solid rgba(0,0,0,0.3)", cursor: "pointer", fontWeight: "700", fontSize: "25px" ,backgroundColor:"black",color:"white"}} onClick={() => {
-                      setSwitch3(1);
-                      setSearch_store_switch(!search_store_switch);
-                      setB(1);
-                      console.log(rangeValue);
-                      console.log(maxPrice);
-                      console.log(maxStars);
-                      console.log(endTime);
-                    }}>적용</button>
-                  </div>
-                </div>
-
-              </div>
 
                     <div style={{ width: "1%", height: "100%" }} ></div>
 
@@ -848,7 +789,7 @@ function App() {
                               </li>
                             ))}
                           </ul>
-                         <div className={`c_view ${cViewVisible ? 'c_view_visible' : ''}`}>
+                          <div className={`c_view ${cViewVisible ? 'c_view_visible' : ''}`}>
                             <div className="c_view_close" onClick={() => {
                               setTimeout(() => {
                                 setCViewVisible(false);
@@ -858,18 +799,20 @@ function App() {
                             <div style={{ marginTop: "30px" }}>
                               {selectedMenuItem && (
                                 <div>
-                                  <div style={{ marginLeft: "40px", width: "87%", height: "280px", borderRadius: "30px", boxShadow: "inset 0 10px 10px -10px #333, inset 0 -10px 10px -10px #333" }}>
-                             <img
-                               src={"/itemimages/" + `${selectedMenuItem.image}`}
-                               alt={selectedMenuItem.image}
-                               style={{
-                                 objectFit: "cover", // 이미지가 영역에 맞게 조절되도록 함
-                                 width: "100%", // 가로 크기를 100%로 지정
-                                 height: "100%", // 세로 크기를 100%로 지정
-                                 borderRadius: "30px", // 이미지에 둥근 테두리를 추가할 경우 지정
-                               }}
-                             />
-                           </div>
+                                  <div style={{ marginLeft: "40px", width: "87%", height: "280px", borderRadius: "30px", boxShadow: "inset 0 20px 20px -20px #333, inset 0 -20px 20px -20px #333" }}>
+                                    <img
+                                      src={"/itemimages/" + `${selectedMenuItem.image}`}
+                                      alt={selectedMenuItem.image}
+                                      style={{
+                                        objectFit: "cover", // 이미지가 영역에 맞게 조절되도록 함
+                                        width: "100%", // 가로 크기를 100%로 지정
+                                        height: "100%", // 세로 크기를 100%로 지정
+                                        borderRadius: "30px", // 이미지에 둥근 테두리를 추가할 경우 지정
+                                        position: "relative",
+                                        zIndex: "-1"
+                                      }}
+                                    />
+                                  </div>
                                   <div style={{ width: "85%", height: "auto", border: "1px solid rgb(150,150,150)", borderRadius: "7px", marginTop: "-20px", margin: "0 auto" }}>
                                     <div style={{ margin: "20px 0px", paddingBottom: "20px", borderBottom: "1px solid rgb(195, 192, 192)" }}>
                                       <span style={{ fontSize: "35px", fontWeight: "600" }}>{selectedMenuItem.itemname}</span>
@@ -889,14 +832,14 @@ function App() {
                                       <span style={{ fontSize: "18px", marginLeft: "10px" }}>남은 수량 : {selectedMenuItem.quantity} </span>
                                     </div>
                                     <div style={{ fontSize: "18px", color: "rgb(95,95,95)", padding: "50px 0px", marginLeft: "40px", width: "80%", height: "auto", wordBreak: "break-all" }}>{selectedMenuItem.itemnotice}</div>
-                              <div>
-                                <div style={{ width: "100%", marginTop: "10px", marginLeft: "-5px", fontSize: "20px", marginBottom: "10px" }}>
-                                  <AccessAlarmIcon style={{ marginBottom: "-7px" }}></AccessAlarmIcon>할인 시작일 : {formatDate(selectedMenuItem.starttime)}
-                                </div>
-                                <div style={{ width: "100%", marginLeft: "-5px", fontSize: "20px" }}>
-                                  <AccessAlarmIcon style={{ marginBottom: "-7px" }}></AccessAlarmIcon>할인 마일일 :  {formatDate(selectedMenuItem.endtime)}
-                                </div>
-                              </div>
+                                    <div>
+                                      <div style={{ width: "100%", marginTop: "10px", marginLeft: "-5px", fontSize: "20px", marginBottom: "10px" }}>
+                                        <AccessAlarmIcon style={{ marginBottom: "-7px" }}></AccessAlarmIcon>할인 시작일 : {formatDate(selectedMenuItem.starttime)}
+                                      </div>
+                                      <div style={{ width: "100%", marginLeft: "-5px", fontSize: "20px" }}>
+                                        <AccessAlarmIcon style={{ marginBottom: "-7px" }}></AccessAlarmIcon>할인 마일일 :  {formatDate(selectedMenuItem.endtime)}
+                                      </div>
+                                    </div>
                                   </div>
                                 </div>
                               )}
@@ -1054,7 +997,7 @@ function App() {
         <Route path="/ad_inquiry_canswer" element={<div>
           < Ad_inquiry_canswer />
         </div>} />
-         <Route path="/ad_inquiry_wanswer_update" element={<div>
+        <Route path="/ad_inquiry_wanswer_update" element={<div>
           < Ad_inquiry_wanswer_update />
         </div>} />
         <Route path="/ad_analysis_shop" element={<div>

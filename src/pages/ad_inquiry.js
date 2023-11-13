@@ -4,7 +4,7 @@ import './../App.css';
 import { useNavigate } from "react-router-dom";
 
 function Ad_inquiry() {
-    const [inquiryInfo, setInquiryInfo] = useState([]);
+    const [inquiryInfo, setInquiryInfo] = useState([{inquiryidx:"1",content_inquiry:"dsdsds",redate:"2023-10-22",status:"답변 완료"}]);
     useEffect(() => {
         axios.get('/inquiry/view/all')
         .then(response =>{
@@ -47,7 +47,7 @@ function Ad_inquiry() {
             </div>
 
             <main className='ad_main'>
-                <div className="ad_title">전체 문의(2)</div>
+                <div className="ad_title">전체 문의({inquiryInfo.length})</div>
                 <div className="tb">
                     <table className='ad_table'>
                         <thead>

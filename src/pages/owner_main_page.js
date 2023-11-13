@@ -12,6 +12,8 @@ import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutli
 import { Brightness1 } from '@material-ui/icons';
 import zIndex from '@material-ui/core/styles/zIndex';
 import { useNavigate } from "react-router-dom";
+import EventNoteIcon from '@mui/icons-material/EventNote';
+import UpdateIcon from '@mui/icons-material/Update';
 function Owner_main_page() {
     let navigate = useNavigate();
     const [userInfo, setUserInfo] = useState("");
@@ -44,7 +46,7 @@ function Owner_main_page() {
                 console.error('세션 데이터를 가져오는데 실패함', error);
             });
     }, [recall]);
-    let [noticepost,setNoticePost] = useState([{noticeIdx:"1",title:"sss",content:"ssss",noticeDate:"2023-10-23"},{noticeIdx:"4",title:"sss",content:"ssss",noticeDate:"2023-10-23"},{noticeIdx:"2",title:"aaaa",content:"aaaaa",noticeDate:"2023-10-23"},{noticeIdx:"3",title:"dddd",content:"ddddd",noticeDate:"2023-10-23"}]);
+    let [noticepost,setNoticePost] = useState([{noticeIdx:"1",title:"sss",content:"ssssdsdsdsdsdsdasdsadsadsacasdacssadasdasdasdasdsadasdasdasdasdasdasdsadasdasdasdsa",noticeDate:"2023-10-23"},{noticeIdx:"1",title:"sss",content:"ssss",noticeDate:"2023-10-23"},{noticeIdx:"4",title:"sss",content:"ssss",noticeDate:"2023-10-23"},{noticeIdx:"2",title:"aaaa",content:"aaaaa",noticeDate:"2023-10-23"},{noticeIdx:"3",title:"dddd",content:"ddddd",noticeDate:"2023-10-23"}]);
     useEffect(() => {
         axios.get('/manager/notice/readall')
             .then(response => {
@@ -61,7 +63,7 @@ function Owner_main_page() {
             },[userInfo]);
     }, []);
     const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 번호
-    const postsPerPage = 10;//페이지당 게시글수
+    const postsPerPage = 4;//페이지당 게시글수
     const indexOfLastPost = currentPage * postsPerPage;
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
     const currentPosts = noticepost.slice(indexOfFirstPost, indexOfLastPost);
@@ -151,7 +153,7 @@ function Owner_main_page() {
                         <div>
                             <div style ={{fontSize:"20px", textAlign:"left",lineHeight:"2"}} className='cont_text0'>
                                 <div><span>가게 등록 및 관리</span></div>
-                                <div><span>홍보 및 마케팅은 다음 페이지이용</span></div>
+                                <div><span>가게 정보 관리는 다음 페이지이용</span></div>
                                 <div style={{borderBottom:"4px solid black", borderRadius:"30px",width:"100px",marginTop:"10px"}}><span></span></div>
                             </div>
                             <div className='cont_text1' style={{marginLeft:"80px",marginTop:"130px"}}>
@@ -167,12 +169,12 @@ function Owner_main_page() {
                         <div>
                             <div style ={{fontSize:"20px", textAlign:"left",lineHeight:"2",marginTop:"100px"}} className='cont_text0'>
                                 <div><span>재고 상품 등록 및 관리</span></div>
-                                <div><span>홍보 및 마케팅은 다음 페이지이용</span></div>
+                                <div><span>물품 등록 및 홍보는 다음 페이지이용</span></div>
                                 <div style={{borderBottom:"4px solid black", borderRadius:"30px",width:"100px",marginTop:"10px"}}><span></span></div>
                             </div>
                             <div className='cont_text1' style={{marginLeft:"80px",marginTop:"130px"}}>
                                 <span style={{ width:"400px",fontSize: "50px", fontWeight: "600", textAlign: "left", marginBottom: "10px" }}>재고 등록&수정</span>
-                                <span>사장님들의 가게를 등록해보세요! 등록한 가게들을 한 눈에 살펴 볼 수 있고, 가게에 대한 정보를 입력해 홍보해보세요</span>
+                                <span>가게들의 재고 메뉴를 등록해보세요! 가게들의 재고 메뉴들을 한 번에 관리 하실 수 있습니다, 등록된 메뉴들의 정보를 입력해 홍보해보세요</span>
                                 <span style={{ marginTop: "30px" }}><a style={{ borderBottom: "1px dashed black", cursor:"pointer" }} onClick={()=>{navigate("/owner_addmenu");}}>알아보기 {">"}</a></span>
                             </div>                                
                             <a style={{ marginLeft: "-430px", marginTop: "-450px", position: "absolute" }}><img style={{ width: "650px" , filter: "contrast(130%)"}} src='https://i.pinimg.com/564x/96/25/1c/96251c1125878e948918e151def81ca0.jpg'></img><div style={{ marginLeft: "250px", marginTop: "-500px", width: "800px", height: "550px", backgroundColor: "#f3eded" }}></div></a>
@@ -180,30 +182,35 @@ function Owner_main_page() {
                     </div>
                     <div className='text'><span>공지사항</span></div>
                     <div className={`content3 ${temp1 == true ? "" : "contents_hidden"}`}>
-                        <div style={{marginTop:"20px",width:"100%", height:"50%", backgroundColor:'red',display:"flex",justifyContent:"space-between",alignContent: "flex-start"}}>
+                    <div style={{float:"right",marginRight:"30px"}}><button className='notice_btn' onClick={()=>{
+                        navigate("/owner_notice");
+                    }}>전체보기 <span style={{color:"#459522"}}> {'>'} </span></button></div>
+                        <div className='content3all'>
                         {currentPosts.map((nti, index) => (
-                            <div style={{width:"25%",height:"90%",border:"1px solid black"}}>
-                            <tr className='notice_main_content' key={index} style={{ height: "40px", fontSize: "20px" }}>
-                                <td id="notice_row" onClick= {()=>{
-                                    navigate(`/owner_noticeview/${nti.noticeIdx}`)
-                                    axios.get('/manager/notice/read',{
-                                        params: {
-                                            noticeIdx:nti.noticeIdx,
-                                            title:nti.title
-                                        }
-                                    })
-                                    .then(response => {
-                                        const not = response.data;
-                                        const noticep = `?notititle=${not.title}&notiDate=${not.noticeDate}&noticontent=${not.content}`;
-                                        const popupURL = `/owner_noticeview/${nti.noticeIdx}${noticep}`;
-                                        navigate(popupURL);
-                                      })
-                                      .catch(error => {
-                                        console.error('세션 데이터를 가져오는데 실패함', error);
-                                      });
-                                }} style={{ textAlign: "left" }}><span>{nti.title}</span></td>
-                                <td id="notice_row">{nti.noticeDate}</td>
-                            </tr>
+                            <div className='notice_main_content3' style={{width:"21%",height:"80%",border:"1px solid rgb(180,180,180)"}}>
+                                <div key={index} style={{ height: "40px" }}>
+                                    <div id="notice_row"><span style={{fontSize:"20px", fontWeight:"900",color:"#459522"}}><EventNoteIcon style={{marginBottom:"-3.5px",marginRight:"3px"}}></EventNoteIcon>공지</span></div>
+                                    <div id="notice_row" onClick= {()=>{
+                                        navigate(`/owner_noticeview/${nti.noticeIdx}`)
+                                        axios.get('/manager/notice/read',{
+                                            params: {
+                                                noticeIdx:nti.noticeIdx,
+                                                title:nti.title
+                                            }
+                                        })
+                                        .then(response => {
+                                            const not = response.data;
+                                            const noticep = `?notititle=${not.title}&notiDate=${not.noticeDate}&noticontent=${not.content}`;
+                                            const popupURL = `/owner_noticeview/${nti.noticeIdx}${noticep}`;
+                                            navigate(popupURL);
+                                        })
+                                        .catch(error => {
+                                            console.error('세션 데이터를 가져오는데 실패함', error);
+                                        });
+                                    }}><span style={{fontSize:"40px",fontWeight:"700px"}}>{nti.title}</span></div>
+                                    <div id="notice_row_con"style={{minHeight:"150px"}}><span style={{fontSize:"18px",color:"rgb(160,160,160)"}}>{nti.content}</span></div>
+                                    <div id="notice_row"><span style={{fontSize:"18px",color:"rgb(160,160,160)"}}><UpdateIcon style={{marginBottom:"-5px",marginRight:"3px"}}></UpdateIcon>{nti.noticeDate}</span></div>
+                                </div>
                             </div>
                         ))}
                         </div>

@@ -31,7 +31,8 @@ function Ad_business_trust() {
                 </div>
                 <div className="content">
                     <div>인사이트 분석</div>
-                    <div className="sub"><a href="/ad_analysis_shop">가게 분석</a></div>
+                    <div className="sub"><a href="
+                    /ad_analysis_shop">가게 분석</a></div>
                 </div>
                 <div className="logout">
                     <div><a href="/ad_login" id="logout">로그아웃</a></div>

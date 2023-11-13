@@ -63,7 +63,7 @@ function Ad_inquiry_wanswer() {
                 <div className="ad_inquiry_wanswer_title">답변 달기</div>
                 <div className="question">
                     <div className="qu">
-                        <div className="d"><div style={{fontWeight:"700",fontSize:"35px"}}>Q</div><div style={{fontWeight:"700",fontSize:"25px"}}>{inquiry.content_inquiry}</div><div style={{fontWeight:"700",fontSize:"20px"}}>{inquiry.redate}</div></div> 
+                        <div className="d"><div style={{fontWeight:"700",fontSize:"35px"}}>Q {inquiry.content_inquiry}</div><div style={{fontWeight:"700",fontSize:"20px",marginTop:"20px",marginLeft:"100px"}}>{inquiry.redate}</div></div> 
                             <div className="qu_con">
                                 <div>A</div>
                                 <div><textarea 
@@ -77,7 +77,7 @@ function Ad_inquiry_wanswer() {
                                    ></textarea></div>
                                 
                             <div>
-                               <button onClick={()=>{
+                        <button className='ad_write_btn' onClick={()=>{
                            const formData = new FormData();
                            formData.append("inquiryidx",inquiry.inquiryidx);
                            formData.append("adminidx",userInfo.memberIdx);

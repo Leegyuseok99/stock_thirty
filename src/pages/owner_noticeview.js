@@ -5,6 +5,8 @@ import { useEffect, useRef } from 'react';
 import Avatar from 'react-avatar';
 import { useParams } from 'react-router-dom';
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import Marker4 from "./../img/marker4.gif";
+
 
 function Owner_noticeview() {
     let [recall, setRecall] = useState(false);
@@ -52,7 +54,8 @@ function Owner_noticeview() {
                     zIndex: 1, // 다른 요소 위에 나타나도록 설정
                     borderRadius: "20px"
                 }}>
-                    <div className='logo'><a href="/owner_main_page">재고 30 </a></div>
+                <div className='logo'style={{marginTop:"-20px"}}><a href="/home_owner"><img style={{marginBottom:"-10px"}} src={Marker4}/>
+                    <span style={{fontSize:"50px",fontWeight:"600"}}>StockTracker</span></a></div>
                     <nav className='nav'>
                         <ul>
                             <li>

@@ -63,17 +63,18 @@ function Ad_inquiry_canswer() {
                 <div className="ad_inquiry_canswer_title">답변 확인</div>
                 <div className="ad_inquiry_canswer_question">
                     <div className="ad_inquiry_canswer_qu">
-                        <div className="ad_inquiry_canswer_d"><div style={{fontWeight:"700",fontSize:"35px"}}>Q</div><div style={{fontWeight:"700",fontSize:"25px"}}>{inquiry.content_inquiry}</div><div style={{fontWeight:"700",fontSize:"20px"}}>{inquiry.redate}</div></div>
+                        <div className="ad_inquiry_canswer_d"><div style={{fontWeight:"700",fontSize:"35px"}}>Q{inquiry.content_inquiry}</div><div style={{fontWeight:"700",fontSize:"20px"}}>{inquiry.redate}</div></div>
                         <div className="ad_inquiry_canswer_qu_con">
                             <div style={{fontSize:"30px"}}>A</div>
                             <div className='ad_inquiry_canswer_qu_con_result'>{inquiry.content_answer}</div>
-                            <div className='ad_inquiry_canswer_u_con_result_redate'>{inquiry.answer_redate}</div>
-                            <div>
-                            <button onClick={()=>{
+                            <div className='ad_inquiry_canswer_u_con_result_redate' style={{marginLeft:"200px"}}>{inquiry.answer_redate}</div>
+                        </div>
+                        <div style={{marginRight:"60px"}}>
+                            <button className='ad_rewrite_btn' onClick={()=>{
                                 localStorage.setItem('inquiry',JSON.stringify(inquiry));
                                 navigate('/ad_inquiry_wanswer_update');
                             }}><span>수정</span></button>
-                            <button onClick={()=>{
+                            <button className='ad_delete_btn' onClick={()=>{
                                 const formData = new FormData();
                               formData.append("inquiryidx",inquiry.inquiryidx);
                               formData.append("adminidx",userInfo.memberIdx);
@@ -92,7 +93,6 @@ function Ad_inquiry_canswer() {
                                     삭제
                                 </span>
                             </button>
-                        </div>
                         </div>
                     </div>
                 </div>

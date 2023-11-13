@@ -53,22 +53,21 @@ function Ad_noticeview() {
                 </div>
             </div>
 
-            <main className='ad_inquiry_canswer_main'>
-                <div className="ad_inquiry_canswer_title">공지사항</div>
-                <div className="ad_inquiry_canswer_question">
-                    <div className="ad_inquiry_canswer_qu">
-                        <div className="ad_inquiry_canswer_d"><div style={{fontWeight:"700",fontSize:"35px"}}>Q</div><div style={{fontWeight:"700",fontSize:"25px"}}>질문 내용</div><div style={{fontWeight:"700",fontSize:"20px"}}>2023-05-11</div></div>
-                        <div className="ad_inquiry_canswer_qu_con">
-                            <div style={{fontSize:"30px"}}>A</div>
+            <main className='ad_noticeview_main'>
+                <div className="ad_noticeview_title">공지사항</div>
+                <div className="ad_noticeview_all">
+                    <div className="ad_noticeview_content">
+                        <div className="ad_noticeview_header"><div style={{fontWeight:"700",fontSize:"25px"}}>{notice.title}</div><div style={{fontWeight:"700",fontSize:"20px"}}>{formatDate(notice.noticedate)}</div></div>
+                        <div className="ad_noticeview_qu_con">
+                            <div style={{fontSize:"30px"}}></div>
                             <div className='ad_inquiry_canswer_qu_con_result'>{notice.title}</div>
-                            <div className='ad_inquiry_canswer_u_con_result_redate'>{formatDate(notice.noticedate)}</div>
                         </div>
-                        <div>
-                            <button onClick={()=>{
+                        <div style={{marginRight:"60px"}}>
+                            <button className='ad_rewrite_btn' onClick={()=>{
                                 localStorage.setItem('notice',JSON.stringify(notice));
                                 navigate('/ad_notice_update');
                             }}><span>수정</span></button>
-                            <button onClick={()=>{
+                            <button className='ad_delete_btn' onClick={()=>{
                                 axios.delete('/manager/notice/delete',{
                            params:{
                               noticeIdx:notice.noticeidx

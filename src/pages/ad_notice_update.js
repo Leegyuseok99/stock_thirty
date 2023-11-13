@@ -11,6 +11,19 @@ function Ad_notice_update() {
     const [userInfo, setUserInfo] = useState("");
     let [content_notice, setContent_notice] = useState("");
     let [title_notice, setTitle_notice] = useState("");
+    function formatDate(dateString) {
+     const originalDate = new Date(dateString);
+     const options = {
+       year: "numeric",
+       month: "2-digit",
+       day: "2-digit",
+       hour: "2-digit",
+       minute: "2-digit",
+       second: "2-digit",
+     };
+     const formattedDate = originalDate.toLocaleString("ko-KR", options);
+     return formattedDate;
+   }
     useEffect(() => {
         // 스프링에서 세션 데이터를 가져오는 호출
         axios.get('/getSessionMember/manager')
@@ -64,13 +77,13 @@ function Ad_notice_update() {
                 <div className="ad_inquiry_wanswer_title">공지사항 수정</div>
                 <div className="question">
                     <div className="qu">
-                        <div className="d"><div style={{fontWeight:"700",fontSize:"35px"}}>Q</div><div style={{fontWeight:"700",fontSize:"25px"}}>{notice.content_inquiry}</div><div style={{fontWeight:"700",fontSize:"20px"}}>{notice.redate}</div></div> 
+                        <div className="d"><div style={{fontWeight:"700",fontSize:"20px"}}>{formatDate(notice.noticedate)}</div></div> 
                             <div className="qu_con">
-                                <div style={{marginLeft:"60px"}}><textarea 
-                                   rows="1" 
+                                <div style={{marginLeft:"180px"}}><textarea 
                                    cols="83" 
-                                   placeholder={notice.title}
+                                   placeholder="제목을 작성해주세요."
                                    name="title_notice"
+                                   style={{resize: "vertical",maxHeight:"40px",minHeight:"40px",lineHeight:"1.7"}}
                                    onChange={(e) => {
                                     setTitle_notice(e.target.value);
                                  }}
@@ -80,13 +93,14 @@ function Ad_notice_update() {
                                    cols="83" 
                                    placeholder={notice.content}
                                    name="content_notice"
+                                   style={{resize: "vertical",minHeight:"200px"}}
                                    onChange={(e) => {
                                      setContent_notice(e.target.value);
                                  }}
                                    ></textarea></div>
                                 
                             <div>
-                               <button onClick={()=>{
+                               <button className="ad_write_btn" onClick={()=>{
                            const formData = new FormData();
                            formData.append("noticeIdx",notice.noticeidx);
                            formData.append("title",title_notice);

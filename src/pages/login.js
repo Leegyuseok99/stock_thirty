@@ -3,6 +3,7 @@ import { KAKAO_AUTH_URL } from './../token/OAuth.js';
 import { NAVER_AUTH_URL } from './../token/OAuth2.js';
 import KakoImg from "./../img/Kakao_login.png";
 import NaverImg from "./../img/Naver_login.png";
+import marker4 from "./../img/marker4.gif";
 import { TextField, Button, InputAdornment } from "@mui/material";
 import PermIdentityIcon from "@material-ui/icons/PermIdentity";
 import LockIcon from "@material-ui/icons/Lock";
@@ -20,8 +21,7 @@ function Login(props) {
             <div className="loginWrap"style={{borderRadius:"20px",boxShadow: "0px 0px 5px rgba(0, 0, 0, 1)" }} >
                 <div className="imgarea" style={{borderTopLeftRadius: "20px",borderBottomLeftRadius: "20px"}}>
                     <div className="text">
-                        <h2>제목</h2>
-                        <span>환영합니다</span>
+                        <img style={{marginBottom:"-15px"}}src={marker4}></img><div style={{width:"180px",height:"11px",backgroundColor:"black",borderRadius:"40%",opacity:"0.1",marginLeft:"50px"}}></div><div style={{marginLeft:"60px",marginTop:"-62px"}}><span style={{fontWeight:"600",fontSize:"50px"}}>재고30</span></div>
                     </div>
                 </div>
                 <div className="login"style={{borderTopRightRadius: "20px",borderBottomRightRadius: "20px",boxShadow:"-10px 0px 5px rgba(0, 0, 0, 0.3)"}} >
