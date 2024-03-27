@@ -109,3 +109,64 @@
 
 ### 공지사항
 <img width="790" alt="공지 사항" src="https://github.com/guyseoklee/stock_thirty/assets/115774339/998f8a36-0b59-49da-8a20-2bb6cb04a70f">
+
+
+----
+### 관리자 페이지
+<img width="790" alt="로그인" src="https://github.com/guyseoklee/stock_thirty/assets/115774339/6ee98b1a-d94e-4f11-889e-3172f1799168">
+
+
+<img width="790" alt="사용자 리스트" src="https://github.com/guyseoklee/stock_thirty/assets/115774339/f8b069de-6574-4664-b65f-c89782c2f6ef">
+
+
+<img width="790" alt="사용자가 방문한 가게" src="https://github.com/guyseoklee/stock_thirty/assets/115774339/5c3b9dfa-871f-4f4a-9d25-688d58a744d8">
+
+
+<img width="790" alt="사용자 예약 내역" src="https://github.com/guyseoklee/stock_thirty/assets/115774339/55378050-c3dd-495f-9528-3a69c227558a">
+
+
+<img width="790" alt="상업자 리스트" src="https://github.com/guyseoklee/stock_thirty/assets/115774339/72cc2f65-38b1-4eff-a023-2cd40e088355">
+
+
+<img width="790" alt="상업자 등록 가게" src="https://github.com/guyseoklee/stock_thirty/assets/115774339/f2a392fb-bba9-49c4-a41e-61148956e19e">
+
+
+<img width="790" alt="상업자 등록 상품" src="https://github.com/guyseoklee/stock_thirty/assets/115774339/2071bb42-427f-4225-b0e8-01bdc4f3cb3b">
+
+
+<img width="790" alt="1대1 문의 리스트" src="https://github.com/guyseoklee/stock_thirty/assets/115774339/9ba41f13-f3f2-4d43-8d93-7afcf64d0ef5">
+
+
+<img width="790" alt="1대1 문의 답변" src="https://github.com/guyseoklee/stock_thirty/assets/115774339/423f9dbc-feed-4e47-8ba9-cf011fd0ee3b">
+
+
+<img width="790" alt="1대1 답변 수정" src="https://github.com/guyseoklee/stock_thirty/assets/115774339/84da26ff-4acd-421c-ada5-73675ef83243">
+
+
+<img width="790" alt="가게 관리" src="https://github.com/guyseoklee/stock_thirty/assets/115774339/05707823-7277-4d60-9c61-8545e5c0ef2e">
+
+
+<img width="790" alt="가게 리스트" src="https://github.com/guyseoklee/stock_thirty/assets/115774339/65dafa64-3703-46c0-b207-6de2201ab607">
+
+
+<img width="790" alt="가게에 등록된 상품" src="https://github.com/guyseoklee/stock_thirty/assets/115774339/6e4f246e-b7e1-4e1b-9e98-77292e08df5f">
+
+
+<img width="790" alt="가게 예약자 리스트" src="https://github.com/guyseoklee/stock_thirty/assets/115774339/325c1bf8-ffd4-44aa-a135-19da18df17cf">
+
+
+<img width="790" alt="가게 별점" src="https://github.com/guyseoklee/stock_thirty/assets/115774339/437634da-83b4-446f-9c15-888d2a129916">
+
+
+<img width="790" alt="별점 준 사용자 리스트" src="https://github.com/guyseoklee/stock_thirty/assets/115774339/18b06776-456c-4e01-8533-7feaa03df19b">
+
+
+## 후기
+
+### 👍만족스러웠던 부분
++ 처음으로 4명이서 작업했던 팀 프로젝트였는데 소통도 원할하게 잘 이루어져서 예상했던 기한 안에 끝 마칠 수 있었던 점이 좋았고, 이를 통해 협업 능력을 키울 수 있는 좋은 경험이었습니다.
++ 네이버 맵 소셜 로그인 api 사용
+### 👎아쉬웠던 부분
++ git의 사용 방법 부족
++ react 컴포넌트 클린 코딩
++ 
