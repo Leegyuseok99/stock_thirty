@@ -93,7 +93,7 @@
 
 
 ----
-### 🛒상업자 페이지
+### 🛒사업자 페이지
 ### 메인 페이지
 <img width="790" alt="상업자 메인" src="https://github.com/guyseoklee/stock_thirty/assets/115774339/31fdfc45-e3b4-4e2c-bffb-16b4f61a8eed">
 
@@ -125,13 +125,7 @@
 <img width="790" alt="사용자 예약 내역" src="https://github.com/guyseoklee/stock_thirty/assets/115774339/55378050-c3dd-495f-9528-3a69c227558a">
 
 
-<img width="790" alt="상업자 리스트" src="https://github.com/guyseoklee/stock_thirty/assets/115774339/72cc2f65-38b1-4eff-a023-2cd40e088355">
-
-
-<img width="790" alt="상업자 등록 가게" src="https://github.com/guyseoklee/stock_thirty/assets/115774339/f2a392fb-bba9-49c4-a41e-61148956e19e">
-
-
-<img width="790" alt="상업자 등록 상품" src="https://github.com/guyseoklee/stock_thirty/assets/115774339/2071bb42-427f-4225-b0e8-01bdc4f3cb3b">
+<img width="790" alt="사업자 리스트" src="https://githu사업자 등록 상품" src="https://github.com/guyseoklee/stock_thirty/assets/115774339/2071bb42-427f-4225-b0e8-01bdc4f3cb3b">
 
 
 <img width="790" alt="1대1 문의 리스트" src="https://github.com/guyseoklee/stock_thirty/assets/115774339/9ba41f13-f3f2-4d43-8d93-7afcf64d0ef5">
